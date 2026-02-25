@@ -1,0 +1,122 @@
+#!/bin/bash
+#PBS -S /bin/bash
+#PBS -N stellar_deduplication
+#PBS -l nodes=1:ppn=64
+#PBS -l mem=700gb
+#PBS -l walltime=120:00:00
+#PBS -o stellar_deduplication.log
+#PBS -e stellar_deduplication.err
+#PBS -m abe
+#PBS -M sutirtharkm@gmail.com
+
+# =============================================================================
+# ENVIRONMENT SETUP
+# =============================================================================
+
+# Memory optimization
+export MALLOC_TRIM_THRESHOLD_=65536
+export MALLOC_MMAP_THRESHOLD_=65536
+export MALLOC_MMAP_MAX_=65536
+export PYTHONHASHSEED=0
+
+# Disable internal threading
+export OMP_NUM_THREADS=1
+export MKL_NUM_THREADS=1
+export NUMEXPR_NUM_THREADS=1
+export OPENBLAS_NUM_THREADS=1
+
+# Activate conda
+source /user/sutirtha/anaconda3/etc/profile.d/conda.sh
+conda activate base
+
+cd /user/sutirtha/BallTree_Xmatch
+
+# =============================================================================
+# PATHS
+# =============================================================================
+INPUT_FITS="/user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits"
+OUTPUT_FITS="/user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits"
+TEMP_DIR="./temp_dedup_${PBS_JOBID}"
+CHECKPOINT_DIR="./checkpoints_${PBS_JOBID}"
+
+# =============================================================================
+# PARAMETERS
+# =============================================================================
+N_WORKERS=64
+TOLERANCE_ARCSEC=1.0
+SIGMA_THRESHOLD=3.0
+N_OUTPUT_CHUNKS=8
+
+# =============================================================================
+# JOB INFO
+# =============================================================================
+echo "=============================================="
+echo "STELLAR DEDUPLICATION - MEMORY OPTIMIZED"
+echo "=============================================="
+echo "Job ID: $PBS_JOBID"
+echo "Node: $(hostname)"
+echo "Started at: $(date)"
+echo "Input: $INPUT_FITS"
+echo "Output: $OUTPUT_FITS"
+echo "Workers: $N_WORKERS"
+echo "Output chunks: $N_OUTPUT_CHUNKS"
+echo ""
+echo "System Resources:"
+echo "  Total RAM: $(free -h | grep Mem | awk '{print $2}')"
+echo "  Available RAM: $(free -h | grep Mem | awk '{print $7}')"
+echo "=============================================="
+
+mkdir -p "$TEMP_DIR"
+mkdir -p "$CHECKPOINT_DIR"
+
+# =============================================================================
+# MEMORY MONITOR (every 5 minutes)
+# =============================================================================
+(
+  while true; do
+    echo "=== $(date) ===" >> "${TEMP_DIR}/memory_monitor.log"
+    free -h >> "${TEMP_DIR}/memory_monitor.log"
+    ps aux --sort=-rss | head -5 >> "${TEMP_DIR}/memory_monitor.log"
+    echo "" >> "${TEMP_DIR}/memory_monitor.log"
+    sleep 300
+  done
+) &
+MONITOR_PID=$!
+
+# =============================================================================
+# RUN
+# =============================================================================
+python3 -u stellar_deduplication.py \
+    "$INPUT_FITS" \
+    "$OUTPUT_FITS" \
+    --workers $N_WORKERS \
+    --tolerance $TOLERANCE_ARCSEC \
+    --sigma $SIGMA_THRESHOLD \
+    --temp-dir "$TEMP_DIR" \
+    --checkpoint-dir "$CHECKPOINT_DIR" \
+    --ra-col "RA_all" \
+    --dec-col "DEC_all" \
+    --n-chunks $N_OUTPUT_CHUNKS
+
+EXIT_CODE=$?
+
+# =============================================================================
+# CLEANUP
+# =============================================================================
+kill $MONITOR_PID 2>/dev/null
+
+echo "=============================================="
+echo "Finished at: $(date)"
+echo "Exit code: $EXIT_CODE"
+free -h
+echo "=============================================="
+
+# Keep checkpoints if failed (for resume)
+if [ $EXIT_CODE -eq 0 ]; then
+    rm -rf "$TEMP_DIR"
+    rm -rf "$CHECKPOINT_DIR"
+else
+    echo "JOB FAILED - Checkpoints preserved for resume: $CHECKPOINT_DIR"
+fi
+
+exit $EXIT_CODE

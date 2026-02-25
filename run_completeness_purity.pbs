@@ -1,0 +1,870 @@
+#!/bin/bash
+#PBS -S /bin/bash
+#PBS -N completeness_purity_analysis
+#PBS -l nodes=1:ppn=64
+#PBS -l mem=128gb
+#PBS -l walltime=48:00:00
+#PBS -o completeness_purity_analysis.log
+#PBS -e completeness_purity_analysis.err
+#PBS -m abe
+#PBS -M sutirtharkm@gmail.com
+
+# =============================================================================
+# COMPLETENESS AND PURITY ANALYSIS FOR MULTI-SURVEY DATA
+# =============================================================================
+
+# =============================================================================
+# ENVIRONMENT SETUP
+# =============================================================================
+
+# Memory optimization
+export MALLOC_TRIM_THRESHOLD_=65536
+export MALLOC_MMAP_THRESHOLD_=65536
+export MALLOC_MMAP_MAX_=65536
+export PYTHONHASHSEED=0
+
+# Threading control
+export OMP_NUM_THREADS=64
+export MKL_NUM_THREADS=64
+export NUMEXPR_NUM_THREADS=64
+export OPENBLAS_NUM_THREADS=64
+
+# Activate conda environment
+source /user/sutirtha/anaconda3/etc/profile.d/conda.sh
+conda activate base
+
+# Change to working directory
+cd /user/sutirtha/BallTree_Xmatch
+
+# =============================================================================
+# PATHS
+# =============================================================================
+INPUT_FITS="/user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits"
+OUTPUT_DIR="/user/sutirtha/BallTree_Xmatch/completeness_purity_results"
+TEMP_DIR="./temp_analysis_${PBS_JOBID}"
+CHECKPOINT_DIR="./checkpoints_${PBS_JOBID}"
+
+# =============================================================================
+# ANALYSIS PARAMETERS
+# =============================================================================
+# Population parameters (adjust these for your stellar population!)
+DISTANCE_MEAN=500        # pc - expected distance to your population
+DISTANCE_STD=50          # pc - intrinsic distance spread
+RV_MEAN=20               # km/s - expected radial velocity
+RV_STD=5                 # km/s - intrinsic velocity dispersion
+
+# Quality cuts
+SNR_PARALLAX_MIN=5.0     # Minimum parallax S/N
+RV_ERROR_MAX=5.0         # Maximum RV error (km/s)
+DISTANCE_FRAC_ERR=0.2    # Maximum fractional distance error
+
+# Selection criteria
+CHI2_THRESHOLD=6.0       # Chi-squared threshold (2 DOF, ~95% confidence)
+
+# Injection-recovery parameters
+N_INJECTIONS=100000      # Number of synthetic stars to inject
+N_WORKERS=64             # Number of parallel workers
+
+# =============================================================================
+# JOB INFO
+# =============================================================================
+echo "=============================================="
+echo "COMPLETENESS AND PURITY ANALYSIS"
+echo "=============================================="
+echo "Job ID: $PBS_JOBID"
+echo "Node: $(hostname)"
+echo "Started at: $(date)"
+echo ""
+echo "Input file: $INPUT_FITS"
+echo "Output directory: $OUTPUT_DIR"
+echo ""
+echo "Population Parameters:"
+echo "  Distance: ${DISTANCE_MEAN} ± ${DISTANCE_STD} pc"
+echo "  Radial Velocity: ${RV_MEAN} ± ${RV_STD} km/s"
+echo ""
+echo "Analysis Settings:"
+echo "  Injections: $N_INJECTIONS"
+echo "  Workers: $N_WORKERS"
+echo "  Chi2 threshold: $CHI2_THRESHOLD"
+echo ""
+echo "System Resources:"
+echo "  Total RAM: $(free -h | grep Mem | awk '{print $2}')"
+echo "  Available RAM: $(free -h | grep Mem | awk '{print $7}')"
+echo "  CPUs: $PBS_NUM_PPN"
+echo "=============================================="
+
+# Create directories
+mkdir -p "$OUTPUT_DIR"
+mkdir -p "$TEMP_DIR"
+mkdir -p "$CHECKPOINT_DIR"
+
+# =============================================================================
+# MEMORY MONITOR (every 5 minutes)
+# =============================================================================
+(
+  while true; do
+    echo "=== $(date) ===" >> "${TEMP_DIR}/memory_monitor.log"
+    free -h >> "${TEMP_DIR}/memory_monitor.log"
+    ps aux --sort=-rss | head -5 >> "${TEMP_DIR}/memory_monitor.log"
+    echo "" >> "${TEMP_DIR}/memory_monitor.log"
+    sleep 300
+  done
+) &
+MONITOR_PID=$!
+
+# =============================================================================
+# RUN COMPLETENESS AND PURITY ANALYSIS
+# =============================================================================
+
+echo ""
+echo "Starting analysis at $(date)"
+echo "=============================================="
+
+python3 -u << 'PYTHON_SCRIPT'
+import sys
+import os
+import numpy as np
+import pickle
+import time
+from datetime import datetime
+from astropy.io import fits
+from astropy.table import Table
+import warnings
+warnings.filterwarnings('ignore')
+
+# Import analysis modules
+from completeness_purity_analysis import (
+    StellarPopulation,
+    CompletenessAnalyzer,
+    PurityAnalyzer,
+    CombinedMetrics,
+    inverse_variance_combine,
+    parallax_to_distance,
+    print_results
+)
+
+print("\n" + "="*70)
+print("COMPLETENESS AND PURITY ANALYSIS")
+print("Multi-Survey Distance and Radial Velocity Data")
+print("="*70)
+
+# =============================================================================
+# CONFIGURATION FROM ENVIRONMENT
+# =============================================================================
+INPUT_FITS = os.environ.get('INPUT_FITS')
+OUTPUT_DIR = os.environ.get('OUTPUT_DIR')
+TEMP_DIR = os.environ.get('TEMP_DIR')
+CHECKPOINT_DIR = os.environ.get('CHECKPOINT_DIR')
+
+DISTANCE_MEAN = float(os.environ.get('DISTANCE_MEAN', 500))
+DISTANCE_STD = float(os.environ.get('DISTANCE_STD', 50))
+RV_MEAN = float(os.environ.get('RV_MEAN', 20))
+RV_STD = float(os.environ.get('RV_STD', 5))
+
+N_INJECTIONS = int(os.environ.get('N_INJECTIONS', 100000))
+N_WORKERS = int(os.environ.get('N_WORKERS', 64))
+CHI2_THRESHOLD = float(os.environ.get('CHI2_THRESHOLD', 6.0))
+
+SNR_PARALLAX_MIN = float(os.environ.get('SNR_PARALLAX_MIN', 5.0))
+RV_ERROR_MAX = float(os.environ.get('RV_ERROR_MAX', 5.0))
+DISTANCE_FRAC_ERR = float(os.environ.get('DISTANCE_FRAC_ERR', 0.2))
+
+print(f"\nInput file: {INPUT_FITS}")
+print(f"Output directory: {OUTPUT_DIR}")
+print(f"\nPopulation: d={DISTANCE_MEAN}±{DISTANCE_STD} pc, RV={RV_MEAN}±{RV_STD} km/s")
+print(f"Injections: {N_INJECTIONS:,} with {N_WORKERS} workers")
+
+# =============================================================================
+# STEP 1: LOAD AND PREPARE DATA
+# =============================================================================
+print("\n" + "="*70)
+print("STEP 1: LOADING DATA")
+print("="*70)
+
+start_time = time.time()
+
+try:
+    with fits.open(INPUT_FITS) as hdul:
+        print(f"\nFITS file structure:")
+        hdul.info()
+        
+        # Load the data table
+        # Adjust the extension index if needed (typically 1 for FITS tables)
+        data = Table.read(hdul[1])
+        print(f"\nLoaded {len(data)} rows from FITS table")
+        
+        # Display available columns
+        print(f"\nAvailable columns ({len(data.colnames)}):")
+        for i, col in enumerate(data.colnames[:30], 1):  # Show first 30
+            print(f"  {i:3d}. {col}")
+        if len(data.colnames) > 30:
+            print(f"  ... and {len(data.colnames) - 30} more columns")
+        
+except Exception as e:
+    print(f"\nERROR loading FITS file: {e}")
+    print("Please check that the file exists and contains a valid FITS table.")
+    sys.exit(1)
+
+# =============================================================================
+# STEP 2: COMBINE MEASUREMENTS FROM MULTIPLE SURVEYS
+# =============================================================================
+print("\n" + "="*70)
+print("STEP 2: COMBINING MULTI-SURVEY MEASUREMENTS")
+print("="*70)
+
+# NOTE: Adjust these column names to match your actual FITS file!
+# Common patterns in your file based on the metadata:
+# - parallax_1, parallax_2, parallax_error_1, parallax_error_2
+# - radial_velocity_1, radial_velocity_2, radial_velocity_error_1, radial_velocity_error_2
+# - dr2_radial_velocity, dr2_radial_velocity_error
+
+def combine_survey_measurements(data):
+    """
+    Combine measurements from multiple surveys using inverse variance weighting.
+    
+    IMPORTANT: Adjust column names to match your actual data!
+    """
+    n_stars = len(data)
+    
+    combined = {
+        'distance': np.zeros(n_stars),
+        'distance_error': np.zeros(n_stars),
+        'rv': np.zeros(n_stars),
+        'rv_error': np.zeros(n_stars),
+        'ra': np.zeros(n_stars),
+        'dec': np.zeros(n_stars)
+    }
+    
+    print("\nCombining parallax measurements...")
+    
+    # Try to find parallax columns (adjust names as needed)
+    parallax_cols = []
+    parallax_error_cols = []
+    
+    for col in data.colnames:
+        if 'parallax' in col.lower() and 'error' not in col.lower():
+            parallax_cols.append(col)
+        elif 'parallax' in col.lower() and 'error' in col.lower():
+            parallax_error_cols.append(col)
+    
+    print(f"Found parallax columns: {parallax_cols}")
+    print(f"Found parallax error columns: {parallax_error_cols}")
+    
+    # Combine parallax and convert to distance
+    for i in range(n_stars):
+        parallaxes = []
+        par_errors = []
+        
+        # Collect parallax measurements
+        for pcol, ecol in zip(parallax_cols, parallax_error_cols):
+            par = data[pcol][i]
+            err = data[ecol][i]
+            if np.isfinite(par) and np.isfinite(err) and err > 0:
+                parallaxes.append(par)
+                par_errors.append(err)
+        
+        if len(parallaxes) > 0:
+            par_combined, par_error_combined = inverse_variance_combine(
+                np.array(parallaxes), np.array(par_errors)
+            )
+            
+            # Convert to distance
+            if np.isfinite(par_combined) and par_combined > 0:
+                d, d_err = parallax_to_distance(par_combined, par_error_combined)
+                combined['distance'][i] = d
+                combined['distance_error'][i] = d_err
+            else:
+                combined['distance'][i] = np.nan
+                combined['distance_error'][i] = np.nan
+        else:
+            combined['distance'][i] = np.nan
+            combined['distance_error'][i] = np.nan
+    
+    print("\nCombining radial velocity measurements...")
+    
+    # Try to find RV columns
+    rv_cols = []
+    rv_error_cols = []
+    
+    for col in data.colnames:
+        if ('radial_velocity' in col.lower() or 'rv' in col.lower() or 'vrad' in col.lower()) \
+           and 'error' not in col.lower():
+            rv_cols.append(col)
+        elif ('radial_velocity' in col.lower() or 'rv' in col.lower() or 'vrad' in col.lower()) \
+             and 'error' in col.lower():
+            rv_error_cols.append(col)
+    
+    print(f"Found RV columns: {rv_cols}")
+    print(f"Found RV error columns: {rv_error_cols}")
+    
+    # Combine RV measurements
+    for i in range(n_stars):
+        rvs = []
+        rv_errors = []
+        
+        for rcol, ecol in zip(rv_cols, rv_error_cols):
+            rv = data[rcol][i]
+            err = data[ecol][i]
+            if np.isfinite(rv) and np.isfinite(err) and err > 0:
+                rvs.append(rv)
+                rv_errors.append(err)
+        
+        if len(rvs) > 0:
+            rv_combined, rv_error_combined = inverse_variance_combine(
+                np.array(rvs), np.array(rv_errors)
+            )
+            combined['rv'][i] = rv_combined
+            combined['rv_error'][i] = rv_error_combined
+        else:
+            combined['rv'][i] = np.nan
+            combined['rv_error'][i] = np.nan
+    
+    # Get coordinates (try different column name patterns)
+    for ra_col in ['ra', 'RA', 'RA_all', 'ra_epoch2000']:
+        if ra_col in data.colnames:
+            combined['ra'] = np.array(data[ra_col])
+            print(f"Using RA column: {ra_col}")
+            break
+    
+    for dec_col in ['dec', 'DEC', 'DEC_all', 'dec_epoch2000']:
+        if dec_col in data.colnames:
+            combined['dec'] = np.array(data[dec_col])
+            print(f"Using DEC column: {dec_col}")
+            break
+    
+    return combined
+
+# Combine measurements
+combined_data = combine_survey_measurements(data)
+
+# Apply quality cuts
+print("\n" + "="*70)
+print("APPLYING QUALITY CUTS")
+print("="*70)
+
+mask = (
+    np.isfinite(combined_data['distance']) &
+    np.isfinite(combined_data['rv']) &
+    np.isfinite(combined_data['distance_error']) &
+    np.isfinite(combined_data['rv_error']) &
+    (combined_data['distance'] > 0) &
+    (combined_data['distance_error'] > 0) &
+    (combined_data['rv_error'] > 0) &
+    (combined_data['distance_error'] / combined_data['distance'] < DISTANCE_FRAC_ERR) &
+    (combined_data['rv_error'] < RV_ERROR_MAX)
+)
+
+print(f"\nQuality cuts:")
+print(f"  Original sample: {len(mask):,} stars")
+print(f"  Valid distance measurements: {np.sum(np.isfinite(combined_data['distance'])):,}")
+print(f"  Valid RV measurements: {np.sum(np.isfinite(combined_data['rv'])):,}")
+print(f"  Distance fractional error < {DISTANCE_FRAC_ERR}: "
+      f"{np.sum(combined_data['distance_error']/combined_data['distance'] < DISTANCE_FRAC_ERR):,}")
+print(f"  RV error < {RV_ERROR_MAX} km/s: "
+      f"{np.sum(combined_data['rv_error'] < RV_ERROR_MAX):,}")
+print(f"  Passed all cuts: {np.sum(mask):,} stars ({100*np.sum(mask)/len(mask):.1f}%)")
+
+# Filter data
+for key in combined_data:
+    combined_data[key] = combined_data[key][mask]
+
+observed_data = combined_data
+
+load_time = time.time() - start_time
+print(f"\nData loading and preparation completed in {load_time:.1f} seconds")
+
+# =============================================================================
+# STEP 3: DEFINE STELLAR POPULATION
+# =============================================================================
+print("\n" + "="*70)
+print("STEP 3: DEFINING STELLAR POPULATION")
+print("="*70)
+
+population = StellarPopulation(
+    distance_mean=DISTANCE_MEAN,
+    distance_std=DISTANCE_STD,
+    rv_mean=RV_MEAN,
+    rv_std=RV_STD
+)
+
+print(f"\nPopulation parameters:")
+print(f"  Distance: {population.distance_mean} ± {population.distance_std} pc")
+print(f"  Radial Velocity: {population.rv_mean} ± {population.rv_std} km/s")
+
+# =============================================================================
+# STEP 4: DEFINE SELECTION FUNCTION
+# =============================================================================
+print("\n" + "="*70)
+print("STEP 4: DEFINING SELECTION FUNCTION")
+print("="*70)
+
+def selection_function(observed):
+    """
+    Selection function based on:
+    1. Data quality (errors, S/N)
+    2. Consistency with expected population (chi-squared test)
+    """
+    # Quality cuts
+    good_distance = (
+        np.isfinite(observed['distance_obs']) &
+        np.isfinite(observed['distance_error']) &
+        (observed['distance_error'] / observed['distance_obs'] < DISTANCE_FRAC_ERR)
+    )
+    
+    good_rv = (
+        np.isfinite(observed['rv_obs']) &
+        np.isfinite(observed['rv_error']) &
+        (observed['rv_error'] < RV_ERROR_MAX)
+    )
+    
+    # Chi-squared consistency with population
+    sigma_d_total = np.sqrt(
+        DISTANCE_STD**2 + observed['distance_error']**2
+    )
+    sigma_rv_total = np.sqrt(
+        RV_STD**2 + observed['rv_error']**2
+    )
+    
+    chi2 = (
+        (observed['distance_obs'] - DISTANCE_MEAN)**2 / sigma_d_total**2 +
+        (observed['rv_obs'] - RV_MEAN)**2 / sigma_rv_total**2
+    )
+    
+    consistent = chi2 < CHI2_THRESHOLD
+    
+    return good_distance & good_rv & consistent
+
+print(f"\nSelection criteria:")
+print(f"  Distance fractional error < {DISTANCE_FRAC_ERR}")
+print(f"  RV error < {RV_ERROR_MAX} km/s")
+print(f"  Chi-squared < {CHI2_THRESHOLD} (2 DOF, ~95% confidence)")
+
+# =============================================================================
+# STEP 5: RUN COMPLETENESS ANALYSIS
+# =============================================================================
+print("\n" + "="*70)
+print("STEP 5: COMPLETENESS ANALYSIS (INJECTION-RECOVERY)")
+print("="*70)
+
+comp_start = time.time()
+
+comp_analyzer = CompletenessAnalyzer(population, n_inject=N_INJECTIONS)
+
+print(f"\nInjecting {N_INJECTIONS:,} synthetic stars...")
+print("This may take some time...")
+
+completeness_result = comp_analyzer.calculate_completeness(
+    observed_data,
+    selection_function
+)
+
+comp_time = time.time() - comp_start
+
+print(f"\nCompleteness analysis completed in {comp_time:.1f} seconds")
+print(f"  Injected: {completeness_result['n_injected']:,}")
+print(f"  Recovered: {completeness_result['n_recovered']:,}")
+print(f"  Completeness: {completeness_result['completeness']:.4f} ± "
+      f"{completeness_result['uncertainty']:.4f}")
+
+# Save checkpoint
+checkpoint_file = f"{CHECKPOINT_DIR}/completeness_result.pkl"
+with open(checkpoint_file, 'wb') as f:
+    pickle.dump(completeness_result, f)
+print(f"\nCheckpoint saved: {checkpoint_file}")
+
+# Calculate binned completeness
+print("\n" + "="*70)
+print("CALCULATING BINNED COMPLETENESS")
+print("="*70)
+
+binned_comp_start = time.time()
+
+binning = {
+    'distance_bins': np.linspace(
+        max(50, DISTANCE_MEAN - 3*DISTANCE_STD),
+        DISTANCE_MEAN + 3*DISTANCE_STD,
+        15
+    ),
+    'rv_bins': np.linspace(
+        RV_MEAN - 3*RV_STD,
+        RV_MEAN + 3*RV_STD,
+        15
+    )
+}
+
+print(f"\nDistance bins: {binning['distance_bins'][0]:.0f} - {binning['distance_bins'][-1]:.0f} pc "
+      f"({len(binning['distance_bins'])-1} bins)")
+print(f"RV bins: {binning['rv_bins'][0]:.1f} - {binning['rv_bins'][-1]:.1f} km/s "
+      f"({len(binning['rv_bins'])-1} bins)")
+
+binned_completeness = comp_analyzer.calculate_completeness(
+    observed_data,
+    selection_function,
+    binning=binning
+)
+
+binned_comp_time = time.time() - binned_comp_start
+print(f"\nBinned completeness calculated in {binned_comp_time:.1f} seconds")
+
+# Save binned completeness
+binned_checkpoint_file = f"{CHECKPOINT_DIR}/binned_completeness.pkl"
+with open(binned_checkpoint_file, 'wb') as f:
+    pickle.dump(binned_completeness, f)
+print(f"Checkpoint saved: {binned_checkpoint_file}")
+
+# =============================================================================
+# STEP 6: RUN PURITY ANALYSIS
+# =============================================================================
+print("\n" + "="*70)
+print("STEP 6: PURITY ANALYSIS (MEMBERSHIP PROBABILITIES)")
+print("="*70)
+
+purity_start = time.time()
+
+purity_analyzer = PurityAnalyzer(population)
+
+print("\nCalculating membership probabilities for each star...")
+
+membership_probs = purity_analyzer.calculate_membership_probability(
+    observed_data,
+    field_model=None  # Using simple uniform background
+)
+
+print(f"\nMembership probability statistics:")
+print(f"  Min: {np.min(membership_probs):.4f}")
+print(f"  Median: {np.median(membership_probs):.4f}")
+print(f"  Mean: {np.mean(membership_probs):.4f}")
+print(f"  Max: {np.max(membership_probs):.4f}")
+
+purity_result = purity_analyzer.calculate_purity(membership_probs)
+
+purity_time = time.time() - purity_start
+
+print(f"\nPurity analysis completed in {purity_time:.1f} seconds")
+print(f"  Purity (probabilistic): {purity_result['purity_probabilistic']:.4f} ± "
+      f"{purity_result['uncertainty']:.4f}")
+print(f"  Expected members: {purity_result['n_members_expected']:.1f} / "
+      f"{purity_result['n_total']}")
+
+# Save checkpoint
+purity_checkpoint_file = f"{CHECKPOINT_DIR}/purity_result.pkl"
+with open(purity_checkpoint_file, 'wb') as f:
+    pickle.dump({
+        'purity_result': purity_result,
+        'membership_probs': membership_probs
+    }, f)
+print(f"\nCheckpoint saved: {purity_checkpoint_file}")
+
+# =============================================================================
+# STEP 7: OPTIMIZE SELECTION THRESHOLD
+# =============================================================================
+print("\n" + "="*70)
+print("STEP 7: OPTIMIZING SELECTION THRESHOLD")
+print("="*70)
+
+def completeness_at_threshold(thresh):
+    """Approximate completeness at given membership threshold."""
+    frac_selected = np.sum(membership_probs > thresh) / len(membership_probs)
+    return completeness_result['completeness'] * frac_selected
+
+optimization_result = CombinedMetrics.optimize_threshold(
+    membership_probs,
+    completeness_at_threshold,
+    metric='f1'
+)
+
+print(f"\nOptimal membership threshold: {optimization_result['optimal_threshold']:.3f}")
+print(f"  Completeness: {optimization_result['completeness']:.4f}")
+print(f"  Purity: {optimization_result['purity']:.4f}")
+print(f"  F1 Score: {optimization_result['metric_value']:.4f}")
+
+# Save optimization result
+opt_checkpoint_file = f"{CHECKPOINT_DIR}/optimization_result.pkl"
+with open(opt_checkpoint_file, 'wb') as f:
+    pickle.dump(optimization_result, f)
+print(f"\nCheckpoint saved: {opt_checkpoint_file}")
+
+# =============================================================================
+# STEP 8: GENERATE PLOTS AND SUMMARIES
+# =============================================================================
+print("\n" + "="*70)
+print("STEP 8: GENERATING PLOTS AND SUMMARIES")
+print("="*70)
+
+import matplotlib
+matplotlib.use('Agg')  # Use non-interactive backend
+import matplotlib.pyplot as plt
+
+# Plot 1: Completeness map
+fig1, ax1 = plt.subplots(figsize=(10, 8))
+c_map = binned_completeness['completeness_map']
+extent = [
+    binned_completeness['distance_bins'][0],
+    binned_completeness['distance_bins'][-1],
+    binned_completeness['rv_bins'][0],
+    binned_completeness['rv_bins'][-1]
+]
+im = ax1.imshow(c_map.T, origin='lower', aspect='auto', extent=extent,
+                vmin=0, vmax=1, cmap='viridis')
+ax1.set_xlabel('Distance (pc)', fontsize=12)
+ax1.set_ylabel('Radial Velocity (km/s)', fontsize=12)
+ax1.set_title('Completeness Map', fontsize=14, fontweight='bold')
+cbar = plt.colorbar(im, ax=ax1)
+cbar.set_label('Completeness', fontsize=12)
+ax1.axvline(DISTANCE_MEAN, color='red', linestyle='--', alpha=0.5, linewidth=2)
+ax1.axhline(RV_MEAN, color='red', linestyle='--', alpha=0.5, linewidth=2)
+plt.tight_layout()
+plot1_file = f"{OUTPUT_DIR}/completeness_map.png"
+plt.savefig(plot1_file, dpi=300, bbox_inches='tight')
+plt.close()
+print(f"\nSaved: {plot1_file}")
+
+# Plot 2: Membership probability distribution
+fig2, ax2 = plt.subplots(figsize=(10, 6))
+ax2.hist(membership_probs, bins=50, alpha=0.7, edgecolor='black', color='skyblue')
+ax2.axvline(optimization_result['optimal_threshold'], color='red', 
+            linestyle='--', linewidth=2, label=f'Optimal threshold = {optimization_result["optimal_threshold"]:.3f}')
+ax2.set_xlabel('Membership Probability', fontsize=12)
+ax2.set_ylabel('Number of Stars', fontsize=12)
+ax2.set_title('Membership Probability Distribution', fontsize=14, fontweight='bold')
+ax2.legend(fontsize=11)
+ax2.grid(True, alpha=0.3)
+plt.tight_layout()
+plot2_file = f"{OUTPUT_DIR}/membership_probability_distribution.png"
+plt.savefig(plot2_file, dpi=300, bbox_inches='tight')
+plt.close()
+print(f"Saved: {plot2_file}")
+
+# Plot 3: Completeness-Purity trade-off
+fig3, ax3 = plt.subplots(figsize=(10, 8))
+ax3.plot(optimization_result['completeness_curve'],
+         optimization_result['purity_curve'],
+         marker='o', markersize=4, alpha=0.6, linewidth=2, color='navy')
+ax3.plot(optimization_result['completeness'],
+         optimization_result['purity'],
+         'r*', markersize=20, label='Optimal Point', zorder=5)
+ax3.set_xlabel('Completeness', fontsize=12)
+ax3.set_ylabel('Purity', fontsize=12)
+ax3.set_title('Completeness-Purity Trade-off', fontsize=14, fontweight='bold')
+ax3.legend(fontsize=11)
+ax3.grid(True, alpha=0.3)
+ax3.set_xlim(0, 1)
+ax3.set_ylim(0, 1)
+plt.tight_layout()
+plot3_file = f"{OUTPUT_DIR}/completeness_purity_tradeoff.png"
+plt.savefig(plot3_file, dpi=300, bbox_inches='tight')
+plt.close()
+print(f"Saved: {plot3_file}")
+
+# Plot 4: Distance-RV diagram with membership probabilities
+fig4, ax4 = plt.subplots(figsize=(10, 8))
+scatter = ax4.scatter(observed_data['distance'], observed_data['rv'],
+                      c=membership_probs, s=10, alpha=0.6, cmap='RdYlGn',
+                      vmin=0, vmax=1)
+ax4.axvline(DISTANCE_MEAN, color='black', linestyle='--', alpha=0.5)
+ax4.axhline(RV_MEAN, color='black', linestyle='--', alpha=0.5)
+ax4.set_xlabel('Distance (pc)', fontsize=12)
+ax4.set_ylabel('Radial Velocity (km/s)', fontsize=12)
+ax4.set_title('Distance-RV Diagram (colored by P(member))', fontsize=14, fontweight='bold')
+cbar = plt.colorbar(scatter, ax=ax4)
+cbar.set_label('P(member)', fontsize=12)
+plt.tight_layout()
+plot4_file = f"{OUTPUT_DIR}/distance_rv_diagram.png"
+plt.savefig(plot4_file, dpi=300, bbox_inches='tight')
+plt.close()
+print(f"Saved: {plot4_file}")
+
+# Plot 5: Optimization curves
+fig5, ax5 = plt.subplots(figsize=(10, 6))
+thresholds = optimization_result['thresholds_tested']
+ax5.plot(thresholds, optimization_result['completeness_curve'],
+         label='Completeness', marker='o', markersize=3, linewidth=2)
+ax5.plot(thresholds, optimization_result['purity_curve'],
+         label='Purity', marker='s', markersize=3, linewidth=2)
+ax5.plot(thresholds, optimization_result['metric_curve'],
+         label='F1 Score', marker='^', markersize=3, linewidth=3, color='red')
+ax5.axvline(optimization_result['optimal_threshold'], 
+            color='black', linestyle='--', alpha=0.5, linewidth=2)
+ax5.set_xlabel('Membership Threshold', fontsize=12)
+ax5.set_ylabel('Metric Value', fontsize=12)
+ax5.set_title('Threshold Optimization Curves', fontsize=14, fontweight='bold')
+ax5.legend(fontsize=11)
+ax5.grid(True, alpha=0.3)
+plt.tight_layout()
+plot5_file = f"{OUTPUT_DIR}/optimization_curves.png"
+plt.savefig(plot5_file, dpi=300, bbox_inches='tight')
+plt.close()
+print(f"Saved: {plot5_file}")
+
+# =============================================================================
+# STEP 9: SAVE FINAL RESULTS AND SUMMARY
+# =============================================================================
+print("\n" + "="*70)
+print("STEP 9: SAVING FINAL RESULTS")
+print("="*70)
+
+# Save complete results
+final_results = {
+    'population': {
+        'distance_mean': DISTANCE_MEAN,
+        'distance_std': DISTANCE_STD,
+        'rv_mean': RV_MEAN,
+        'rv_std': RV_STD
+    },
+    'completeness': completeness_result,
+    'binned_completeness': binned_completeness,
+    'purity': purity_result,
+    'membership_probabilities': membership_probs,
+    'optimization': optimization_result,
+    'observed_data': observed_data,
+    'parameters': {
+        'n_injections': N_INJECTIONS,
+        'chi2_threshold': CHI2_THRESHOLD,
+        'snr_parallax_min': SNR_PARALLAX_MIN,
+        'rv_error_max': RV_ERROR_MAX,
+        'distance_frac_err': DISTANCE_FRAC_ERR
+    },
+    'timing': {
+        'load_time': load_time,
+        'completeness_time': comp_time,
+        'binned_completeness_time': binned_comp_time,
+        'purity_time': purity_time
+    }
+}
+
+results_file = f"{OUTPUT_DIR}/completeness_purity_results.pkl"
+with open(results_file, 'wb') as f:
+    pickle.dump(final_results, f)
+print(f"\nComplete results saved: {results_file}")
+
+# Save summary text file
+summary_file = f"{OUTPUT_DIR}/analysis_summary.txt"
+with open(summary_file, 'w') as f:
+    f.write("="*70 + "\n")
+    f.write("COMPLETENESS AND PURITY ANALYSIS - SUMMARY\n")
+    f.write("="*70 + "\n\n")
+    
+    f.write(f"Analysis Date: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+    f.write(f"Input File: {INPUT_FITS}\n")
+    f.write(f"Output Directory: {OUTPUT_DIR}\n\n")
+    
+    f.write("STELLAR POPULATION PARAMETERS\n")
+    f.write("-"*70 + "\n")
+    f.write(f"  Distance: {DISTANCE_MEAN} ± {DISTANCE_STD} pc\n")
+    f.write(f"  Radial Velocity: {RV_MEAN} ± {RV_STD} km/s\n\n")
+    
+    f.write("SAMPLE STATISTICS\n")
+    f.write("-"*70 + "\n")
+    f.write(f"  Total stars analyzed: {len(observed_data['distance']):,}\n")
+    f.write(f"  Distance range: {np.min(observed_data['distance']):.1f} - "
+            f"{np.max(observed_data['distance']):.1f} pc\n")
+    f.write(f"  RV range: {np.min(observed_data['rv']):.1f} - "
+            f"{np.max(observed_data['rv']):.1f} km/s\n\n")
+    
+    f.write("COMPLETENESS RESULTS\n")
+    f.write("-"*70 + "\n")
+    f.write(f"  Injections: {completeness_result['n_injected']:,}\n")
+    f.write(f"  Recovered: {completeness_result['n_recovered']:,}\n")
+    f.write(f"  Completeness: {completeness_result['completeness']:.6f} ± "
+            f"{completeness_result['uncertainty']:.6f}\n")
+    f.write(f"                ({completeness_result['completeness']*100:.2f}% ± "
+            f"{completeness_result['uncertainty']*100:.2f}%)\n\n")
+    
+    f.write("PURITY RESULTS\n")
+    f.write("-"*70 + "\n")
+    f.write(f"  Purity (probabilistic): {purity_result['purity_probabilistic']:.6f} ± "
+            f"{purity_result['uncertainty']:.6f}\n")
+    f.write(f"                          ({purity_result['purity_probabilistic']*100:.2f}% ± "
+            f"{purity_result['uncertainty']*100:.2f}%)\n")
+    f.write(f"  Expected members: {purity_result['n_members_expected']:.1f} / "
+            f"{purity_result['n_total']}\n\n")
+    
+    f.write("OPTIMIZED SELECTION\n")
+    f.write("-"*70 + "\n")
+    f.write(f"  Optimal threshold: {optimization_result['optimal_threshold']:.4f}\n")
+    f.write(f"  Completeness at optimal: {optimization_result['completeness']:.6f}\n")
+    f.write(f"  Purity at optimal: {optimization_result['purity']:.6f}\n")
+    f.write(f"  F1 Score: {optimization_result['metric_value']:.6f}\n\n")
+    
+    f.write("TIMING\n")
+    f.write("-"*70 + "\n")
+    f.write(f"  Data loading: {load_time:.1f} seconds\n")
+    f.write(f"  Completeness analysis: {comp_time:.1f} seconds\n")
+    f.write(f"  Binned completeness: {binned_comp_time:.1f} seconds\n")
+    f.write(f"  Purity analysis: {purity_time:.1f} seconds\n")
+    f.write(f"  Total analysis time: {load_time + comp_time + binned_comp_time + purity_time:.1f} seconds\n\n")
+    
+    f.write("OUTPUT FILES\n")
+    f.write("-"*70 + "\n")
+    f.write(f"  {plot1_file}\n")
+    f.write(f"  {plot2_file}\n")
+    f.write(f"  {plot3_file}\n")
+    f.write(f"  {plot4_file}\n")
+    f.write(f"  {plot5_file}\n")
+    f.write(f"  {results_file}\n")
+    f.write(f"  {summary_file}\n\n")
+    
+    f.write("="*70 + "\n")
+
+print(f"\nSummary saved: {summary_file}")
+
+# Print summary to screen
+print("\n" + "="*70)
+print("FINAL RESULTS SUMMARY")
+print("="*70)
+print_results(completeness_result, purity_result)
+
+print("\n" + "="*70)
+print("ANALYSIS COMPLETE")
+print("="*70)
+print(f"\nTotal runtime: {time.time() - start_time:.1f} seconds")
+print(f"\nAll results saved to: {OUTPUT_DIR}")
+print(f"\nKey metrics:")
+print(f"  Completeness: {completeness_result['completeness']*100:.2f}% ± "
+      f"{completeness_result['uncertainty']*100:.2f}%")
+print(f"  Purity: {purity_result['purity_probabilistic']*100:.2f}% ± "
+      f"{purity_result['uncertainty']*100:.2f}%")
+print(f"  F1 Score: {optimization_result['metric_value']:.4f}")
+print("="*70 + "\n")
+
+PYTHON_SCRIPT
+
+EXIT_CODE=$?
+
+# =============================================================================
+# CLEANUP
+# =============================================================================
+echo ""
+echo "=============================================="
+echo "Stopping memory monitor..."
+kill $MONITOR_PID 2>/dev/null
+
+echo ""
+echo "Final system status:"
+free -h
+
+echo ""
+echo "=============================================="
+echo "Job finished at: $(date)"
+echo "Exit code: $EXIT_CODE"
+echo "=============================================="
+
+# Keep checkpoints if failed (for resume)
+if [ $EXIT_CODE -eq 0 ]; then
+    echo "SUCCESS - Cleaning up temporary files..."
+    rm -rf "$TEMP_DIR"
+    # Keep checkpoints for reference
+    echo "Checkpoints preserved in: $CHECKPOINT_DIR"
+else
+    echo "JOB FAILED - All data preserved for debugging"
+    echo "  Temporary files: $TEMP_DIR"
+    echo "  Checkpoints: $CHECKPOINT_DIR"
+fi
+
+echo ""
+echo "=============================================="
+echo "Results location: $OUTPUT_DIR"
+echo "Log file: completeness_purity_analysis.log"
+echo "=============================================="
+
+exit $EXIT_CODE

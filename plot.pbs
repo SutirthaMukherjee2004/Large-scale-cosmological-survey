@@ -1,0 +1,126 @@
+#!/bin/bash
+#PBS -S /bin/bash
+#PBS -N stellar_plots_v5
+#PBS -l nodes=1:ppn=16
+#PBS -l mem=128gb
+#PBS -l walltime=24:00:00
+#PBS -o stellar_plots_v5.log
+#PBS -e stellar_plots_v5.err
+#PBS -m abe
+#PBS -M sutirtharkm@gmail.com
+
+# =============================================================================
+# STELLAR CATALOG VISUALIZATION V5
+# =============================================================================
+# Plotting order:
+#   1. Sky Grid   (all surveys + member catalogs)
+#   2. Extinction (E(BP-RP) and A_G Mollweide maps)
+#   3. HR Diagram (unfiltered gray + filtered turbo + contours)
+#   4. Kiel Diagram (unfiltered gray + filtered turbo + contours + [Fe/H])
+# =============================================================================
+
+source /user/sutirtha/anaconda3/etc/profile.d/conda.sh
+conda activate base
+
+cd /user/sutirtha/BallTree_Xmatch/
+
+# ========== CONFIGURATION — EDIT THESE ==========
+
+# Directory containing your FITS files (chunks 0, 1, 2, ... 6, etc.)
+INPUT_DIR="/user/sutirtha/BallTree_Xmatch/"
+
+# Where to save the computed NPZ (histograms + sky maps)
+OUTPUT_DATA="stellar_data_v5.npz"
+
+# Where to save the PDF figures
+OUTPUT_DIR="./plots_v5_${PBS_JOBID}"
+
+# Name of the Python plotting script (same directory as this PBS file)
+PLOT_SCRIPT="plot.py"
+
+# How many rows to read per FITS chunk (reduce if memory issues)
+CHUNK_SIZE=2000000
+
+# Plot resolution (150 = fast preview, 200 = publication quality)
+DPI=200
+
+# Optional: directory with member CSVs (GC/OC/SGR/DWG)
+# Leave blank ("") if you don't have member catalogs yet
+MEMBER_DIR=""
+
+# =====================================================
+
+echo "=============================================="
+echo "STELLAR CATALOG VISUALIZATION V5"
+echo "=============================================="
+echo "Job ID:      ${PBS_JOBID}"
+echo "Node:        $(hostname)"
+echo "Started:     $(date)"
+echo "Input dir:   ${INPUT_DIR}"
+echo "Output data: ${OUTPUT_DATA}"
+echo "Output dir:  ${OUTPUT_DIR}"
+echo "Chunk size:  ${CHUNK_SIZE}"
+echo "DPI:         ${DPI}"
+echo "=============================================="
+
+mkdir -p "${OUTPUT_DIR}"
+
+# Build optional member-dir argument
+MEMBER_ARG=""
+if [ -n "${MEMBER_DIR}" ] && [ -d "${MEMBER_DIR}" ]; then
+    MEMBER_ARG="--member-dir ${MEMBER_DIR}"
+    echo "Member dir: ${MEMBER_DIR}"
+fi
+
+# ---- Decide: compute from scratch or load existing NPZ ----
+if [ -f "${OUTPUT_DATA}" ]; then
+    echo ""
+    echo "Found existing NPZ: ${OUTPUT_DATA}"
+    echo "Skipping compute — loading NPZ and generating plots ..."
+    echo ""
+
+    python "${PLOT_SCRIPT}" \
+        --load-data    "${OUTPUT_DATA}" \
+        --plot \
+        --output-dir   "${OUTPUT_DIR}" \
+        --prefix       stellar \
+        --dpi          "${DPI}" \
+        ${MEMBER_ARG}
+
+else
+    echo ""
+    echo "No existing NPZ found — computing from FITS files in ${INPUT_DIR} ..."
+    echo ""
+
+    python "${PLOT_SCRIPT}" \
+        --input        "${INPUT_DIR}" \
+        --compute \
+        --output-data  "${OUTPUT_DATA}" \
+        --plot \
+        --output-dir   "${OUTPUT_DIR}" \
+        --prefix       stellar \
+        --dpi          "${DPI}" \
+        --chunk-size   "${CHUNK_SIZE}" \
+        ${MEMBER_ARG}
+fi
+
+EXIT_CODE=$?
+
+echo ""
+echo "=============================================="
+echo "COMPLETE"
+echo "=============================================="
+echo "Finished:  $(date)"
+echo "Exit code: ${EXIT_CODE}"
+
+if [ ${EXIT_CODE} -eq 0 ]; then
+    echo ""
+    echo "Output figures:"
+    ls -lh "${OUTPUT_DIR}"/*.pdf 2>/dev/null || echo "  (no PDF files found)"
+    echo ""
+    echo "Output data:"
+    ls -lh "${OUTPUT_DATA}" 2>/dev/null || echo "  (NPZ not found)"
+fi
+
+echo "=============================================="
+exit ${EXIT_CODE}

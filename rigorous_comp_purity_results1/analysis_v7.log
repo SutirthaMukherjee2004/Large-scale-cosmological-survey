@@ -1,0 +1,121 @@
+2026-02-19 10:35:31 | INFO     | ======================================================================
+COMPLETENESS & PURITY v7
+======================================================================
+2026-02-19 10:35:31 | INFO     | Started: 2026-02-19T10:35:31.730174
+2026-02-19 10:35:31 | INFO     | eta bounds: [0.4,0.9], min_sep=1.0sig, tail_ratio=2.0x
+2026-02-19 10:35:31 | INFO     | ======================================================================
+LOADING MASTER CATALOG
+======================================================================
+2026-02-19 10:35:31 | INFO     | Found 8 files
+2026-02-19 10:35:31 | INFO     | [1/8] Entire_catalogue_chunk01.fits
+2026-02-19 10:35:31 | INFO     |   ra -> RA_final
+2026-02-19 10:35:31 | INFO     |   dec -> DEC_final
+2026-02-19 10:35:31 | INFO     |   distance -> distance_final
+2026-02-19 10:35:31 | INFO     |   distance_err -> distance_err_final
+2026-02-19 10:35:31 | INFO     |   rv -> RV_final
+2026-02-19 10:35:31 | INFO     |   rv_err -> RV_err_final
+2026-02-19 10:35:31 | INFO     |   parallax -> parallax_final
+2026-02-19 10:35:31 | INFO     |   parallax_err -> parallax_err_final
+2026-02-19 10:35:31 | INFO     |   ruwe -> RUWE
+2026-02-19 10:35:31 | INFO     |   gmag -> Gmag
+2026-02-19 10:36:03 | INFO     |   Loaded 4,069,110 rows
+2026-02-19 10:36:03 | INFO     | [2/8] Entire_catalogue_chunk02.fits
+2026-02-19 10:36:27 | INFO     |   Loaded 4,069,110 rows
+2026-02-19 10:36:28 | INFO     | [3/8] Entire_catalogue_chunk03.fits
+2026-02-19 10:36:57 | INFO     |   Loaded 4,069,110 rows
+2026-02-19 10:36:57 | INFO     | [4/8] Entire_catalogue_chunk04.fits
+2026-02-19 10:37:26 | INFO     |   Loaded 4,069,110 rows
+2026-02-19 10:37:26 | INFO     | [5/8] Entire_catalogue_chunk05.fits
+2026-02-19 10:37:53 | INFO     |   Loaded 4,069,110 rows
+2026-02-19 10:37:53 | INFO     | [6/8] Entire_catalogue_chunk06.fits
+2026-02-19 10:38:28 | INFO     |   Loaded 4,069,110 rows
+2026-02-19 10:38:28 | INFO     | [7/8] Entire_catalogue_chunk07.fits
+2026-02-19 10:38:59 | INFO     |   Loaded 4,069,110 rows
+2026-02-19 10:38:59 | INFO     | [8/8] Entire_catalogue_chunk08.fits
+2026-02-19 10:39:35 | INFO     |   Loaded 4,069,106 rows
+2026-02-19 10:39:44 | INFO     | Total: 32,552,876 stars
+2026-02-19 10:39:44 | INFO     | 
+======================================================================
+PURITY ANALYSIS (Log-Normal + Gamma)
+======================================================================
+2026-02-19 10:39:44 | INFO     | 
+============================================================
+REGULARIZED GAUSSIAN: RUWE
+============================================================
+2026-02-19 10:39:45 | INFO     |   N=2,000,000, median=1.0130, robust_sig=0.0682
+2026-02-19 10:39:58 | INFO     |   CONVERGED: eta=0.8934, Core: mu=1.0098 sig=0.0698, Tail: mu=2.3748 sig=2.4222
+2026-02-19 10:39:59 | INFO     | 
+============================================================
+LOG-NORMAL MIXTURE (corrected): sigma_d/d (LN)
+============================================================
+2026-02-19 10:39:59 | INFO     |   Valid: 3,930,793
+2026-02-19 10:39:59 | INFO     |   Log-space: P10=-3.030 P25=-2.625 P50=-2.160 P75=-1.620 P90=-1.127
+2026-02-19 10:39:59 | INFO     |   Robust sigma=0.7397
+2026-02-19 10:41:04 | INFO     |   CONVERGED: eta=0.9000
+2026-02-19 10:41:04 | INFO     |     Core: mu_log=-2.1237, sig_log=0.1000 -> median=0.1196
+2026-02-19 10:41:04 | INFO     |     Tail: mu_log=-2.0237, sig_log=0.2236 -> median=0.1322
+2026-02-19 10:41:04 | INFO     |     Tail/Core ratio: 1.11x, separation=1.00 sigma_core
+2026-02-19 10:41:04 | INFO     | 
+============================================================
+GAMMA MIXTURE: sigma_d/d (Gamma)
+============================================================
+2026-02-19 10:41:04 | INFO     |   Valid: 3,930,793
+2026-02-19 10:41:05 | INFO     |   P25=0.0725 P50=0.1153 P75=0.1980 mean=0.1601 std=0.1418
+2026-02-19 10:56:59 | INFO     |   CONVERGED: eta=0.6030
+2026-02-19 10:56:59 | INFO     |     Core: a=3.853 b=38.860 -> mean=0.0992
+2026-02-19 10:56:59 | INFO     |     Tail: a=2.201 b=8.713 -> mean=0.2526
+2026-02-19 10:56:59 | INFO     |     Tail/Core ratio: 2.55x
+2026-02-19 10:57:00 | INFO     | 
+============================================================
+LOG-NORMAL MIXTURE (corrected): sigma_v/v (LN)
+============================================================
+2026-02-19 10:57:00 | INFO     |   Valid: 32,312,272
+2026-02-19 10:57:00 | INFO     |   Log-space: P10=-4.968 P25=-3.799 P50=-2.616 P75=-1.544 P90=-0.483
+2026-02-19 10:57:00 | INFO     |   Robust sigma=1.6667
+2026-02-19 10:57:20 | INFO     |   CONVERGED: eta=0.9000
+2026-02-19 10:57:20 | INFO     |     Core: mu_log=-2.7401, sig_log=1.2867 -> median=0.0646
+2026-02-19 10:57:20 | INFO     |     Tail: mu_log=-1.4534, sig_log=2.5734 -> median=0.2338
+2026-02-19 10:57:20 | INFO     |     Tail/Core ratio: 3.62x, separation=1.00 sigma_core
+2026-02-19 10:57:21 | INFO     | 
+============================================================
+GAMMA MIXTURE: sigma_v/v (Gamma)
+============================================================
+2026-02-19 10:57:21 | INFO     |   Valid: 32,312,272
+2026-02-19 10:57:22 | INFO     |   P25=0.0224 P50=0.0731 P75=0.2136 mean=0.2896 std=0.7748
+2026-02-19 11:02:57 | INFO     |   CONVERGED: eta=0.7680
+2026-02-19 11:02:57 | INFO     |     Core: a=0.798 b=8.790 -> mean=0.0908
+2026-02-19 11:02:57 | INFO     |     Tail: a=0.610 b=0.644 -> mean=0.9476
+2026-02-19 11:02:57 | INFO     |     Tail/Core ratio: 10.44x
+2026-02-19 11:03:01 | INFO     |   Combined: mean=0.4001, P>0.8: 1,044,374
+2026-02-19 11:03:01 | INFO     |   0-5 kpc: N=1,020,092, P_mean=0.4145
+2026-02-19 11:03:01 | INFO     |   5-10 kpc: N=23,166,588, P_mean=0.4005
+2026-02-19 11:03:02 | INFO     |   10-20 kpc: N=1,957,356, P_mean=0.4671
+2026-02-19 11:03:02 | INFO     |   20-50 kpc: N=97,382, P_mean=0.5165
+2026-02-19 11:03:02 | INFO     |   50-100 kpc: N=14,883, P_mean=0.4835
+2026-02-19 11:03:02 | INFO     |   100-200 kpc: N=3,196, P_mean=0.4602
+2026-02-19 11:03:02 | INFO     |   200-500 kpc: N=840, P_mean=0.4466
+2026-02-19 11:03:02 | INFO     | 
+======================================================================
+TRADE-OFF ANALYSIS
+======================================================================
+2026-02-19 11:07:38 | INFO     | 
+======================================================================
+GENERATING PLOTS
+======================================================================
+2026-02-19 11:07:44 | INFO     |   Saved: plot1_mixture_comparison.png
+2026-02-19 11:07:45 | INFO     |   Saved: plot2_purity_vs_error.png
+2026-02-19 11:07:49 | INFO     |   Saved: plot3_purity_distributions.png
+2026-02-19 11:07:50 | INFO     |   Saved: plot4_tradeoff_curves.png
+2026-02-19 11:07:50 | INFO     |   Saved: plot5_dist_err_radial.png
+2026-02-19 11:07:51 | INFO     |   Saved: plot5_rv_err_radial.png
+2026-02-19 11:07:51 | INFO     |   Saved: plot5_ruwe_radial.png
+2026-02-19 11:08:02 | INFO     |   Saved: plot6_radial_error_profiles.png
+2026-02-19 11:08:03 | INFO     |   Saved: plot7_joint_quality_heatmap.png
+2026-02-19 11:08:03 | INFO     |   Saved: plot8_purity_by_radius.png
+2026-02-19 11:08:03 | INFO     |   Saved: plot9_combined_summary.png
+2026-02-19 11:08:03 | INFO     | 
+All plots -> /user/sutirtha/BallTree_Xmatch/rigorous_comp_purity_results1
+2026-02-19 11:08:03 | INFO     | 
+======================================================================
+DONE in 32.5 min | Combined Purity: 0.4001
+======================================================================

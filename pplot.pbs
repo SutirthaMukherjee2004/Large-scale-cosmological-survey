@@ -1,0 +1,118 @@
+#!/bin/bash
+#PBS -S /bin/bash
+#PBS -N RV_Heatmap_Analysis
+#PBS -l nodes=1:ppn=1
+#PBS -l mem=64gb
+#PBS -l walltime=04:00:00
+#PBS -o /user/sutirtha/BallTree_Xmatch/rv_heatmap.log
+#PBS -e /user/sutirtha/BallTree_Xmatch/rv_heatmap.err
+#PBS -m abe
+#PBS -M sutirtharkm@gmail.com
+
+# =============================================================================
+# RV vs DISTANCE HEATMAP & ERROR ANALYSIS
+# =============================================================================
+
+# Memory optimization & Threading Control
+# (Important for numpy/matplotlib to avoid over-subscribing threads on shared nodes)
+export MALLOC_TRIM_THRESHOLD_=65536
+export MALLOC_MMAP_THRESHOLD_=65536
+export MALLOC_MMAP_MAX_=65536
+export PYTHONHASHSEED=0
+export OMP_NUM_THREADS=1
+export MKL_NUM_THREADS=1
+export NUMEXPR_NUM_THREADS=1
+export OPENBLAS_NUM_THREADS=1
+export MPLBACKEND='Agg'  # Force non-interactive matplotlib backend
+
+# Activate conda
+source /user/sutirtha/anaconda3/etc/profile.d/conda.sh
+conda activate base
+
+# Move to working directory
+cd /user/sutirtha/BallTree_Xmatch
+
+# =============================================================================
+# FILE PATHS & SETTINGS
+# =============================================================================
+
+# Assuming the chunks and the python script are in the current dir
+SCRIPT_NAME="paper_plot.py"
+OUTPUT_DIR="/user/sutirtha/BallTree_Xmatch/rv_results"
+
+# =============================================================================
+# JOB INFO
+# =============================================================================
+
+echo "=============================================="
+echo "RV HEATMAP JOB"
+echo "=============================================="
+echo "Job ID: $PBS_JOBID"
+echo "Node: $(hostname)"
+echo "Started: $(date)"
+echo "Work Dir: $(pwd)"
+echo "Script: $SCRIPT_NAME"
+echo "Output Dir: $OUTPUT_DIR"
+echo "RAM Allocated: $(free -h | grep Mem | awk '{print $2}')"
+echo "=============================================="
+
+mkdir -p "$OUTPUT_DIR"
+
+# Memory monitor (Background process)
+(
+  while true; do
+    echo "=== $(date) ===" >> "${OUTPUT_DIR}/memory_profile.log"
+    # Detailed process memory usage for the python script
+    ps -C python3 -o pid,%cpu,%mem,vsz,rss,cmd >> "${OUTPUT_DIR}/memory_profile.log"
+    free -h >> "${OUTPUT_DIR}/memory_profile.log"
+    sleep 300
+  done
+) &
+MONITOR_PID=$!
+
+# =============================================================================
+# RUN COMMAND
+# =============================================================================
+
+# The python script is standalone, but we run it nicely
+CMD="python3 -u $SCRIPT_NAME"
+
+echo ""
+echo "Command: $CMD"
+echo "Starting Analysis..."
+echo ""
+
+# Execute
+$CMD
+
+EXIT_CODE=$?
+
+# Cleanup Monitor
+kill $MONITOR_PID 2>/dev/null
+
+# =============================================================================
+# SUMMARY & ARTIFACTS
+# =============================================================================
+
+echo ""
+echo "=============================================="
+echo "FINISHED"
+echo "=============================================="
+echo "Time: $(date)"
+echo "Exit Code: $EXIT_CODE"
+echo ""
+
+if [ $EXIT_CODE -eq 0 ]; then
+    echo "Success! Moving plots to output directory..."
+    # Move the generated PNG to the specific output folder if it was saved in root
+    mv *.png "$OUTPUT_DIR/" 2>/dev/null
+    
+    echo "Generated Files in $OUTPUT_DIR:"
+    ls -la "$OUTPUT_DIR"
+else
+    echo "Job Failed. Check error logs."
+fi
+
+echo "=============================================="
+
+exit $EXIT_CODE

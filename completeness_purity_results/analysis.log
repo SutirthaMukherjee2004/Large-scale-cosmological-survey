@@ -1,0 +1,139 @@
+2026-01-31 10:48:19 | INFO     | ======================================================================
+RIGOROUS COMPLETENESS & PURITY ANALYSIS
+======================================================================
+2026-01-31 10:48:19 | INFO     | Started: 2026-01-31T10:48:19.264262
+2026-01-31 10:48:19 | INFO     | ======================================================================
+LOADING MASTER CATALOG
+======================================================================
+2026-01-31 10:48:19 | INFO     | Found 8 files
+2026-01-31 10:48:19 | INFO     | [1/8] Entire_catalogue_chunk01.fits
+2026-01-31 10:48:19 | INFO     |   ra -> RA_final
+2026-01-31 10:48:19 | INFO     |   dec -> DEC_final
+2026-01-31 10:48:19 | INFO     |   distance -> distance_final
+2026-01-31 10:48:19 | INFO     |   distance_err -> distance_err_final
+2026-01-31 10:48:19 | INFO     |   rv -> RV_final
+2026-01-31 10:48:19 | INFO     |   rv_err -> RV_err_final
+2026-01-31 10:48:19 | INFO     |   parallax -> parallax_final
+2026-01-31 10:48:19 | INFO     |   parallax_err -> parallax_err_final
+2026-01-31 10:48:19 | INFO     |   ruwe -> RUWE
+2026-01-31 10:48:53 | INFO     | [2/8] Entire_catalogue_chunk02.fits
+2026-01-31 10:49:19 | INFO     | [3/8] Entire_catalogue_chunk03.fits
+2026-01-31 10:49:51 | INFO     | [4/8] Entire_catalogue_chunk04.fits
+2026-01-31 10:50:22 | INFO     | [5/8] Entire_catalogue_chunk05.fits
+2026-01-31 10:50:51 | INFO     | [6/8] Entire_catalogue_chunk06.fits
+2026-01-31 10:51:29 | INFO     | [7/8] Entire_catalogue_chunk07.fits
+2026-01-31 10:52:02 | INFO     | [8/8] Entire_catalogue_chunk08.fits
+2026-01-31 10:52:53 | INFO     | Loaded 32,552,876 stars
+2026-01-31 10:52:53 | INFO     | 
+======================================================================
+LOADING MEMBER CATALOGS
+======================================================================
+2026-01-31 10:52:53 | INFO     |   GC distances: 162
+2026-01-31 10:52:55 | INFO     |   GC members: 1,168,746
+2026-01-31 10:52:57 | INFO     |   OC members: 435,833
+2026-01-31 10:52:57 | INFO     | 
+--- QUALITY DISTRIBUTIONS ---
+2026-01-31 10:52:57 | INFO     |   RUWE median: 1.013
+2026-01-31 10:52:58 | INFO     |   Plx/err median: 36.5
+2026-01-31 10:52:58 | INFO     | 
+======================================================================
+COMPLETENESS ANALYSIS
+======================================================================
+2026-01-31 10:52:58 | INFO     | 
+--- GC Completeness ---
+2026-01-31 10:53:01 | INFO     |   GC: C = 0.0129
+2026-01-31 10:53:01 | INFO     | 
+--- OC Completeness ---
+2026-01-31 10:53:25 | INFO     |   OC: C = 0.2015
+2026-01-31 10:53:25 | INFO     | 
+--- SGR Completeness ---
+2026-01-31 10:53:25 | INFO     | 
+--- Injection-Recovery ---
+2026-01-31 10:53:25 | INFO     |   Injection: 32,418/50,000 = 0.6484
+2026-01-31 10:53:25 | INFO     | 
+======================================================================
+PURITY ANALYSIS
+======================================================================
+2026-01-31 10:53:25 | INFO     | 
+--- Preparing ML Training ---
+2026-01-31 10:53:25 | INFO     |   Positive: 30,645
+2026-01-31 13:43:31 | INFO     | ======================================================================
+RIGOROUS COMPLETENESS & PURITY ANALYSIS
+======================================================================
+2026-01-31 13:43:31 | INFO     | Started: 2026-01-31T13:43:31.825422
+2026-01-31 13:43:31 | INFO     | ======================================================================
+LOADING MASTER CATALOG
+======================================================================
+2026-01-31 13:43:31 | INFO     | Found 8 files
+2026-01-31 13:43:31 | INFO     | [1/8] Entire_catalogue_chunk01.fits
+2026-01-31 13:43:31 | INFO     |   ra -> RA_final
+2026-01-31 13:43:31 | INFO     |   dec -> DEC_final
+2026-01-31 13:43:31 | INFO     |   distance -> distance_final
+2026-01-31 13:43:31 | INFO     |   distance_err -> distance_err_final
+2026-01-31 13:43:31 | INFO     |   rv -> RV_final
+2026-01-31 13:43:31 | INFO     |   rv_err -> RV_err_final
+2026-01-31 13:43:31 | INFO     |   parallax -> parallax_final
+2026-01-31 13:43:31 | INFO     |   parallax_err -> parallax_err_final
+2026-01-31 13:43:31 | INFO     |   ruwe -> RUWE
+2026-01-31 13:43:52 | INFO     | [2/8] Entire_catalogue_chunk02.fits
+2026-01-31 13:44:11 | INFO     | [3/8] Entire_catalogue_chunk03.fits
+2026-01-31 13:44:29 | INFO     | [4/8] Entire_catalogue_chunk04.fits
+2026-01-31 13:44:50 | INFO     | [5/8] Entire_catalogue_chunk05.fits
+2026-01-31 13:45:09 | INFO     | [6/8] Entire_catalogue_chunk06.fits
+2026-01-31 13:45:25 | INFO     | [7/8] Entire_catalogue_chunk07.fits
+2026-01-31 13:45:48 | INFO     | [8/8] Entire_catalogue_chunk08.fits
+2026-01-31 13:46:24 | INFO     | Loaded 32,552,876 stars
+2026-01-31 13:46:25 | INFO     | 
+======================================================================
+LOADING MEMBER CATALOGS
+======================================================================
+2026-01-31 13:46:25 | INFO     |   GC distances: 162
+2026-01-31 13:46:27 | INFO     |   GC members: 1,168,746
+2026-01-31 13:46:28 | INFO     |   OC members: 435,833
+2026-01-31 13:46:28 | INFO     | 
+--- QUALITY DISTRIBUTIONS ---
+2026-01-31 13:46:29 | INFO     |   RUWE median: 1.013
+2026-01-31 13:46:29 | INFO     |   Plx/err median: 36.5
+2026-01-31 13:46:29 | INFO     | 
+======================================================================
+COMPLETENESS ANALYSIS
+======================================================================
+2026-01-31 13:46:29 | INFO     | 
+--- GC Completeness ---
+2026-01-31 13:46:32 | INFO     |   GC: C = 0.0129
+2026-01-31 13:46:32 | INFO     | 
+--- OC Completeness ---
+2026-01-31 13:46:56 | INFO     |   OC: C = 0.2015
+2026-01-31 13:46:56 | INFO     | 
+--- SGR Completeness ---
+2026-01-31 13:46:56 | INFO     | 
+--- Injection-Recovery ---
+2026-01-31 13:46:56 | INFO     |   Injection: 32,366/50,000 = 0.6473
+2026-01-31 13:46:56 | INFO     | 
+======================================================================
+PURITY ANALYSIS
+======================================================================
+2026-01-31 13:46:56 | INFO     | 
+--- Preparing ML Training ---
+2026-01-31 13:46:57 | INFO     |   Positive samples found: 30,645
+2026-01-31 13:46:57 | INFO     |   Generating negative sample pool (excluding known members)...
+2026-01-31 13:46:57 | INFO     |   Negative pool generation complete. Available stars: 32,522,275
+2026-01-31 13:46:58 | INFO     |   Negative samples selected: 50,000
+2026-01-31 13:46:58 | INFO     | 
+--- Training ML ---
+2026-01-31 13:46:59 | INFO     |   Acc: 0.7738, F1: 0.6991, AUC: 0.8426
+2026-01-31 13:47:07 | INFO     |   CV F1: 0.4919 +/- 0.1376
+2026-01-31 13:48:37 | INFO     |   Mean P: 0.1116
+2026-01-31 13:48:37 | INFO     |   Purity (prob): 0.1116
+2026-01-31 13:48:37 | INFO     |   Purity (thresh): 0.6235
+2026-01-31 13:48:37 | INFO     | 
+======================================================================
+GENERATING PLOTS
+======================================================================
+2026-01-31 13:48:44 | INFO     | Plots saved to: /user/sutirtha/BallTree_Xmatch/completeness_purity_results
+2026-01-31 13:48:44 | INFO     | 
+======================================================================
+ANALYSIS COMPLETE
+======================================================================
+2026-01-31 13:48:44 | INFO     | Time: 5.2 min | C: 0.6473 | P: 0.1116 | F1: 0.1904
+2026-01-31 13:48:44 | INFO     | Results: /user/sutirtha/BallTree_Xmatch/completeness_purity_results/analysis_results.json

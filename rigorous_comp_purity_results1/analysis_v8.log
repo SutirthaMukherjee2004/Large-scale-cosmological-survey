@@ -1,0 +1,542 @@
+2026-02-19 13:22:46 | INFO     | ======================================================================
+COMPLETENESS & PURITY v8
+======================================================================
+2026-02-19 13:22:46 | INFO     | Started: 2026-02-19T13:22:46.305840
+2026-02-19 13:22:46 | INFO     | eta:[0.4,0.9] sep_frac=0.8 tail_ratio=2.0
+2026-02-19 13:22:46 | INFO     | ======================================================================
+LOADING CATALOG
+======================================================================
+2026-02-19 13:22:46 | INFO     | Found 8 files
+2026-02-19 13:22:46 | INFO     | [1/8] Entire_catalogue_chunk01.fits
+2026-02-19 13:22:46 | INFO     |   ra -> RA_final
+2026-02-19 13:22:46 | INFO     |   dec -> DEC_final
+2026-02-19 13:22:46 | INFO     |   distance -> distance_final
+2026-02-19 13:22:46 | INFO     |   distance_err -> distance_err_final
+2026-02-19 13:22:46 | INFO     |   rv -> RV_final
+2026-02-19 13:22:46 | INFO     |   rv_err -> RV_err_final
+2026-02-19 13:22:46 | INFO     |   parallax -> parallax_final
+2026-02-19 13:22:46 | INFO     |   parallax_err -> parallax_err_final
+2026-02-19 13:22:46 | INFO     |   ruwe -> RUWE
+2026-02-19 13:22:46 | INFO     |   gmag -> Gmag
+2026-02-19 13:22:47 | INFO     |   4,069,110 rows
+2026-02-19 13:22:47 | INFO     | [2/8] Entire_catalogue_chunk02.fits
+2026-02-19 13:22:49 | INFO     |   4,069,110 rows
+2026-02-19 13:22:49 | INFO     | [3/8] Entire_catalogue_chunk03.fits
+2026-02-19 13:22:50 | INFO     |   4,069,110 rows
+2026-02-19 13:22:50 | INFO     | [4/8] Entire_catalogue_chunk04.fits
+2026-02-19 13:22:52 | INFO     |   4,069,110 rows
+2026-02-19 13:22:52 | INFO     | [5/8] Entire_catalogue_chunk05.fits
+2026-02-19 13:22:53 | INFO     |   4,069,110 rows
+2026-02-19 13:22:53 | INFO     | [6/8] Entire_catalogue_chunk06.fits
+2026-02-19 13:22:54 | INFO     |   4,069,110 rows
+2026-02-19 13:22:55 | INFO     | [7/8] Entire_catalogue_chunk07.fits
+2026-02-19 13:22:56 | INFO     |   4,069,110 rows
+2026-02-19 13:22:56 | INFO     | [8/8] Entire_catalogue_chunk08.fits
+2026-02-19 13:22:58 | INFO     |   4,069,106 rows
+2026-02-19 13:23:07 | INFO     | Total: 32,552,876 stars
+2026-02-19 13:23:07 | INFO     | 
+======================================================================
+LOADING TRUTH MEMBERS
+======================================================================
+2026-02-19 13:23:07 | INFO     |   Loading GC: /user/sutirtha/BallTree_Xmatch/GC_members.csv
+2026-02-19 13:23:09 | INFO     |   GC: 1,168,746 members with valid coords
+2026-02-19 13:23:09 | INFO     |   Loading OC: /user/sutirtha/BallTree_Xmatch/OC_members.csv
+2026-02-19 13:23:10 | INFO     |   OC: 435,833 members with valid coords
+2026-02-19 13:23:10 | INFO     |   SGR: not provided or not found, skipping
+2026-02-19 13:23:10 | INFO     | 
+--- Cross-matching truth members ---
+2026-02-19 13:23:22 | INFO     |   GC: 16,715/1,168,746 matched = 1.4%
+2026-02-19 13:23:22 | INFO     |   OC: 49,399/435,833 matched = 11.3%
+2026-02-19 13:23:22 | INFO     | 
+======================================================================
+PURITY ANALYSIS
+======================================================================
+2026-02-19 13:23:22 | INFO     | 
+============================================================
+REG GAUSSIAN: RUWE
+============================================================
+2026-02-19 13:23:23 | INFO     |   N=2,000,000, median=1.0130, robust_sig=0.0682
+2026-02-19 13:23:36 | INFO     |   CONVERGED: eta=0.8934, Core:mu=1.0098,sig=0.0698, Tail:mu=2.3748,sig=2.4222
+2026-02-19 13:23:37 | INFO     | 
+============================================================
+LOG-NORMAL (v8): sig_d/d(LN)
+============================================================
+2026-02-19 13:23:37 | INFO     |   Valid: 3,930,793
+2026-02-19 13:23:37 | INFO     |   robust_std=0.7397, abs_min_sep=0.5918, sig_floor=0.1500
+2026-02-19 13:23:54 | INFO     |   CONVERGED: eta=0.9000, Core_med=0.1168, Tail_med=0.2111, ratio=1.81x, abs_sep=0.5918(min=0.5918)
+2026-02-19 13:23:54 | INFO     | 
+============================================================
+GAMMA: sig_d/d(Gamma)
+============================================================
+2026-02-19 13:23:54 | INFO     |   Valid: 3,930,793
+2026-02-19 13:23:54 | INFO     |   P25=0.0725 P50=0.1153 P75=0.1980 mean=0.1601
+2026-02-19 13:25:46 | INFO     | ======================================================================
+COMPLETENESS & PURITY v8
+======================================================================
+2026-02-19 13:25:46 | INFO     | Started: 2026-02-19T13:25:46.673943
+2026-02-19 13:25:46 | INFO     | eta:[0.4,0.9] sep_frac=0.8 tail_ratio=2.0
+2026-02-19 13:25:46 | INFO     | ======================================================================
+LOADING CATALOG
+======================================================================
+2026-02-19 13:25:46 | INFO     | Found 8 files
+2026-02-19 13:25:46 | INFO     | [1/8] Entire_catalogue_chunk01.fits
+2026-02-19 13:25:46 | INFO     |   ra -> RA_final
+2026-02-19 13:25:46 | INFO     |   dec -> DEC_final
+2026-02-19 13:25:46 | INFO     |   distance -> distance_final
+2026-02-19 13:25:46 | INFO     |   distance_err -> distance_err_final
+2026-02-19 13:25:46 | INFO     |   rv -> RV_final
+2026-02-19 13:25:46 | INFO     |   rv_err -> RV_err_final
+2026-02-19 13:25:46 | INFO     |   parallax -> parallax_final
+2026-02-19 13:25:46 | INFO     |   parallax_err -> parallax_err_final
+2026-02-19 13:25:46 | INFO     |   ruwe -> RUWE
+2026-02-19 13:25:46 | INFO     |   gmag -> Gmag
+2026-02-19 13:25:48 | INFO     |   4,069,110 rows
+2026-02-19 13:25:48 | INFO     | [2/8] Entire_catalogue_chunk02.fits
+2026-02-19 13:25:49 | INFO     |   4,069,110 rows
+2026-02-19 13:25:50 | INFO     | [3/8] Entire_catalogue_chunk03.fits
+2026-02-19 13:25:51 | INFO     |   4,069,110 rows
+2026-02-19 13:25:51 | INFO     | [4/8] Entire_catalogue_chunk04.fits
+2026-02-19 13:25:52 | INFO     |   4,069,110 rows
+2026-02-19 13:25:52 | INFO     | [5/8] Entire_catalogue_chunk05.fits
+2026-02-19 13:25:54 | INFO     |   4,069,110 rows
+2026-02-19 13:25:54 | INFO     | [6/8] Entire_catalogue_chunk06.fits
+2026-02-19 13:25:55 | INFO     |   4,069,110 rows
+2026-02-19 13:25:55 | INFO     | [7/8] Entire_catalogue_chunk07.fits
+2026-02-19 13:25:57 | INFO     |   4,069,110 rows
+2026-02-19 13:25:57 | INFO     | [8/8] Entire_catalogue_chunk08.fits
+2026-02-19 13:25:58 | INFO     |   4,069,106 rows
+2026-02-19 13:26:07 | INFO     | Total: 32,552,876 stars
+2026-02-19 13:26:07 | INFO     | 
+======================================================================
+LOADING TRUTH MEMBERS
+======================================================================
+2026-02-19 13:26:07 | INFO     |   Loading GC: /user/sutirtha/BallTree_Xmatch/GC_members.csv
+2026-02-19 13:26:09 | INFO     |   GC: 1,168,746 members with valid coords
+2026-02-19 13:26:09 | INFO     |   Loading OC: /user/sutirtha/BallTree_Xmatch/OC_members.csv
+2026-02-19 13:26:11 | INFO     |   OC: 435,833 members with valid coords
+2026-02-19 13:26:11 | INFO     |   Loading SGR: /user/sutirtha/BallTree_Xmatch/Sgr_stream_members.csv
+2026-02-19 13:26:11 | INFO     |   SGR: 55,192 members with valid coords
+2026-02-19 13:26:11 | INFO     | 
+--- Cross-matching truth members ---
+2026-02-19 13:26:23 | INFO     |   GC: 16,715/1,168,746 matched = 1.4%
+2026-02-19 13:26:23 | INFO     |   OC: 49,399/435,833 matched = 11.3%
+2026-02-19 13:26:23 | INFO     |   SGR: 2,687/55,192 matched = 4.9%
+2026-02-19 13:26:23 | INFO     | 
+======================================================================
+PURITY ANALYSIS
+======================================================================
+2026-02-19 13:26:23 | INFO     | 
+============================================================
+REG GAUSSIAN: RUWE
+============================================================
+2026-02-19 13:26:23 | INFO     |   N=2,000,000, median=1.0130, robust_sig=0.0682
+2026-02-19 13:26:37 | INFO     |   CONVERGED: eta=0.8934, Core:mu=1.0098,sig=0.0698, Tail:mu=2.3748,sig=2.4222
+2026-02-19 13:26:38 | INFO     | 
+============================================================
+LOG-NORMAL (v8): sig_d/d(LN)
+============================================================
+2026-02-19 13:26:38 | INFO     |   Valid: 3,930,793
+2026-02-19 13:26:38 | INFO     |   robust_std=0.7397, abs_min_sep=0.5918, sig_floor=0.1500
+2026-02-19 13:26:52 | INFO     |   CONVERGED: eta=0.9000, Core_med=0.1168, Tail_med=0.2111, ratio=1.81x, abs_sep=0.5918(min=0.5918)
+2026-02-19 13:26:53 | INFO     | 
+============================================================
+GAMMA: sig_d/d(Gamma)
+============================================================
+2026-02-19 13:26:53 | INFO     |   Valid: 3,930,793
+2026-02-19 13:26:53 | INFO     |   P25=0.0725 P50=0.1153 P75=0.1980 mean=0.1601
+2026-02-19 13:40:17 | INFO     | ======================================================================
+COMPLETENESS & PURITY v8
+======================================================================
+2026-02-19 13:40:17 | INFO     | Started: 2026-02-19T13:40:17.516121
+2026-02-19 13:40:17 | INFO     | eta:[0.4,0.9] sep_frac=0.8 tail_ratio=2.0
+2026-02-19 13:40:17 | INFO     | ======================================================================
+LOADING CATALOG
+======================================================================
+2026-02-19 13:40:17 | INFO     | Found 8 files
+2026-02-19 13:40:17 | INFO     | [1/8] Entire_catalogue_chunk01.fits
+2026-02-19 13:40:17 | INFO     |   ra -> RA_final
+2026-02-19 13:40:17 | INFO     |   dec -> DEC_final
+2026-02-19 13:40:17 | INFO     |   distance -> distance_final
+2026-02-19 13:40:17 | INFO     |   distance_err -> distance_err_final
+2026-02-19 13:40:17 | INFO     |   rv -> RV_final
+2026-02-19 13:40:17 | INFO     |   rv_err -> RV_err_final
+2026-02-19 13:40:17 | INFO     |   parallax -> parallax_final
+2026-02-19 13:40:17 | INFO     |   parallax_err -> parallax_err_final
+2026-02-19 13:40:17 | INFO     |   ruwe -> RUWE
+2026-02-19 13:40:17 | INFO     |   gmag -> Gmag
+2026-02-19 13:40:19 | INFO     |   4,069,110 rows
+2026-02-19 13:40:19 | INFO     | [2/8] Entire_catalogue_chunk02.fits
+2026-02-19 13:40:21 | INFO     |   4,069,110 rows
+2026-02-19 13:40:21 | INFO     | [3/8] Entire_catalogue_chunk03.fits
+2026-02-19 13:40:22 | INFO     |   4,069,110 rows
+2026-02-19 13:40:22 | INFO     | [4/8] Entire_catalogue_chunk04.fits
+2026-02-19 13:40:24 | INFO     |   4,069,110 rows
+2026-02-19 13:40:24 | INFO     | [5/8] Entire_catalogue_chunk05.fits
+2026-02-19 13:43:14 | INFO     |   CONVERGED: eta=0.6030, Core=0.0992, Tail=0.2526, ratio=2.55x
+2026-02-19 13:43:15 | INFO     | 
+============================================================
+LOG-NORMAL (v8): sig_v/v(LN)
+============================================================
+2026-02-19 13:43:15 | INFO     |   Valid: 32,312,272
+2026-02-19 13:43:15 | INFO     |   robust_std=1.6667, abs_min_sep=1.3334, sig_floor=0.1667
+2026-02-19 13:43:36 | INFO     |   CONVERGED: eta=0.9000, Core_med=0.0644, Tail_med=0.2444, ratio=3.79x, abs_sep=1.3334(min=1.3334)
+2026-02-19 13:43:37 | INFO     | 
+============================================================
+GAMMA: sig_v/v(Gamma)
+============================================================
+2026-02-19 13:43:37 | INFO     |   Valid: 32,312,272
+2026-02-19 13:43:38 | INFO     |   P25=0.0224 P50=0.0731 P75=0.2136 mean=0.2896
+2026-02-19 13:49:26 | INFO     |   CONVERGED: eta=0.7680, Core=0.0908, Tail=0.9476, ratio=10.44x
+2026-02-19 13:49:29 | INFO     |   Combined: mean=0.3527, P>0.8=0
+2026-02-19 13:49:30 | INFO     | 
+======================================================================
+TRADE-OFF & COMPLETENESS
+======================================================================
+2026-02-19 13:53:20 | INFO     |   Saved JSON: /user/sutirtha/BallTree_Xmatch/rigorous_comp_purity_results1/results_v8.json
+2026-02-19 13:53:20 | INFO     | 
+======================================================================
+PLOTTING
+======================================================================
+2026-02-19 13:53:25 | INFO     |   Saved: plot1_mixture_comparison.png
+2026-02-19 13:53:33 | INFO     |   Saved: plot2_purity_curves_and_distributions.png
+2026-02-19 13:53:35 | INFO     |   Saved: plot3_radial_dist.png
+2026-02-19 13:53:39 | INFO     |   Saved: plot3_radial_rv.png
+2026-02-19 13:53:42 | INFO     |   Saved: plot3_radial_ruwe.png
+2026-02-19 13:53:43 | INFO     |   Saved: plot4_summary.png
+2026-02-19 13:53:43 | INFO     | 
+======================================================================
+DONE in 27.9 min
+======================================================================
+2026-02-19 14:46:33 | INFO     | ======================================================================
+COMPLETENESS & PURITY v8
+======================================================================
+2026-02-19 14:46:33 | INFO     | Started: 2026-02-19T14:46:33.860379
+2026-02-19 14:46:33 | INFO     | eta:[0.4,0.9] sep_frac=0.8 tail_ratio=2.0
+2026-02-19 14:46:33 | INFO     | ======================================================================
+LOADING CATALOG
+======================================================================
+2026-02-19 14:46:33 | INFO     | Found 8 files
+2026-02-19 14:46:33 | INFO     | [1/8] Entire_catalogue_chunk01.fits
+2026-02-19 14:46:33 | INFO     |   ra -> RA_final
+2026-02-19 14:46:33 | INFO     |   dec -> DEC_final
+2026-02-19 14:46:33 | INFO     |   distance -> distance_final
+2026-02-19 14:46:33 | INFO     |   distance_err -> distance_err_final
+2026-02-19 14:46:33 | INFO     |   rv -> RV_final
+2026-02-19 14:46:33 | INFO     |   rv_err -> RV_err_final
+2026-02-19 14:46:33 | INFO     |   parallax -> parallax_final
+2026-02-19 14:46:33 | INFO     |   parallax_err -> parallax_err_final
+2026-02-19 14:46:33 | INFO     |   ruwe -> RUWE
+2026-02-19 14:46:33 | INFO     |   gmag -> Gmag
+2026-02-19 14:46:36 | INFO     |   4,069,110 rows
+2026-02-19 14:46:36 | INFO     | [2/8] Entire_catalogue_chunk02.fits
+2026-02-19 14:46:39 | INFO     |   4,069,110 rows
+2026-02-19 14:46:39 | INFO     | [3/8] Entire_catalogue_chunk03.fits
+2026-02-19 14:46:41 | INFO     |   4,069,110 rows
+2026-02-19 14:46:41 | INFO     | [4/8] Entire_catalogue_chunk04.fits
+2026-02-19 14:46:43 | INFO     |   4,069,110 rows
+2026-02-19 14:46:43 | INFO     | [5/8] Entire_catalogue_chunk05.fits
+2026-02-19 14:46:44 | INFO     |   4,069,110 rows
+2026-02-19 14:46:44 | INFO     | [6/8] Entire_catalogue_chunk06.fits
+2026-02-19 14:46:46 | INFO     |   4,069,110 rows
+2026-02-19 14:46:46 | INFO     | [7/8] Entire_catalogue_chunk07.fits
+2026-02-19 14:46:48 | INFO     |   4,069,110 rows
+2026-02-19 14:46:48 | INFO     | [8/8] Entire_catalogue_chunk08.fits
+2026-02-19 14:46:50 | INFO     |   4,069,106 rows
+2026-02-19 14:47:19 | INFO     | Total: 32,552,876 stars
+2026-02-19 14:47:20 | INFO     | 
+======================================================================
+LOADING TRUTH MEMBERS
+======================================================================
+2026-02-19 14:47:20 | INFO     |   Loading GC: /user/sutirtha/BallTree_Xmatch/GC_members.csv
+2026-02-19 14:47:24 | INFO     |   GC: 1,168,746 members with valid coords
+2026-02-19 14:47:24 | INFO     |   Loading OC: /user/sutirtha/BallTree_Xmatch/OC_members.csv
+2026-02-19 14:47:27 | INFO     |   OC: 435,833 members with valid coords
+2026-02-19 14:47:27 | INFO     |   Loading SGR: /user/sutirtha/BallTree_Xmatch/Sgr_stream_members.csv
+2026-02-19 14:47:27 | INFO     |   SGR: 55,192 members with valid coords
+2026-02-19 14:47:27 | INFO     | 
+--- Cross-matching truth members ---
+2026-02-19 14:47:28 | INFO     |   GC: 16,715/1,168,746 matched = 1.4%
+2026-02-19 14:47:28 | INFO     |   OC: 49,399/435,833 matched = 11.3%
+2026-02-19 14:47:28 | INFO     |   SGR: 2,687/55,192 matched = 4.9%
+2026-02-19 14:47:28 | INFO     | 
+======================================================================
+PURITY ANALYSIS
+======================================================================
+2026-02-19 14:47:28 | INFO     | 
+============================================================
+REG GAUSSIAN: RUWE
+============================================================
+2026-02-19 14:47:29 | INFO     |   N=2,000,000, median=1.0130, robust_sig=0.0682
+2026-02-19 14:47:51 | INFO     |   CONVERGED: eta=0.8934, Core:mu=1.0098,sig=0.0698, Tail:mu=2.3748,sig=2.4222
+2026-02-19 14:47:52 | INFO     | 
+============================================================
+LOG-NORMAL (v8): sig_d/d(LN)
+============================================================
+2026-02-19 14:47:52 | INFO     |   Valid: 3,930,793
+2026-02-19 14:47:52 | INFO     |   robust_std=0.7397, abs_min_sep=0.5918, sig_floor=0.1500
+2026-02-19 14:48:19 | INFO     |   CONVERGED: eta=0.9000, Core_med=0.1168, Tail_med=0.2111, ratio=1.81x
+2026-02-19 14:48:19 | INFO     | 
+============================================================
+GAMMA: sig_d/d(Gamma)
+============================================================
+2026-02-19 14:48:19 | INFO     |   Valid: 3,930,793
+2026-02-19 14:48:20 | INFO     |   P25=0.0725 P50=0.1153 P75=0.1980 mean=0.1601
+2026-02-19 15:13:30 | INFO     |   CONVERGED: eta=0.6030, Core=0.0992, Tail=0.2526, ratio=2.55x
+2026-02-19 15:13:32 | INFO     | 
+============================================================
+LOG-NORMAL (v8): sig_v/v(LN)
+============================================================
+2026-02-19 15:13:32 | INFO     |   Valid: 32,312,272
+2026-02-19 15:13:33 | INFO     |   robust_std=1.6667, abs_min_sep=1.3334, sig_floor=0.1667
+2026-02-19 15:14:10 | INFO     |   CONVERGED: eta=0.9000, Core_med=0.0644, Tail_med=0.2444, ratio=3.79x
+2026-02-19 15:14:13 | INFO     | 
+============================================================
+GAMMA: sig_v/v(Gamma)
+============================================================
+2026-02-19 15:14:14 | INFO     |   Valid: 32,312,272
+2026-02-19 15:14:14 | INFO     |   P25=0.0224 P50=0.0731 P75=0.2136 mean=0.2896
+2026-02-19 15:22:38 | INFO     |   CONVERGED: eta=0.7680, Core=0.0908, Tail=0.9476, ratio=10.44x
+2026-02-19 15:22:42 | INFO     |   Combined: mean=0.3527, P>0.8=0
+2026-02-19 15:22:43 | INFO     | 
+======================================================================
+TRADE-OFF & COMPLETENESS
+======================================================================
+2026-02-19 15:33:53 | INFO     |   Saved JSON: /user/sutirtha/BallTree_Xmatch/rigorous_comp_purity_results1/results_v8.json
+2026-02-19 15:33:53 | INFO     | 
+======================================================================
+PLOTTING
+======================================================================
+2026-02-19 15:34:00 | INFO     |   Saved: plot1_mixture_comparison.png
+2026-02-19 15:34:09 | INFO     |   Saved: plot2_purity_curves_and_distributions.png
+2026-02-19 15:34:15 | INFO     |   Saved: plot3_radial_dist.png
+2026-02-19 15:34:23 | INFO     |   Saved: plot3_radial_rv.png
+2026-02-19 15:34:31 | INFO     |   Saved: plot3_radial_ruwe.png
+2026-02-19 15:34:31 | INFO     |   Saved: plot4_core_fraction_eta.png
+2026-02-19 15:34:32 | INFO     |   Saved: plot5_purity_by_method.png
+2026-02-19 15:34:33 | INFO     |   Saved: plot6_gc_oc_sgr_completeness.png
+2026-02-19 15:34:33 | INFO     | 
+======================================================================
+DONE in 48.0 min
+======================================================================
+2026-02-19 16:17:07 | INFO     | ======================================================================
+COMPLETENESS & PURITY v8
+======================================================================
+2026-02-19 16:17:07 | INFO     | Started: 2026-02-19T16:17:07.140005
+2026-02-19 16:17:07 | INFO     | eta:[0.4,0.9] sep_frac=0.8 tail_ratio=2.0
+2026-02-19 16:17:07 | INFO     | ======================================================================
+LOADING CATALOG
+======================================================================
+2026-02-19 16:17:07 | INFO     | Found 8 files
+2026-02-19 16:17:07 | INFO     | [1/8] Entire_catalogue_chunk01.fits
+2026-02-19 16:17:07 | INFO     |   ra -> RA_final
+2026-02-19 16:17:07 | INFO     |   dec -> DEC_final
+2026-02-19 16:17:07 | INFO     |   distance -> distance_final
+2026-02-19 16:17:07 | INFO     |   distance_err -> distance_err_final
+2026-02-19 16:17:07 | INFO     |   rv -> RV_final
+2026-02-19 16:17:07 | INFO     |   rv_err -> RV_err_final
+2026-02-19 16:17:07 | INFO     |   parallax -> parallax_final
+2026-02-19 16:17:07 | INFO     |   parallax_err -> parallax_err_final
+2026-02-19 16:17:07 | INFO     |   ruwe -> RUWE
+2026-02-19 16:17:07 | INFO     |   gmag -> Gmag
+2026-02-19 16:17:08 | INFO     |   4,069,110 rows
+2026-02-19 16:17:08 | INFO     | [2/8] Entire_catalogue_chunk02.fits
+2026-02-19 16:17:10 | INFO     |   4,069,110 rows
+2026-02-19 16:17:10 | INFO     | [3/8] Entire_catalogue_chunk03.fits
+2026-02-19 16:17:12 | INFO     |   4,069,110 rows
+2026-02-19 16:17:12 | INFO     | [4/8] Entire_catalogue_chunk04.fits
+2026-02-19 16:17:14 | INFO     |   4,069,110 rows
+2026-02-19 16:17:14 | INFO     | [5/8] Entire_catalogue_chunk05.fits
+2026-02-19 16:17:15 | INFO     |   4,069,110 rows
+2026-02-19 16:17:15 | INFO     | [6/8] Entire_catalogue_chunk06.fits
+2026-02-19 16:17:17 | INFO     |   4,069,110 rows
+2026-02-19 16:17:17 | INFO     | [7/8] Entire_catalogue_chunk07.fits
+2026-02-19 16:17:19 | INFO     |   4,069,110 rows
+2026-02-19 16:17:19 | INFO     | [8/8] Entire_catalogue_chunk08.fits
+2026-02-19 16:17:21 | INFO     |   4,069,106 rows
+2026-02-19 16:17:41 | INFO     | Total: 32,552,876 stars
+2026-02-19 16:17:41 | INFO     | 
+======================================================================
+LOADING TRUTH MEMBERS
+======================================================================
+2026-02-19 16:17:41 | INFO     |   Loading GC: /user/sutirtha/BallTree_Xmatch/GC_members.csv
+2026-02-19 16:17:43 | INFO     |   GC: 1,168,746 members with valid coords
+2026-02-19 16:17:43 | INFO     |   Loading OC: /user/sutirtha/BallTree_Xmatch/OC_members.csv
+2026-02-19 16:17:45 | INFO     |   OC: 435,833 members with valid coords
+2026-02-19 16:17:45 | INFO     |   Loading SGR: /user/sutirtha/BallTree_Xmatch/Sgr_stream_members.csv
+2026-02-19 16:17:45 | INFO     |   SGR: 55,192 members with valid coords
+2026-02-19 16:17:45 | INFO     | 
+--- Cross-matching truth members ---
+2026-02-19 16:17:45 | INFO     |   GC: 16,715/1,168,746 matched = 1.4%
+2026-02-19 16:17:45 | INFO     |   OC: 49,399/435,833 matched = 11.3%
+2026-02-19 16:17:45 | INFO     |   SGR: 2,687/55,192 matched = 4.9%
+2026-02-19 16:17:45 | INFO     | 
+======================================================================
+PURITY ANALYSIS
+======================================================================
+2026-02-19 16:17:45 | INFO     | 
+============================================================
+REG GAUSSIAN: RUWE
+============================================================
+2026-02-19 16:17:45 | INFO     |   N=2,000,000, median=1.0130, robust_sig=0.0682
+2026-02-19 16:17:59 | INFO     |   CONVERGED: eta=0.8934, Core:mu=1.0098,sig=0.0698, Tail:mu=2.3748,sig=2.4222
+2026-02-19 16:18:00 | INFO     | 
+============================================================
+LOG-NORMAL (v8): sig_d/d(LN)
+============================================================
+2026-02-19 16:18:00 | INFO     |   Valid: 3,930,793
+2026-02-19 16:18:00 | INFO     |   robust_std=0.7397, abs_min_sep=0.5918, sig_floor=0.1500
+2026-02-19 16:18:15 | INFO     |   CONVERGED: eta=0.9000, Core_med=0.1168, Tail_med=0.2111, ratio=1.81x
+2026-02-19 16:18:15 | INFO     | 
+============================================================
+GAMMA: sig_d/d(Gamma)
+============================================================
+2026-02-19 16:18:15 | INFO     |   Valid: 3,930,793
+2026-02-19 16:18:15 | INFO     |   P25=0.0725 P50=0.1153 P75=0.1980 mean=0.1601
+2026-02-19 16:34:15 | INFO     |   CONVERGED: eta=0.6030, Core=0.0992, Tail=0.2526, ratio=2.55x
+2026-02-19 16:34:15 | INFO     | 
+============================================================
+LOG-NORMAL (v8): sig_v/v(LN)
+============================================================
+2026-02-19 16:34:15 | INFO     |   Valid: 32,312,272
+2026-02-19 16:34:16 | INFO     |   robust_std=1.6667, abs_min_sep=1.3334, sig_floor=0.1667
+2026-02-19 16:34:37 | INFO     |   CONVERGED: eta=0.9000, Core_med=0.0644, Tail_med=0.2444, ratio=3.79x
+2026-02-19 16:34:39 | INFO     | 
+============================================================
+GAMMA: sig_v/v(Gamma)
+============================================================
+2026-02-19 16:34:39 | INFO     |   Valid: 32,312,272
+2026-02-19 16:34:39 | INFO     |   P25=0.0224 P50=0.0731 P75=0.2136 mean=0.2896
+2026-02-19 16:40:16 | INFO     |   CONVERGED: eta=0.7680, Core=0.0908, Tail=0.9476, ratio=10.44x
+2026-02-19 16:40:19 | INFO     |   Combined: mean=0.3527, P>0.8=0
+2026-02-19 16:40:20 | INFO     | 
+======================================================================
+TRADE-OFF & COMPLETENESS
+======================================================================
+2026-02-19 16:46:04 | INFO     |   Saved JSON: /user/sutirtha/BallTree_Xmatch/rigorous_comp_purity_results1/results_v8.json
+2026-02-19 16:46:04 | INFO     | 
+======================================================================
+PLOTTING
+======================================================================
+2026-02-19 16:46:10 | INFO     |   Saved: plot1_mixture_comparison.png
+2026-02-19 16:46:18 | INFO     |   Saved: plot2_purity_curves_and_distributions.png
+2026-02-19 16:46:21 | INFO     |   Saved: plot3_radial_dist.png
+2026-02-19 16:46:25 | INFO     |   Saved: plot3_radial_rv.png
+2026-02-19 16:46:29 | INFO     |   Saved: plot3_radial_ruwe.png
+2026-02-19 16:46:29 | INFO     |   Saved: plot4_core_fraction_eta.png
+2026-02-19 16:46:29 | INFO     |   Saved: plot5_purity_by_method.png
+2026-02-19 16:46:30 | INFO     |   Saved: plot6_gc_oc_sgr_completeness.png
+2026-02-19 16:46:30 | INFO     | 
+======================================================================
+DONE in 29.4 min
+======================================================================
+2026-02-19 17:11:14 | INFO     | ======================================================================
+COMPLETENESS & PURITY v8
+======================================================================
+2026-02-19 17:11:14 | INFO     | Started: 2026-02-19T17:11:14.852984
+2026-02-19 17:11:14 | INFO     | eta:[0.4,0.9] sep_frac=0.8 tail_ratio=2.0
+2026-02-19 17:11:14 | INFO     | ======================================================================
+LOADING CATALOG
+======================================================================
+2026-02-19 17:11:14 | INFO     | Found 8 files
+2026-02-19 17:11:14 | INFO     | [1/8] Entire_catalogue_chunk01.fits
+2026-02-19 17:11:14 | INFO     |   ra -> RA_final
+2026-02-19 17:11:14 | INFO     |   dec -> DEC_final
+2026-02-19 17:11:14 | INFO     |   distance -> distance_final
+2026-02-19 17:11:14 | INFO     |   distance_err -> distance_err_final
+2026-02-19 17:11:14 | INFO     |   rv -> RV_final
+2026-02-19 17:11:14 | INFO     |   rv_err -> RV_err_final
+2026-02-19 17:11:14 | INFO     |   parallax -> parallax_final
+2026-02-19 17:11:14 | INFO     |   parallax_err -> parallax_err_final
+2026-02-19 17:11:14 | INFO     |   ruwe -> RUWE
+2026-02-19 17:11:14 | INFO     |   gmag -> Gmag
+2026-02-19 17:11:16 | INFO     |   4,069,110 rows
+2026-02-19 17:11:16 | INFO     | [2/8] Entire_catalogue_chunk02.fits
+2026-02-19 17:11:18 | INFO     |   4,069,110 rows
+2026-02-19 17:11:18 | INFO     | [3/8] Entire_catalogue_chunk03.fits
+2026-02-19 17:11:19 | INFO     |   4,069,110 rows
+2026-02-19 17:11:20 | INFO     | [4/8] Entire_catalogue_chunk04.fits
+2026-02-19 17:11:21 | INFO     |   4,069,110 rows
+2026-02-19 17:11:21 | INFO     | [5/8] Entire_catalogue_chunk05.fits
+2026-02-19 17:11:23 | INFO     |   4,069,110 rows
+2026-02-19 17:11:23 | INFO     | [6/8] Entire_catalogue_chunk06.fits
+2026-02-19 17:11:25 | INFO     |   4,069,110 rows
+2026-02-19 17:11:25 | INFO     | [7/8] Entire_catalogue_chunk07.fits
+2026-02-19 17:11:27 | INFO     |   4,069,110 rows
+2026-02-19 17:11:27 | INFO     | [8/8] Entire_catalogue_chunk08.fits
+2026-02-19 17:11:29 | INFO     |   4,069,106 rows
+2026-02-19 17:11:49 | INFO     | Total: 32,552,876 stars
+2026-02-19 17:11:49 | INFO     | 
+======================================================================
+LOADING TRUTH MEMBERS
+======================================================================
+2026-02-19 17:11:49 | INFO     |   Loading GC: /user/sutirtha/BallTree_Xmatch/GC_members.csv
+2026-02-19 17:11:51 | INFO     |   GC: 1,168,746 members with valid coords
+2026-02-19 17:11:51 | INFO     |   Loading OC: /user/sutirtha/BallTree_Xmatch/OC_members.csv
+2026-02-19 17:11:52 | INFO     |   OC: 435,833 members with valid coords
+2026-02-19 17:11:52 | INFO     |   Loading SGR: /user/sutirtha/BallTree_Xmatch/Sgr_stream_members.csv
+2026-02-19 17:11:52 | INFO     |   SGR: 55,192 members with valid coords
+2026-02-19 17:11:52 | INFO     | 
+--- Cross-matching truth members ---
+2026-02-19 17:11:53 | INFO     |   GC: 16,715/1,168,746 matched = 1.4%
+2026-02-19 17:11:53 | INFO     |   OC: 49,399/435,833 matched = 11.3%
+2026-02-19 17:11:53 | INFO     |   SGR: 2,687/55,192 matched = 4.9%
+2026-02-19 17:11:53 | INFO     | 
+======================================================================
+PURITY ANALYSIS
+======================================================================
+2026-02-19 17:11:53 | INFO     | 
+============================================================
+REG GAUSSIAN: RUWE
+============================================================
+2026-02-19 17:11:53 | INFO     |   N=2,000,000, median=1.0130, robust_sig=0.0682
+2026-02-19 17:12:07 | INFO     |   CONVERGED: eta=0.8934, Core:mu=1.0098,sig=0.0698, Tail:mu=2.3748,sig=2.4222
+2026-02-19 17:12:08 | INFO     | 
+============================================================
+LOG-NORMAL (v8): sig_d/d(LN)
+============================================================
+2026-02-19 17:12:08 | INFO     |   Valid: 3,930,793
+2026-02-19 17:12:08 | INFO     |   robust_std=0.7397, abs_min_sep=0.5918, sig_floor=0.1500
+2026-02-19 17:12:26 | INFO     |   CONVERGED: eta=0.9000, Core_med=0.1168, Tail_med=0.2111, ratio=1.81x
+2026-02-19 17:12:26 | INFO     | 
+============================================================
+GAMMA: sig_d/d(Gamma)
+============================================================
+2026-02-19 17:12:26 | INFO     |   Valid: 3,930,793
+2026-02-19 17:12:26 | INFO     |   P25=0.0725 P50=0.1153 P75=0.1980 mean=0.1601
+2026-02-19 17:29:30 | INFO     |   CONVERGED: eta=0.6030, Core=0.0992, Tail=0.2526, ratio=2.55x
+2026-02-19 17:29:31 | INFO     | 
+============================================================
+LOG-NORMAL (v8): sig_v/v(LN)
+============================================================
+2026-02-19 17:29:31 | INFO     |   Valid: 32,312,272
+2026-02-19 17:29:31 | INFO     |   robust_std=1.6667, abs_min_sep=1.3334, sig_floor=0.1667
+2026-02-19 17:29:54 | INFO     |   CONVERGED: eta=0.9000, Core_med=0.0644, Tail_med=0.2444, ratio=3.79x
+2026-02-19 17:29:55 | INFO     | 
+============================================================
+GAMMA: sig_v/v(Gamma)
+============================================================
+2026-02-19 17:29:55 | INFO     |   Valid: 32,312,272
+2026-02-19 17:29:55 | INFO     |   P25=0.0224 P50=0.0731 P75=0.2136 mean=0.2896
+2026-02-19 17:35:31 | INFO     |   CONVERGED: eta=0.7680, Core=0.0908, Tail=0.9476, ratio=10.44x
+2026-02-19 17:35:35 | INFO     |   Combined: mean=0.3527, P>0.8=0
+2026-02-19 17:35:36 | INFO     | 
+======================================================================
+TRADE-OFF & COMPLETENESS
+======================================================================
+2026-02-19 17:41:14 | INFO     |   Saved JSON: /user/sutirtha/BallTree_Xmatch/rigorous_comp_purity_results1/results_v8.json
+2026-02-19 17:41:28 | INFO     | 
+======================================================================
+PLOTTING
+======================================================================
+2026-02-19 17:41:35 | INFO     |   Saved: plot1_mixture_comparison.png
+2026-02-19 17:41:42 | INFO     |   Saved: plot2_purity_curves_and_distributions.png
+2026-02-19 17:41:45 | INFO     |   Saved: plot3_radial_dist.png
+2026-02-19 17:41:49 | INFO     |   Saved: plot3_radial_rv.png
+2026-02-19 17:41:53 | INFO     |   Saved: plot3_radial_ruwe.png
+2026-02-19 17:41:53 | INFO     |   Saved: plot4_core_fraction_eta.png
+2026-02-19 17:41:54 | INFO     |   Saved: plot5_purity_by_method.png
+2026-02-19 17:41:54 | INFO     |   Saved: plot6_gc_oc_sgr_completeness.png
+2026-02-19 17:41:54 | INFO     | 
+======================================================================
+DONE in 30.7 min
+======================================================================

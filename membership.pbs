@@ -1,0 +1,210 @@
+#!/bin/bash
+#PBS -S /bin/bash
+#PBS -N adaptive_membership
+#PBS -l nodes=1:ppn=32
+#PBS -l mem=200gb
+#PBS -l walltime=48:00:00
+#PBS -o adaptive_membership.log
+#PBS -e adaptive_membership.err
+#PBS -m abe
+#PBS -M sutirtharkm@gmail.com
+
+# =============================================================================
+# ADAPTIVE MEMBERSHIP ANALYSIS - PBS JOB SCRIPT
+# =============================================================================
+# 
+# This script runs the adaptive membership analysis:
+# 1. Cross-matches member catalogs against 52M master catalog
+# 2. Runs GMM/DBSCAN clustering algorithms
+# 3. Generates membership probability plots
+#
+# Memory estimate: ~50-80 GB for 52M master catalog
+# Time estimate: 2-6 hours depending on number of objects
+#
+# =============================================================================
+
+# =============================================================================
+# ENVIRONMENT SETUP
+# =============================================================================
+
+# Memory optimization
+export MALLOC_TRIM_THRESHOLD_=65536
+export MALLOC_MMAP_THRESHOLD_=65536
+export MALLOC_MMAP_MAX_=65536
+export PYTHONHASHSEED=0
+
+# Disable internal multithreading (we use our own parallelization)
+export OMP_NUM_THREADS=1
+export MKL_NUM_THREADS=1
+export NUMEXPR_NUM_THREADS=1
+export OPENBLAS_NUM_THREADS=1
+
+# Matplotlib backend (non-interactive for cluster)
+export MPLBACKEND=Agg
+
+# Activate conda environment
+source /user/sutirtha/anaconda3/etc/profile.d/conda.sh
+conda activate base
+
+# Change to working directory
+cd /user/sutirtha/BallTree_Xmatch
+
+# =============================================================================
+# FILE PATHS - EDIT THESE
+# =============================================================================
+
+# Master catalog (52M rows)
+MASTER_CATALOG="/user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits"
+
+# Member catalogs
+GC_MEMBERS="/user/sutirtha/BallTree_Xmatch/GC_members.csv"
+OC_MEMBERS="/user/sutirtha/BallTree_Xmatch/OC_members.csv"
+SGR_MEMBERS="/user/sutirtha/BallTree_Xmatch/Sgr_stream_members.csv"
+DWG_MEMBERS="/user/sutirtha/BallTree_Xmatch/DWG_members.csv"
+
+# Output directories
+OUTPUT_DIR="/user/sutirtha/BallTree_Xmatch/outputs_${PBS_JOBID}"
+CHECKPOINT_DIR="/user/sutirtha/BallTree_Xmatch/checkpoints_${PBS_JOBID}"
+LOG_FILE="${OUTPUT_DIR}/adaptive_membership_${PBS_JOBID}.log"
+
+# =============================================================================
+# JOB INFORMATION
+# =============================================================================
+
+echo "=============================================="
+echo "ADAPTIVE MEMBERSHIP ANALYSIS"
+echo "=============================================="
+echo "Job ID: $PBS_JOBID"
+echo "Node: $(hostname)"
+echo "Started at: $(date)"
+echo ""
+echo "Input Files:"
+echo "  Master: $MASTER_CATALOG"
+echo "  GC:     $GC_MEMBERS"
+echo "  OC:     $OC_MEMBERS"
+echo "  SGR:    $SGR_MEMBERS"
+echo "  DWG:    $DWG_MEMBERS"
+echo ""
+echo "Output: $OUTPUT_DIR"
+echo ""
+echo "System Resources:"
+echo "  Total RAM: $(free -h | grep Mem | awk '{print $2}')"
+echo "  Available RAM: $(free -h | grep Mem | awk '{print $7}')"
+echo "  CPUs: $(nproc)"
+echo "=============================================="
+
+# Create output directories
+mkdir -p "$OUTPUT_DIR"
+mkdir -p "$CHECKPOINT_DIR"
+
+# =============================================================================
+# PRE-FLIGHT CHECKS
+# =============================================================================
+
+echo ""
+echo "Running pre-flight checks..."
+echo ""
+
+# Check Python
+python3 --version
+if [ $? -ne 0 ]; then
+    echo "ERROR: Python3 not found!"
+    exit 1
+fi
+
+# Check required packages
+python3 -c "import numpy; import pandas; import scipy; import sklearn; from astropy.io import fits; import matplotlib" 2>/dev/null
+if [ $? -ne 0 ]; then
+    echo "ERROR: Missing required Python packages!"
+    echo "Required: numpy, pandas, scipy, sklearn, astropy, matplotlib"
+    exit 1
+fi
+
+# Check input files exist
+for FILE in "$MASTER_CATALOG" "$GC_MEMBERS"; do
+    if [ ! -f "$FILE" ]; then
+        echo "ERROR: Required file not found: $FILE"
+        exit 1
+    fi
+done
+
+echo "Pre-flight checks passed!"
+echo ""
+
+# =============================================================================
+# MEMORY MONITOR (background process)
+# =============================================================================
+
+(
+  while true; do
+    echo "=== $(date) ===" >> "${OUTPUT_DIR}/memory_monitor.log"
+    free -h >> "${OUTPUT_DIR}/memory_monitor.log"
+    ps aux --sort=-rss | head -5 >> "${OUTPUT_DIR}/memory_monitor.log"
+    echo "" >> "${OUTPUT_DIR}/memory_monitor.log"
+    sleep 300  # Every 5 minutes
+  done
+) &
+MONITOR_PID=$!
+
+# =============================================================================
+# RUN ANALYSIS
+# =============================================================================
+
+echo "Starting analysis..."
+echo ""
+
+# Build command with optional files
+CMD="python3 -u membership.py"
+CMD="$CMD --master \"$MASTER_CATALOG\""
+CMD="$CMD --output \"$OUTPUT_DIR\""
+CMD="$CMD --checkpoint \"$CHECKPOINT_DIR\""
+CMD="$CMD --log \"$LOG_FILE\""
+
+# Add member files if they exist
+[ -f "$GC_MEMBERS" ] && CMD="$CMD --gc \"$GC_MEMBERS\""
+[ -f "$OC_MEMBERS" ] && CMD="$CMD --oc \"$OC_MEMBERS\""
+[ -f "$SGR_MEMBERS" ] && CMD="$CMD --sgr \"$SGR_MEMBERS\""
+[ -f "$DWG_MEMBERS" ] && CMD="$CMD --dwg \"$DWG_MEMBERS\""
+
+echo "Command: $CMD"
+echo ""
+
+# Execute
+eval $CMD
+EXIT_CODE=$?
+
+# =============================================================================
+# CLEANUP
+# =============================================================================
+
+# Kill memory monitor
+kill $MONITOR_PID 2>/dev/null
+
+echo ""
+echo "=============================================="
+echo "ANALYSIS COMPLETE"
+echo "=============================================="
+echo "Finished at: $(date)"
+echo "Exit code: $EXIT_CODE"
+echo ""
+echo "Final memory state:"
+free -h
+echo ""
+
+# Keep checkpoints if failed (for potential resume)
+if [ $EXIT_CODE -eq 0 ]; then
+    echo "Success! Cleaning up checkpoints..."
+    rm -rf "$CHECKPOINT_DIR"
+    
+    echo ""
+    echo "Output files in $OUTPUT_DIR:"
+    ls -la "$OUTPUT_DIR"
+else
+    echo "JOB FAILED!"
+    echo "Checkpoints preserved for debugging: $CHECKPOINT_DIR"
+    echo "Check log file: $LOG_FILE"
+fi
+
+echo "=============================================="
+
+exit $EXIT_CODE

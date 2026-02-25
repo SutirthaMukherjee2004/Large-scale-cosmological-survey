@@ -1,0 +1,332 @@
+=== Sat Jan 31 13:54:45 IST 2026 ===
+=== Sat Jan 31 13:56:01 IST 2026 ===
+=== Sat Jan 31 13:56:36 IST 2026 ===
+=== Sat Jan 31 13:59:31 IST 2026 ===
+=== Sat Jan 31 14:01:04 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 290116  0.0  0.0 187760 29184 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       4.2Gi       750Gi       7.0Mi       823Mi       747Gi
+Swap:          238Gi       296Mi       238Gi
+=== Sat Jan 31 14:24:32 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 312609  0.0  0.0 186836 27648 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       4.2Gi       750Gi       7.0Mi       698Mi       747Gi
+Swap:          238Gi       286Mi       238Gi
+=== Sat Jan 31 14:27:05 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 350791  0.0  0.0 198108 36864 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       4.4Gi       665Gi       7.0Mi        85Gi       746Gi
+Swap:          238Gi       284Mi       238Gi
+=== Sat Jan 31 14:28:28 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 256900  0.0  0.0 200916 43008 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       6.7Gi       662Gi        12Mi        85Gi       744Gi
+Swap:          238Gi       292Mi       238Gi
+=== Sat Jan 31 14:29:28 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 290327  0.0  0.0 195992 35328 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       4.2Gi       665Gi       7.0Mi        85Gi       746Gi
+Swap:          238Gi       296Mi       238Gi
+=== Sat Jan 31 15:45:15 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 351255  0.0  0.0 196748 36864 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       4.4Gi       665Gi       7.0Mi        85Gi       746Gi
+Swap:          238Gi       284Mi       238Gi
+=== Sat Jan 31 16:10:01 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 257452  0.0  0.0 198980 36864 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       6.6Gi       662Gi        12Mi        85Gi       744Gi
+Swap:          238Gi       292Mi       238Gi
+=== Sat Jan 31 16:19:01 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 290915  0.0  0.0 196892 36864 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       4.2Gi       665Gi       7.0Mi        85Gi       747Gi
+Swap:          238Gi       296Mi       238Gi
+=== Sat Jan 31 16:40:07 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 313415  0.0  0.0 194816 35328 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       4.3Gi       665Gi       7.0Mi        85Gi       746Gi
+Swap:          238Gi       286Mi       238Gi
+=== Sat Jan 31 16:42:52 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 351571  0.0  0.0 196244 35328 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       4.4Gi       665Gi       7.0Mi        85Gi       746Gi
+Swap:          238Gi       284Mi       238Gi
+=== Sat Jan 31 16:48:03 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 257703 11.0  0.0 198952 36864 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       6.6Gi       662Gi        12Mi        85Gi       744Gi
+Swap:          238Gi       292Mi       238Gi
+=== Sat Jan 31 16:52:50 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 291147  0.0  0.0 198132 36864 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       4.2Gi       665Gi       7.0Mi        85Gi       747Gi
+Swap:          238Gi       296Mi       238Gi
+=== Sat Jan 31 16:57:50 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 291147 99.6  1.6 13571660 13325712 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       7.8Gi       661Gi       7.0Mi        85Gi       743Gi
+Swap:          238Gi       296Mi       238Gi
+=== Sat Jan 31 17:02:50 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 291147 99.8  1.8 14941368 14657352 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       9.2Gi       660Gi       7.0Mi        85Gi       741Gi
+Swap:          238Gi       296Mi       238Gi
+=== Sat Jan 31 17:07:50 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 291147 99.9  2.3 18783916 18430276 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       9.4Gi       660Gi       7.0Mi        85Gi       741Gi
+Swap:          238Gi       296Mi       238Gi
+=== Sat Jan 31 17:11:32 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 313616  0.0  0.0 196420 35328 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       4.3Gi       665Gi       7.0Mi        85Gi       746Gi
+Swap:          238Gi       286Mi       238Gi
+=== Sat Jan 31 17:16:33 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 313616  100  1.7 13939024 13687168 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       8.3Gi       661Gi       7.0Mi        85Gi       742Gi
+Swap:          238Gi       286Mi       238Gi
+=== Sat Jan 31 17:21:33 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 313616  100  2.1 17158904 16877652 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi        10Gi       659Gi       7.0Mi        85Gi       741Gi
+Swap:          238Gi       286Mi       238Gi
+=== Sat Jan 31 17:26:33 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 313616  100  2.5 20108300 19802240 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi        10Gi       658Gi       7.0Mi        85Gi       740Gi
+Swap:          238Gi       286Mi       238Gi
+=== Sat Jan 31 18:02:21 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 257947 99.9  1.3 10871108 10396928 python3 -u comp_pu.py --master /user/sutirtha/BallTree_Xmatch --output /user/sutirtha/BallTree_Xmatch/rigorous_comp_purity_results --gc /user/sutirtha/BallTree_Xmatch/GC_members.csv --oc /user/sutirtha/BallTree_Xmatch/OC_members.csv
+ 258195  0.0  0.0 200864 39936 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi        16Gi       652Gi        12Mi        85Gi       734Gi
+Swap:          238Gi       292Mi       238Gi
+=== Sat Jan 31 18:07:22 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 257947 99.9  1.3 10871108 10366208 python3 -u comp_pu.py --master /user/sutirtha/BallTree_Xmatch --output /user/sutirtha/BallTree_Xmatch/rigorous_comp_purity_results --gc /user/sutirtha/BallTree_Xmatch/GC_members.csv --oc /user/sutirtha/BallTree_Xmatch/OC_members.csv
+ 258195  100  1.7 14394892 14130748 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi        20Gi       648Gi        12Mi        85Gi       730Gi
+Swap:          238Gi       292Mi       238Gi
+=== Sat Jan 31 18:12:22 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 257947 99.9  1.3 11123548 10537800 python3 -u comp_pu.py --master /user/sutirtha/BallTree_Xmatch --output /user/sutirtha/BallTree_Xmatch/rigorous_comp_purity_results --gc /user/sutirtha/BallTree_Xmatch/GC_members.csv --oc /user/sutirtha/BallTree_Xmatch/OC_members.csv
+ 258195  100  2.2 17954848 17651784 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi        23Gi       646Gi        12Mi        85Gi       727Gi
+Swap:          238Gi       292Mi       238Gi
+=== Sat Jan 31 18:17:22 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 257947 99.9  1.3 11123548 10728576 python3 -u comp_pu.py --master /user/sutirtha/BallTree_Xmatch --output /user/sutirtha/BallTree_Xmatch/rigorous_comp_purity_results --gc /user/sutirtha/BallTree_Xmatch/GC_members.csv --oc /user/sutirtha/BallTree_Xmatch/OC_members.csv
+ 258195  100  2.4 20098760 19778528 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi        23Gi       645Gi        12Mi        85Gi       727Gi
+Swap:          238Gi       292Mi       238Gi
+=== Sat Jan 31 18:35:31 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 291615  0.0  0.0 198932 38400 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       4.2Gi       665Gi       7.0Mi        85Gi       747Gi
+Swap:          238Gi       296Mi       238Gi
+=== Sat Jan 31 18:38:16 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 291615  100  1.9 15677664 15423800 python3 -u paper_plot.py
+ 291716  0.0  0.0 196564 36864 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       9.2Gi       660Gi       7.0Mi        85Gi       741Gi
+Swap:          238Gi       296Mi       238Gi
+=== Sat Jan 31 18:43:16 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 291716  100  1.8 15166104 14902164 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       9.2Gi       660Gi       7.0Mi        85Gi       741Gi
+Swap:          238Gi       296Mi       238Gi
+=== Sat Jan 31 18:48:16 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 291716 99.8  2.1 17495404 17215996 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi        10Gi       659Gi       7.0Mi        85Gi       740Gi
+Swap:          238Gi       296Mi       238Gi
+=== Sat Jan 31 18:53:16 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 291716 99.9  2.7 22323768 22005852 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi        12Gi       657Gi       7.0Mi        85Gi       738Gi
+Swap:          238Gi       296Mi       238Gi
+=== Sat Jan 31 20:36:50 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 352362 99.9  1.3 10871248 10505736 python3 -u comp_pu.py --master /user/sutirtha/BallTree_Xmatch --output /user/sutirtha/BallTree_Xmatch/rigorous_comp_purity_results --gc /user/sutirtha/BallTree_Xmatch/GC_members.csv --oc /user/sutirtha/BallTree_Xmatch/OC_members.csv
+ 352474 99.9  0.8 7401012 7039816 python3 -u comp_pu1.py --master /user/sutirtha/BallTree_Xmatch --output /user/sutirtha/BallTree_Xmatch/rigorous_comp_purity_results1 --gc /user/sutirtha/BallTree_Xmatch/GC_members.csv --oc /user/sutirtha/BallTree_Xmatch/OC_members.csv
+ 352673  0.0  0.0 210588 47616 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi        21Gi       648Gi       7.0Mi        85Gi       729Gi
+Swap:          238Gi       284Mi       238Gi
+=== Sat Jan 31 20:41:51 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 352362 99.9  1.3 10871248 10331656 python3 -u comp_pu.py --master /user/sutirtha/BallTree_Xmatch --output /user/sutirtha/BallTree_Xmatch/rigorous_comp_purity_results --gc /user/sutirtha/BallTree_Xmatch/GC_members.csv --oc /user/sutirtha/BallTree_Xmatch/OC_members.csv
+ 352673  100  1.7 14414312 14165512 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi        18Gi       650Gi       7.0Mi        85Gi       732Gi
+Swap:          238Gi       284Mi       238Gi
+=== Sat Jan 31 20:46:51 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 352362 99.9  1.3 10871248 10446880 python3 -u comp_pu.py --master /user/sutirtha/BallTree_Xmatch --output /user/sutirtha/BallTree_Xmatch/rigorous_comp_purity_results --gc /user/sutirtha/BallTree_Xmatch/GC_members.csv --oc /user/sutirtha/BallTree_Xmatch/OC_members.csv
+ 352673  100  2.2 17736004 17457800 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi        20Gi       648Gi       7.0Mi        85Gi       730Gi
+Swap:          238Gi       284Mi       238Gi
+=== Sat Jan 31 20:51:51 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 352362 99.9  1.2 10871248 10267096 python3 -u comp_pu.py --master /user/sutirtha/BallTree_Xmatch --output /user/sutirtha/BallTree_Xmatch/rigorous_comp_purity_results --gc /user/sutirtha/BallTree_Xmatch/GC_members.csv --oc /user/sutirtha/BallTree_Xmatch/OC_members.csv
+ 352673  100  2.7 21976756 21675272 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi        22Gi       647Gi       7.0Mi        85Gi       728Gi
+Swap:          238Gi       284Mi       238Gi
+=== Sat Feb 21 16:22:53 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+  58046  0.0  0.0 201164 43008 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi        13Gi       676Gi       116Mi        64Gi       735Gi
+Swap:          238Gi       0.0Ki       238Gi
+=== Sat Feb 21 16:27:54 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+  58046 79.5  2.5 23820764 19917356 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi        17Gi       647Gi       116Mi        90Gi       732Gi
+Swap:          238Gi       0.0Ki       238Gi
+=== Sat Feb 21 16:32:54 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+  58046 80.6  3.3 26961816 26526116 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi        17Gi       621Gi       116Mi       115Gi       731Gi
+Swap:          238Gi       0.0Ki       238Gi
+=== Sat Feb 21 16:37:54 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+  58046 80.9  2.1 17552592 17270544 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi        19Gi       599Gi       116Mi       136Gi       730Gi
+Swap:          238Gi       0.0Ki       238Gi
+=== Sat Feb 21 17:04:34 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 447999  0.0  0.0 193780 29184 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi        52Gi       525Gi       7.0Mi       177Gi       698Gi
+Swap:          238Gi       298Mi       238Gi
+=== Sat Feb 21 17:09:34 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 447999 90.5  1.9 15772340 15410924 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi        62Gi       490Gi       7.0Mi       201Gi       688Gi
+Swap:          238Gi       298Mi       238Gi
+=== Sat Feb 21 17:14:34 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 447999 92.8  1.6 13322272 12956672 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi        58Gi       485Gi       7.0Mi       211Gi       692Gi
+Swap:          238Gi       298Mi       238Gi
+=== Sat Feb 21 17:19:34 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 447999 91.9  2.1 17294552 16869864 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi        62Gi       460Gi       7.0Mi       232Gi       688Gi
+Swap:          238Gi       298Mi       238Gi
+=== Sat Feb 21 17:24:34 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 447999 92.8  1.7 13985132 13576436 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi        62Gi       451Gi       7.0Mi       241Gi       687Gi
+Swap:          238Gi       298Mi       238Gi
+=== Sat Feb 21 17:29:35 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 447999 91.9  2.4 19690500 19270392 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi        64Gi       424Gi       7.0Mi       265Gi       686Gi
+Swap:          238Gi       298Mi       238Gi
+=== Sat Feb 21 17:53:16 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 529649  0.0  0.0 195120 35328 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       5.2Gi       696Gi       7.0Mi        53Gi       745Gi
+Swap:          238Gi       255Mi       238Gi
+=== Sat Feb 21 17:58:16 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 529649 99.5  1.6 13601548 13350232 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       9.4Gi       566Gi       7.0Mi       179Gi       741Gi
+Swap:          238Gi       255Mi       238Gi
+=== Sat Feb 21 18:03:16 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 529649 99.7  3.0 24565668 24303108 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       8.6Gi       566Gi       7.0Mi       179Gi       741Gi
+Swap:          238Gi       255Mi       238Gi
+=== Sat Feb 21 18:08:16 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 529649 99.8  2.4 19794208 19522520 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi        10Gi       564Gi       7.0Mi       179Gi       739Gi
+Swap:          238Gi       255Mi       238Gi
+=== Sat Feb 21 18:43:00 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+  61217  0.0  0.0 200636 39936 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       6.4Gi       598Gi       116Mi       150Gi       742Gi
+Swap:          238Gi       0.0Ki       238Gi
+=== Sat Feb 21 18:48:00 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+  61217 99.6  1.6 22830836 12736840 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       7.9Gi       596Gi       116Mi       150Gi       741Gi
+Swap:          238Gi       0.0Ki       238Gi
+=== Sat Feb 21 18:53:01 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+  61217 99.8  1.5 12206404 11954300 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       8.9Gi       595Gi       116Mi       150Gi       740Gi
+Swap:          238Gi       0.0Ki       238Gi
+=== Sat Feb 21 20:48:42 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 485400  0.0  0.0 187520 29184 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       4.1Gi       163Gi       7.0Mi       587Gi       746Gi
+Swap:          238Gi       288Mi       238Gi
+=== Sat Feb 21 20:53:42 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 485400 87.2  2.8 22520288 22268144 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       6.5Gi       131Gi       7.0Mi       617Gi       744Gi
+Swap:          238Gi       288Mi       238Gi
+=== Sat Feb 21 20:58:43 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 485400 88.9  1.7 14477444 14215760 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       7.3Gi       120Gi       7.0Mi       627Gi       743Gi
+Swap:          238Gi       288Mi       238Gi
+=== Sat Feb 21 21:03:43 IST 2026 ===
+    PID %CPU %MEM    VSZ   RSS CMD
+ 485400 88.4  3.1 28953116 24733008 python3 -u paper_plot.py
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       7.1Gi       119Gi       7.0Mi       628Gi       743Gi
+Swap:          238Gi       288Mi       238Gi

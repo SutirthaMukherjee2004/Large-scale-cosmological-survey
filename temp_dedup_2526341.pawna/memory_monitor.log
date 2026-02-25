@@ -1,0 +1,1056 @@
+=== Mon Jan 26 12:26:26 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       6.2Gi       738Gi       115Mi        10Gi       744Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:51 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+sutirtha   54191 15.0  0.0 202908 39936 ?        R    12:26   0:00 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:14 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root       54072  0.0  0.0 392312 24576 ?        Ssl  12:09   0:00 /usr/libexec/fwupd/fwupd
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        3468  0.0  0.0  70100 18432 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+
+=== Mon Jan 26 12:31:27 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi        11Gi       677Gi       115Mi        66Gi       739Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 66.4  8.0 64449196 63688296 ?   R    12:26   3:20 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+sutirtha   57558  0.0  0.5 64449196 4710180 ?    S    12:31   0:00 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+sutirtha   57559  0.0  0.5 64449196 4710180 ?    S    12:31   0:00 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+sutirtha   57560  0.0  0.5 64449196 4710180 ?    S    12:31   0:00 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+sutirtha   57561  0.0  0.5 64449196 4710180 ?    S    12:31   0:00 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+sutirtha   57562  0.0  0.5 64449196 4710180 ?    S    12:31   0:00 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+sutirtha   57567  0.0  0.5 64449196 4710180 ?    S    12:31   0:00 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+sutirtha   57568  0.0  0.5 64449196 4710180 ?    S    12:31   0:00 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:51 /usr/bin/gnome-shell
+
+=== Mon Jan 26 12:36:27 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi        13Gi       674Gi       115Mi        66Gi       737Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 79.1  8.2 66239924 65400248 ?   R    12:26   7:55 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:51 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:14 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root       54072  0.0  0.0 392312 24576 ?        Ssl  12:09   0:00 /usr/libexec/fwupd/fwupd
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        3468  0.0  0.0  70100 18432 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+
+=== Mon Jan 26 12:41:27 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi        33Gi       655Gi       115Mi        66Gi       717Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 84.7 10.9 88108748 86871928 ?   R    12:26  12:43 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:52 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:14 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root       54072  0.0  0.0 392312 24576 ?        Ssl  12:09   0:00 /usr/libexec/fwupd/fwupd
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        3468  0.0  0.0  70100 18432 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+
+=== Mon Jan 26 12:46:27 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       110Gi       578Gi       115Mi        66Gi       640Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 88.5 21.1 168640408 167197860 ? R    12:26  17:43 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:52 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:14 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root       54072  0.0  0.0 392312 24576 ?        Ssl  12:09   0:00 /usr/libexec/fwupd/fwupd
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        3468  0.0  0.0  70100 18432 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+
+=== Mon Jan 26 12:51:27 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       207Gi       481Gi       115Mi        66Gi       543Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 90.7 33.9 271077792 268856484 ? R    12:26  22:43 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:52 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:14 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root       54072  0.0  0.0 392312 24576 ?        Ssl  12:09   0:01 /usr/libexec/fwupd/fwupd
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        3468  0.0  0.0  70100 18432 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+
+=== Mon Jan 26 12:56:28 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       301Gi       387Gi       115Mi        66Gi       449Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 92.3 46.3 369902716 367191204 ? R    12:26  27:43 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:52 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:14 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root       54072  0.0  0.0 392312 24576 ?        Ssl  12:09   0:01 /usr/libexec/fwupd/fwupd
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        3468  0.0  0.0  70100 18432 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+
+=== Mon Jan 26 13:01:28 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       392Gi       295Gi       115Mi        66Gi       357Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 93.4 58.5 467053100 463366308 ? R    12:26  32:43 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:52 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:14 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root       54072  0.0  0.0 392312 24576 ?        Ssl  12:09   0:01 /usr/libexec/fwupd/fwupd
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        3468  0.0  0.0  70100 18432 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+
+=== Mon Jan 26 13:06:28 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       483Gi       205Gi       115Mi        66Gi       267Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 94.2 70.4 562312316 558076068 ? R    12:26  37:43 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:52 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:14 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root       54072  0.0  0.0 392312 24576 ?        Ssl  12:09   0:01 /usr/libexec/fwupd/fwupd
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        3468  0.0  0.0  70100 18432 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+
+=== Mon Jan 26 13:11:28 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       494Gi       193Gi       115Mi        66Gi       256Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 94.8 71.9 574257428 569884836 ? R    12:26  42:44 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:53 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:14 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root       54072  0.0  0.0 392312 24576 ?        Ssl  12:09   0:01 /usr/libexec/fwupd/fwupd
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        3468  0.0  0.0  70100 18432 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+
+=== Mon Jan 26 13:16:28 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       496Gi       191Gi       115Mi        66Gi       254Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 95.3 72.2 576391660 572001444 ? R    12:26  47:44 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:53 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:14 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root       54072  0.0  0.0 392312 24576 ?        Ssl  12:09   0:01 /usr/libexec/fwupd/fwupd
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        3468  0.0  0.0  70100 18432 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+
+=== Mon Jan 26 13:21:29 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       498Gi       189Gi       115Mi        66Gi       251Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 95.8 72.4 578540624 574124196 ? R    12:26  52:44 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:53 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:14 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root       54072  0.0  0.0 392312 24576 ?        Ssl  12:09   0:01 /usr/libexec/fwupd/fwupd
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        3468  0.0  0.0  70100 18432 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+
+=== Mon Jan 26 13:26:29 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       500Gi       187Gi       115Mi        66Gi       249Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 96.1 72.7 580696044 576256164 ? R    12:26  57:44 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:53 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:14 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root       54072  0.0  0.0 392312 24576 ?        Ssl  12:09   0:01 /usr/libexec/fwupd/fwupd
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        3468  0.0  0.0  70100 18432 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+
+=== Mon Jan 26 13:31:29 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       502Gi       185Gi       115Mi        66Gi       247Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 96.4 73.0 582830676 578369700 ? R    12:26  62:44 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:53 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:14 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root       54072  0.0  0.0 392312 24576 ?        Ssl  12:09   0:01 /usr/libexec/fwupd/fwupd
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        3468  0.0  0.0  70100 18432 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+
+=== Mon Jan 26 13:36:29 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       504Gi       183Gi       115Mi        66Gi       245Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 96.6 73.2 584973824 580483236 ? R    12:26  67:44 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:53 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:15 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root       54072  0.0  0.0 392312 24576 ?        Ssl  12:09   0:01 /usr/libexec/fwupd/fwupd
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+
+=== Mon Jan 26 13:41:30 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       506Gi       181Gi       115Mi        66Gi       243Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 96.9 73.5 587136308 582612132 ? R    12:26  72:45 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:54 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:15 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root       54072  0.0  0.0 392312 24576 ?        Ssl  12:09   0:01 /usr/libexec/fwupd/fwupd
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+
+=== Mon Jan 26 13:46:30 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       508Gi       179Gi       115Mi        66Gi       241Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 97.1 73.8 589280384 584756388 ? R    12:26  77:45 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:54 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:15 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root       54072  0.0  0.0 392312 24576 ?        Ssl  12:09   0:01 /usr/libexec/fwupd/fwupd
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+
+=== Mon Jan 26 13:51:30 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       510Gi       177Gi       115Mi        66Gi       239Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 97.2 74.1 591417152 586894500 ? R    12:26  82:45 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:54 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:15 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root       54072  0.0  0.0 392312 24576 ?        Ssl  12:09   0:01 /usr/libexec/fwupd/fwupd
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+
+=== Mon Jan 26 13:56:30 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       513Gi       175Gi       115Mi        66Gi       237Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 97.4 74.3 593552764 589035684 ? R    12:26  87:45 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:54 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:15 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root       54072  0.0  0.0 392312 24576 ?        Ssl  12:09   0:01 /usr/libexec/fwupd/fwupd
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+
+=== Mon Jan 26 14:01:30 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       515Gi       173Gi       115Mi        66Gi       235Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 97.5 74.6 595692868 591183012 ? R    12:26  92:45 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:54 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:15 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root       54072  0.0  0.0 392312 24576 ?        Ssl  12:09   0:01 /usr/libexec/fwupd/fwupd
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+
+=== Mon Jan 26 14:06:31 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       517Gi       171Gi       115Mi        66Gi       233Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 97.6 74.9 597837808 593324196 ? R    12:26  97:45 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:54 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:15 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root       54072  0.0  0.0 392312 24576 ?        Ssl  12:09   0:01 /usr/libexec/fwupd/fwupd
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+
+=== Mon Jan 26 14:11:31 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       519Gi       169Gi       115Mi        66Gi       231Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 97.7 75.1 599958832 595440804 ? R    12:26 102:45 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:55 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:15 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        4154  0.0  0.0 118180 18432 ?        Ssl  Jan23   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+
+=== Mon Jan 26 14:16:31 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       521Gi       167Gi       115Mi        66Gi       229Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 97.8 75.4 602074344 597557412 ? R    12:26 107:45 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:55 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:15 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        4154  0.0  0.0 118180 18432 ?        Ssl  Jan23   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+
+=== Mon Jan 26 14:21:31 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       523Gi       165Gi       115Mi        66Gi       227Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 97.9 75.7 604199816 599683236 ? R    12:26 112:45 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:55 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:15 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        4154  0.0  0.0 118180 18432 ?        Ssl  Jan23   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+
+=== Mon Jan 26 14:26:31 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       525Gi       163Gi       115Mi        66Gi       225Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 98.0 75.9 606304680 601787556 ? R    12:26 117:46 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:55 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:15 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        4154  0.0  0.0 118180 18432 ?        Ssl  Jan23   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+
+=== Mon Jan 26 14:31:32 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       527Gi       161Gi       115Mi        66Gi       223Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 98.1 76.2 608412572 603901092 ? R    12:26 122:46 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:55 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:15 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        4154  0.0  0.0 118180 18432 ?        Ssl  Jan23   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+
+=== Mon Jan 26 14:36:32 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       529Gi       159Gi       115Mi        66Gi       221Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 98.2 76.5 610523996 606011556 ? R    12:26 127:46 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:56 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:15 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        4154  0.0  0.0 118180 18432 ?        Ssl  Jan23   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+
+=== Mon Jan 26 14:41:32 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       531Gi       157Gi       115Mi        66Gi       219Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 98.2 76.7 612636728 608125092 ? R    12:26 132:46 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:56 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:15 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        4154  0.0  0.0 118180 18432 ?        Ssl  Jan23   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+
+=== Mon Jan 26 14:46:32 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       533Gi       155Gi       115Mi        66Gi       217Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 98.3 77.0 614825488 610315428 ? R    12:26 137:46 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:56 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:15 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        4154  0.0  0.0 118180 18432 ?        Ssl  Jan23   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+
+=== Mon Jan 26 14:51:32 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       535Gi       151Gi       115Mi        68Gi       215Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 98.3 77.3 616984724 612478116 ? R    12:26 142:46 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:56 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:15 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        4154  0.0  0.0 118180 18432 ?        Ssl  Jan23   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+
+=== Mon Jan 26 14:56:33 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       537Gi       149Gi       115Mi        68Gi       213Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 98.4 77.6 619135316 614625444 ? R    12:26 147:46 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:56 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:15 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        4154  0.0  0.0 118180 18432 ?        Ssl  Jan23   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+
+=== Mon Jan 26 15:01:33 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       539Gi       147Gi       115Mi        68Gi       211Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 98.4 77.8 621294788 616794276 ? R    12:26 152:46 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:56 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:15 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        4154  0.0  0.0 118180 18432 ?        Ssl  Jan23   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+
+=== Mon Jan 26 15:06:33 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       541Gi       145Gi       115Mi        68Gi       209Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 98.5 78.1 623425744 618932388 ? R    12:26 157:47 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:57 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:15 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        4154  0.0  0.0 118180 18432 ?        Ssl  Jan23   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+
+=== Mon Jan 26 15:11:33 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       543Gi       143Gi       115Mi        68Gi       207Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 98.5 78.4 625560144 621061284 ? R    12:26 162:47 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:57 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:15 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        4154  0.0  0.0 118180 18432 ?        Ssl  Jan23   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+
+=== Mon Jan 26 15:16:33 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       545Gi       141Gi       115Mi        68Gi       205Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 98.6 78.6 627693812 623190180 ? R    12:26 167:47 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:57 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:15 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        4154  0.0  0.0 118180 18432 ?        Ssl  Jan23   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+
+=== Mon Jan 26 15:21:34 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       547Gi       139Gi       115Mi        68Gi       203Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 98.6 78.9 629833964 625337508 ? R    12:26 172:47 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:57 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:15 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        4154  0.0  0.0 118180 18432 ?        Ssl  Jan23   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+
+=== Mon Jan 26 15:26:34 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       549Gi       137Gi       115Mi        68Gi       201Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 98.6 79.2 631976560 627481764 ? R    12:26 177:47 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:57 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:16 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        4154  0.0  0.0 118180 18432 ?        Ssl  Jan23   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+
+=== Mon Jan 26 15:31:34 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       551Gi       135Gi       115Mi        68Gi       199Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 98.7 79.5 634100800 629601444 ? R    12:26 182:47 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:57 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:16 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        4154  0.0  0.0 118180 18432 ?        Ssl  Jan23   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+
+=== Mon Jan 26 15:36:34 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       553Gi       133Gi       115Mi        68Gi       197Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 98.7 79.7 636242184 631745700 ? R    12:26 187:47 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:58 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:16 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        4154  0.0  0.0 118180 18432 ?        Ssl  Jan23   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+
+=== Mon Jan 26 15:41:34 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       555Gi       131Gi       115Mi        68Gi       195Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 98.8 80.0 638379840 633880740 ? R    12:26 192:47 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:58 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:16 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        4154  0.0  0.0 118180 18432 ?        Ssl  Jan23   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+
+=== Mon Jan 26 15:46:34 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       557Gi       129Gi       115Mi        68Gi       192Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 98.8 80.3 640519780 636018852 ? R    12:26 197:47 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:58 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:16 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        4154  0.0  0.0 118180 18432 ?        Ssl  Jan23   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+
+=== Mon Jan 26 15:51:35 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       559Gi       127Gi       115Mi        68Gi       190Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 98.8 80.5 642647420 638144676 ? R    12:26 202:47 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:58 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:16 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        4154  0.0  0.0 118180 18432 ?        Ssl  Jan23   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+
+=== Mon Jan 26 15:56:35 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       561Gi       125Gi       115Mi        68Gi       188Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 98.8 80.8 644810672 640279716 ? R    12:26 207:48 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:58 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:16 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        4154  0.0  0.0 118180 18432 ?        Ssl  Jan23   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+
+=== Mon Jan 26 16:01:35 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       563Gi       123Gi       115Mi        68Gi       186Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 98.9 81.1 646961900 642408612 ? R    12:26 212:48 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:58 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:16 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        4154  0.0  0.0 118180 18432 ?        Ssl  Jan23   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+
+=== Mon Jan 26 16:06:35 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       565Gi       121Gi       115Mi        68Gi       184Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 98.9 81.3 649139016 644562084 ? R    12:26 217:48 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:58 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:16 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        4154  0.0  0.0 118180 18432 ?        Ssl  Jan23   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+
+=== Mon Jan 26 16:11:35 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       567Gi       119Gi       115Mi        68Gi       182Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 98.9 81.6 651314836 646709412 ? R    12:26 222:48 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:59 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:16 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        4154  0.0  0.0 118180 18432 ?        Ssl  Jan23   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+
+=== Mon Jan 26 16:16:36 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       570Gi       117Gi       115Mi        68Gi       180Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 98.9 81.9 653501228 648875172 ? R    12:26 227:48 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:59 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:16 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        4154  0.0  0.0 118180 18432 ?        Ssl  Jan23   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+
+=== Mon Jan 26 16:21:36 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       572Gi       115Gi       115Mi        68Gi       178Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 98.9 82.2 655667140 651019428 ? R    12:26 232:48 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:59 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:16 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        4154  0.0  0.0 118180 18432 ?        Ssl  Jan23   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+
+=== Mon Jan 26 16:26:36 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       574Gi       113Gi       115Mi        68Gi       176Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 99.0 82.4 657842204 653166756 ? R    12:26 237:48 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:59 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:16 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        4154  0.0  0.0 118180 18432 ?        Ssl  Jan23   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+
+=== Mon Jan 26 16:31:36 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       576Gi       110Gi       115Mi        68Gi       174Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 99.0 82.7 660021016 655323300 ? R    12:26 242:48 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   2:59 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:16 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        4154  0.0  0.0 118180 18432 ?        Ssl  Jan23   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+
+=== Mon Jan 26 16:36:36 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       578Gi       108Gi       115Mi        68Gi       172Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 99.0 83.0 662208792 657489060 ? R    12:26 247:49 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   3:00 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:16 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        4154  0.0  0.0 118180 18432 ?        Ssl  Jan23   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+
+=== Mon Jan 26 16:41:37 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       580Gi       106Gi       115Mi        68Gi       170Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 99.0 83.2 664378584 659633316 ? R    12:26 252:49 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   3:00 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:16 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        4154  0.0  0.0 118180 18432 ?        Ssl  Jan23   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+
+=== Mon Jan 26 16:46:37 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       582Gi       104Gi       115Mi        68Gi       168Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 99.0 83.5 666560408 661789860 ? R    12:26 257:49 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   3:00 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:16 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        4154  0.0  0.0 118180 18432 ?        Ssl  Jan23   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+
+=== Mon Jan 26 16:51:37 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       584Gi       102Gi       115Mi        68Gi       166Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 99.1 83.8 668733720 663940260 ? R    12:26 262:49 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   3:00 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:16 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        4154  0.0  0.0 118180 18432 ?        Ssl  Jan23   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+
+=== Mon Jan 26 16:56:37 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       586Gi       100Gi       115Mi        68Gi       164Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 99.1 84.1 670892148 666078372 ? R    12:26 267:49 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   3:00 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:16 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        4154  0.0  0.0 118180 18432 ?        Ssl  Jan23   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+
+=== Mon Jan 26 17:01:37 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       588Gi        98Gi       115Mi        68Gi       162Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 99.1 84.3 673050948 668213412 ? R    12:26 272:49 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   3:00 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:01 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:16 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        4154  0.0  0.0 118180 18432 ?        Ssl  Jan23   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+
+=== Mon Jan 26 17:06:38 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       590Gi        96Gi       115Mi        68Gi       160Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 99.1 84.6 675221396 670360740 ? R    12:26 277:49 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   3:01 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:02 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:16 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        4154  0.0  0.0 118180 18432 ?        Ssl  Jan23   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+
+=== Mon Jan 26 17:11:38 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       592Gi        94Gi       115Mi        68Gi       158Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 99.1 84.9 677421980 672538788 ? R    12:26 282:49 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   3:01 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:02 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:17 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        4154  0.0  0.0 118180 18432 ?        Ssl  Jan23   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+
+=== Mon Jan 26 17:16:38 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       594Gi        92Gi       115Mi        68Gi       155Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 99.1 85.2 679655604 674747556 ? R    12:26 287:49 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   3:01 /usr/bin/gnome-shell
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:02 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:17 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+root        4154  0.0  0.0 118180 18432 ?        Ssl  Jan23   0:00 /usr/bin/python3 /usr/share/unattended-upgrades/unattended-upgrade-shutdown --wait-for-signal
+
+=== Mon Jan 26 17:21:38 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       596Gi        90Gi       115Mi        68Gi       153Gi
+Swap:          238Gi        17Mi       238Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 99.1 85.4 681882656 676953252 ? R    12:26 292:50 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+gdm         4995  0.0  0.0 8717452 193536 tty1   Sl+  Jan23   3:01 /usr/bin/gnome-shell
+animesh+   66645  0.0  0.0 2174012 49152 pts/0   Dl+  17:21   0:07 python3 selection_BGS.py
+gdm         4402  0.0  0.0 4516244 49148 tty1    Sl+  Jan23   0:02 /usr/lib/xorg/Xorg vt1 -displayfd 3 -auth /run/user/128/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+root        4030  0.0  0.0 6498840 33376 ?       Ssl  Jan23   1:17 /usr/lib/snapd/snapd
+gdm         5206  0.0  0.0 2931180 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.Shell.Notifications
+gdm         5374  0.0  0.0 2939376 27648 tty1    Sl+  Jan23   0:00 /usr/bin/gjs /usr/share/gnome-shell/org.gnome.ScreenSaver
+root        3468  0.0  0.0  78296 21504 ?        S<s  Jan23   0:05 /lib/systemd/systemd-journald
+postgres    4178  0.0  0.0 220992 21504 ?        Ss   Jan23   0:05 /usr/lib/postgresql/14/bin/postgres -D /var/lib/postgresql/14/main -c config_file=/etc/postgresql/14/main/postgresql.conf
+
+=== Mon Jan 26 17:26:44 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       611Gi       6.4Gi        16Mi       137Gi       136Gi
+Swap:          238Gi        72Gi       165Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 98.8 76.6 683631940 607274148 ? D    12:26 297:06 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+animesh+   66859  1.8  0.0 2595544 357464 pts/0  D+   17:21   0:05 python3 selection_BGS.py
+animesh+   66645  3.0  0.0 2568132 296000 pts/0  Sl+  17:21   0:09 python3 selection_BGS.py
+animesh+   66871  1.6  0.0 2605668 280680 pts/0  D+   17:21   0:05 python3 selection_BGS.py
+animesh+   66811  1.6  0.0 2612768 280600 pts/0  D+   17:21   0:05 python3 selection_BGS.py
+animesh+   66952  1.6  0.0 2538536 274640 pts/0  D+   17:21   0:05 python3 selection_BGS.py
+animesh+   66900  1.7  0.0 2536268 274572 pts/0  D+   17:21   0:05 python3 selection_BGS.py
+animesh+   66883  1.7  0.0 2610772 274548 pts/0  D+   17:21   0:05 python3 selection_BGS.py
+animesh+   66823  1.7  0.0 2610180 274472 pts/0  D+   17:21   0:05 python3 selection_BGS.py
+
+=== Mon Jan 26 17:32:13 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       616Gi       5.3Gi        15Mi       133Gi       134Gi
+Swap:          238Gi       141Gi        96Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 98.2 70.3 684951116 556773540 ? D    12:26 300:27 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+animesh+   66645  2.2  0.1 3520080 1126472 pts/0 Sl+  17:21   0:14 python3 selection_BGS.py
+animesh+   66903  1.7  0.0 3044248 440464 pts/0  D+   17:21   0:10 python3 selection_BGS.py
+animesh+   66936  1.9  0.0 2799956 412856 pts/0  D+   17:21   0:12 python3 selection_BGS.py
+animesh+   66877  2.1  0.0 2635656 409712 pts/0  D+   17:21   0:13 python3 selection_BGS.py
+animesh+   66924  1.7  0.0 2737508 406704 pts/0  D+   17:21   0:11 python3 selection_BGS.py
+animesh+   66937  1.9  0.0 2723140 400572 pts/0  D+   17:21   0:12 python3 selection_BGS.py
+animesh+   66818  1.9  0.0 2571336 400416 pts/0  D+   17:21   0:12 python3 selection_BGS.py
+animesh+   66768  1.8  0.0 3064748 400348 pts/0  D+   17:21   0:11 python3 selection_BGS.py
+
+=== Mon Jan 26 17:37:13 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       579Gi       6.2Gi        15Mi       169Gi       170Gi
+Swap:          238Gi       192Gi        46Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 97.8 64.1 686417400 508303524 ? R    12:26 304:03 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+animesh+   66645  1.6  0.1 3811192 1408240 pts/0 Sl+  17:21   0:15 python3 selection_BGS.py
+animesh+   66877  1.8  0.0 2635656 425072 pts/0  D+   17:21   0:17 python3 selection_BGS.py
+animesh+   66924  1.8  0.0 2737508 418992 pts/0  D+   17:21   0:17 python3 selection_BGS.py
+animesh+   66936  1.8  0.0 2799956 412856 pts/0  D+   17:21   0:17 python3 selection_BGS.py
+animesh+   66961  1.5  0.0 2774456 400604 pts/0  D+   17:21   0:14 python3 selection_BGS.py
+animesh+   66963  1.5  0.0 2621328 400604 pts/0  D+   17:21   0:14 python3 selection_BGS.py
+animesh+   66951  1.6  0.0 2632152 400592 pts/0  D+   17:21   0:15 python3 selection_BGS.py
+animesh+   66937  1.7  0.0 2723140 400572 pts/0  D+   17:21   0:16 python3 selection_BGS.py
+
+=== Mon Jan 26 17:42:14 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       555Gi       6.7Gi        15Mi       193Gi       193Gi
+Swap:          238Gi       238Gi        60Mi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 97.5 57.7 688056280 457649316 ? R    12:26 308:03 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+animesh+   66645  1.3  0.2 4139896 1676348 pts/0 Sl+  17:21   0:16 python3 selection_BGS.py
+animesh+   66766  2.4  0.1 3310844 1194400 pts/0 R+   17:21   0:29 python3 selection_BGS.py
+animesh+   66951  1.7  0.1 3252536 1159376 pts/0 R+   17:21   0:21 python3 selection_BGS.py
+animesh+   66829  1.9  0.1 3092208 995288 pts/0  R+   17:21   0:23 python3 selection_BGS.py
+animesh+   67695  2.1  0.0 2927532 750012 pts/1  R+   17:24   0:22 python3 selection_BGS.py -d south
+animesh+   66924  1.9  0.0 2737508 498864 pts/0  D+   17:21   0:24 python3 selection_BGS.py
+animesh+   67320  1.8  0.0 2697604 477396 pts/1  R+   17:24   0:20 python3 selection_BGS.py -d south
+animesh+   66937  1.8  0.0 2723140 455868 pts/0  D+   17:21   0:22 python3 selection_BGS.py
+
+=== Mon Jan 26 17:47:14 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       638Gi       5.1Gi        15Mi       111Gi       110Gi
+Swap:          238Gi       238Gi       0.0Ki
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+sutirtha   54191 97.5 50.1 690236904 396943524 ? R    12:26 313:00 python3 -u stellar_deduplication.py /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits --workers 64 --tolerance 1.0 --sigma 3.0 --chunk-size 100000 --temp-dir ./temp_dedup_2526341.pawna --ra-col RA_all --dec-col DEC_all
+animesh+   66645  1.2  0.2 4404088 1961584 pts/0 Sl+  17:21   0:18 python3 selection_BGS.py
+animesh+   67519  2.3  0.1 3185776 992984 pts/1  R+   17:24   0:31 python3 selection_BGS.py -d south
+animesh+   67453  3.0  0.1 3149048 946212 pts/1  R+   17:24   0:41 python3 selection_BGS.py -d south
+animesh+   67520  2.1  0.1 3137180 943604 pts/1  R+   17:24   0:29 python3 selection_BGS.py -d south
+animesh+   67391  1.9  0.0 3009496 749956 pts/1  R+   17:24   0:26 python3 selection_BGS.py -d south
+animesh+   67680  2.1  0.0 2986284 707124 pts/1  R+   17:24   0:30 python3 selection_BGS.py -d south
+animesh+   66948  1.7  0.0 3007272 680140 pts/0  D+   17:21   0:26 python3 selection_BGS.py
+animesh+   67541  1.9  0.0 3085524 640012 pts/1  D+   17:24   0:27 python3 selection_BGS.py -d south
+
+=== Mon Jan 26 17:52:14 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi       353Gi       387Gi        12Mi        13Gi       396Gi
+Swap:          238Gi       158Gi        80Gi
+Top memory consumers:
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+animesh+   67256  1.9  0.5 6894544 4485556 pts/1 Sl+  17:24   0:32 python3 selection_BGS.py -d south
+animesh+   67443  3.0  0.2 4449284 2188200 pts/1 R+   17:24   0:51 python3 selection_BGS.py -d south
+animesh+   67401  2.8  0.2 4351424 2105096 pts/1 R+   17:24   0:48 python3 selection_BGS.py -d south
+animesh+   67325  2.5  0.2 4487136 1781088 pts/1 R+   17:24   0:42 python3 selection_BGS.py -d south
+animesh+   67418  2.7  0.2 4477716 1699800 pts/1 R+   17:24   0:46 python3 selection_BGS.py -d south
+animesh+   67565  2.4  0.1 4360440 1442216 pts/1 R+   17:24   0:40 python3 selection_BGS.py -d south
+animesh+   67475  3.9  0.1 3571060 1301548 pts/1 S+   17:24   1:06 python3 selection_BGS.py -d south
+animesh+   67553  3.6  0.1 3493824 1261852 pts/1 S+   17:24   1:01 python3 selection_BGS.py -d south
+animesh+   67449  3.6  0.1 3430572 1185052 pts/1 S+   17:24   1:00 python3 selection_BGS.py -d south
+

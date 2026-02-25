@@ -1,0 +1,264 @@
+#!/bin/bash
+#PBS -S /bin/bash
+#PBS -N v11.1_adaptive_membership_v10
+#PBS -l nodes=1:ppn=32
+#PBS -l mem=256gb
+#PBS -l walltime=72:00:00
+#PBS -o adaptive_membership_v10.log
+#PBS -e adaptive_membership_v10.err
+#PBS -m abe
+#PBS -M sutirtharkm@gmail.com
+
+# =============================================================================
+# ADAPTIVE MEMBERSHIP ANALYSIS V10  —  DUAL-EPOCH (J2000 + J2016)
+# =============================================================================
+#
+# Changes from V6/V7:
+#   - Runs TWO full analyses sequentially:
+#
+#       Epoch 2016  (outputs_v10_${PBS_JOBID}/epoch2016/)
+#         Member catalog RA/Dec treated as Gaia J2016.0 epoch (as-is).
+#         Identical to V7 behaviour. Crossmatch is direct.
+#
+#       Epoch 2000  (outputs_v10_${PBS_JOBID}/epoch2000/)
+#         Member catalog RA/Dec treated as J2000.0.
+#         Positions propagated to J2016.0 via PMRA/PMDEC before crossmatch.
+#         PMRA/PMDEC assumed already in Gaia/ICRS frame (no PM correction).
+#         Propagation: astropy SkyCoord.apply_space_motion() if available,
+#                      otherwise linear:  ΔRA  = pmra·dt/(cos δ·3.6×10⁶)
+#                                         Δdec = pmdec·dt/3.6×10⁶
+#                      where dt = 16.0 yr (J2000.0 → J2016.0).
+#
+#   - Sky-position panels in epoch-2000 plots show propagated J2016 coords.
+#   - Independent checkpoint directories per epoch.
+#   - Combined cross-epoch summary CSV written to output root.
+#   - All V7 P_mem-filtered (P > 0.5) distance & RV histogram style preserved.
+#
+# OUTPUT STRUCTURE:
+#   outputs_v10_${PBS_JOBID}/
+#     adaptive_membership_v10.log       ← master log
+#     V10_summary_COMBINED.csv          ← both epochs, easy side-by-side
+#     epoch2016/
+#       individual_plots/
+#         GC_<name>.png  OC_<name>.png  DW_<name>.png  SGR_<bin>.png ...
+#       SUMMARY_PM*.png
+#       SUMMARY_RADEC*.png
+#       SUMMARY_Distance*.png
+#       SUMMARY_RV*.png
+#       SUMMARY_DistRV*.png  (legacy-compatible)
+#       GRAND_SUMMARY_*.png
+#       V10_full_membership_epoch2016.csv
+#       V10_summary_epoch2016.csv
+#       V10_algorithm_results_epoch2016.json
+#     epoch2000/
+#       individual_plots/  (same structure as epoch2016/)
+#       SUMMARY_*.png
+#       V10_*_epoch2000.csv / .json
+#
+# CHECKPOINT STRUCTURE:
+#   checkpoints_v10/
+#     epoch2016/
+#       master_data_v10.parquet   ← master catalog DataFrame
+#       master_tree_v10.npz       ← 3-D unit-vector KDTree coords
+#     epoch2000/
+#       master_data_v10.parquet   ← same master data (independent reload)
+#       master_tree_v10.npz
+#
+# NOTE: The master catalog is identical for both epochs (it is always Gaia
+# DR3 J2016.0 data). Only the MEMBER catalog query positions change between
+# epochs. Checkpoints are kept separate so either epoch can be resumed
+# independently without re-running the other.
+#
+# REQUIREMENTS:
+#   Python packages: numpy, pandas, scipy, scikit-learn, matplotlib,
+#                    astropy (highly recommended for rigorous propagation),
+#                    hdbscan (optional, improves OC detection)
+#   Install:  pip install astropy hdbscan
+# =============================================================================
+
+source /user/sutirtha/anaconda3/etc/profile.d/conda.sh
+conda activate base
+
+cd /user/sutirtha/BallTree_Xmatch
+
+# ─────────────────────────────────────────────────────────────────────────────
+# FILE PATHS
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Master catalog: glob pattern passed to Python (MUST be quoted below)
+MASTER_CATALOG="/user/sutirtha/BallTree_Xmatch/Entire_catalogue_chunk*.fits"
+
+# Member catalogs
+GC_MEMBERS="/user/sutirtha/BallTree_Xmatch/GC_members_with_RV.csv"
+OC_MEMBERS="/user/sutirtha/BallTree_Xmatch/OC_members.csv"
+SGR_MEMBERS="/user/sutirtha/BallTree_Xmatch/Sgr_stream_members.csv"
+DWG_MEMBERS="/user/sutirtha/BallTree_Xmatch/DWG_members_with_RV.csv"
+
+# Reference distance table for GCs
+GC_DIST_FILE="/user/sutirtha/BallTree_Xmatch/GC_dist.csv"
+
+# Output and checkpoint root directories
+OUTPUT_DIR="./outputs_v10_${PBS_JOBID}"
+CHECKPOINT_DIR="./checkpoints_v10"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ANALYSIS PARAMETERS
+# ─────────────────────────────────────────────────────────────────────────────
+
+# P_mem threshold for distance/RV histogram plots (V7 feature, preserved)
+# 0.5 keeps probable members, removes clear contaminants.
+# Set to 0.8 for stricter membership filtering in plots.
+PMEM_THRESHOLD=0.5
+
+# Epoch propagation: dt in years from member catalog epoch to master epoch.
+# Default: 16.0  (J2000.0 → J2016.0 Gaia DR3 reference epoch)
+# Change only if your member catalogs use a different reference epoch.
+EPOCH_DELTA=16.0
+
+# Which epochs to run: '2016', '2000', or both (default = both)
+# To run only one epoch, change to: EPOCHS="2016"  or  EPOCHS="2000"
+EPOCHS="2016 2000"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SETUP
+# ─────────────────────────────────────────────────────────────────────────────
+
+echo "=============================================================="
+echo "  ADAPTIVE MEMBERSHIP ANALYSIS V10 — DUAL-EPOCH"
+echo "  Epoch 2016 : member RA/Dec as J2016 (Gaia DR3, unchanged)"
+echo "  Epoch 2000 : member RA/Dec as J2000, propagate → J2016"
+echo "              via PMRA/PMDEC  (dt = ${EPOCH_DELTA} yr)"
+echo "=============================================================="
+echo "Job ID     : ${PBS_JOBID}"
+echo "Node       : $(hostname)"
+echo "CPUs       : $(nproc)"
+echo "Started    : $(date)"
+echo "Output dir : ${OUTPUT_DIR}"
+echo "Checkpoints: ${CHECKPOINT_DIR}"
+echo "P_mem thr  : ${PMEM_THRESHOLD}"
+echo "Epochs     : ${EPOCHS}"
+echo "=============================================================="
+
+mkdir -p "${OUTPUT_DIR}"
+mkdir -p "${CHECKPOINT_DIR}/epoch2016"
+mkdir -p "${CHECKPOINT_DIR}/epoch2000"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# CHECK ASTROPY (preferred for rigorous epoch propagation)
+# ─────────────────────────────────────────────────────────────────────────────
+
+echo ""
+echo "Checking Python environment..."
+python -c "import astropy; print('astropy version:', astropy.__version__)" \
+    && echo "  ✓ astropy available (rigorous propagation enabled)" \
+    || echo "  ⚠ astropy NOT found — will use linear approximation fallback"
+
+python -c "import hdbscan; print('hdbscan version:', hdbscan.__version__)" \
+    && echo "  ✓ hdbscan available (improved OC detection)" \
+    || echo "  ⚠ hdbscan NOT found — DBSCAN will be used for OCs"
+
+echo ""
+
+# ─────────────────────────────────────────────────────────────────────────────
+# BUILD COMMAND
+# ─────────────────────────────────────────────────────────────────────────────
+
+# NOTE: --master is quoted to pass the glob pattern to Python unexpanded.
+#       Shell expansion would break multi-file loading.
+CMD="python mem4_plot_custom.py"
+CMD="${CMD} --master '${MASTER_CATALOG}'"
+CMD="${CMD} --output  ${OUTPUT_DIR}"
+CMD="${CMD} --checkpoint ${CHECKPOINT_DIR}"
+CMD="${CMD} --pmem-threshold ${PMEM_THRESHOLD}"
+CMD="${CMD} --epoch-delta ${EPOCH_DELTA}"
+CMD="${CMD} --epochs ${EPOCHS}"
+
+# Append member files only if they exist
+if [ -f "${GC_MEMBERS}" ]; then
+    CMD="${CMD} --gc  ${GC_MEMBERS}"
+    echo "✓ GC members    : ${GC_MEMBERS}"
+else
+    echo "⚠ GC members    : NOT FOUND  (${GC_MEMBERS})"
+fi
+
+if [ -f "${OC_MEMBERS}" ]; then
+    CMD="${CMD} --oc  ${OC_MEMBERS}"
+    echo "✓ OC members    : ${OC_MEMBERS}"
+else
+    echo "⚠ OC members    : NOT FOUND  (${OC_MEMBERS})"
+fi
+
+if [ -f "${SGR_MEMBERS}" ]; then
+    CMD="${CMD} --sgr ${SGR_MEMBERS}"
+    echo "✓ SGR members   : ${SGR_MEMBERS}"
+else
+    echo "⚠ SGR members   : NOT FOUND  (${SGR_MEMBERS})"
+fi
+
+if [ -f "${DWG_MEMBERS}" ]; then
+    CMD="${CMD} --dwg ${DWG_MEMBERS}"
+    echo "✓ DWG members   : ${DWG_MEMBERS}"
+else
+    echo "⚠ DWG members   : NOT FOUND  (${DWG_MEMBERS})"
+fi
+
+if [ -f "${GC_DIST_FILE}" ]; then
+    CMD="${CMD} --gc-dist ${GC_DIST_FILE}"
+    echo "✓ GC distances  : ${GC_DIST_FILE}"
+else
+    echo "⚠ GC distances  : NOT FOUND  (${GC_DIST_FILE})"
+fi
+
+# ─────────────────────────────────────────────────────────────────────────────
+# RUN
+# ─────────────────────────────────────────────────────────────────────────────
+
+echo ""
+echo "Running: ${CMD}"
+echo "=============================================================="
+echo ""
+
+eval ${CMD}
+EXIT_CODE=$?
+
+# ─────────────────────────────────────────────────────────────────────────────
+# POST-RUN REPORT
+# ─────────────────────────────────────────────────────────────────────────────
+
+echo ""
+echo "=============================================================="
+echo "Finished   : $(date)"
+echo "Exit code  : ${EXIT_CODE}"
+echo ""
+echo "Output directory listing:"
+echo "  ${OUTPUT_DIR}/"
+ls -lh "${OUTPUT_DIR}/" 2>/dev/null || echo "  (empty or not found)"
+
+echo ""
+for EPOCH in 2016 2000; do
+    EDIR="${OUTPUT_DIR}/epoch${EPOCH}"
+    if [ -d "${EDIR}" ]; then
+        N_PNG=$(find "${EDIR}/individual_plots" -name "*.png" 2>/dev/null | wc -l)
+        N_SUM=$(find "${EDIR}" -maxdepth 1 -name "SUMMARY_*.png" 2>/dev/null | wc -l)
+        N_GRAND=$(find "${EDIR}" -maxdepth 1 -name "GRAND_SUMMARY_*.png" 2>/dev/null | wc -l)
+        echo "  epoch${EPOCH}/  — ${N_PNG} individual plots | ${N_SUM} summary plots | ${N_GRAND} grand-summary plots"
+        ls -lh "${EDIR}/"*.csv "${EDIR}/"*.json 2>/dev/null | awk '{print "    " $NF, $5}'
+    else
+        echo "  epoch${EPOCH}/  — NOT CREATED (skipped or error)"
+    fi
+done
+
+COMBINED="${OUTPUT_DIR}/V10_summary_COMBINED.csv"
+if [ -f "${COMBINED}" ]; then
+    NROWS=$(tail -n +2 "${COMBINED}" | wc -l)
+    echo ""
+    echo "  Combined summary: ${COMBINED}  (${NROWS} objects × 2 epochs)"
+fi
+
+echo ""
+echo "Checkpoint sizes:"
+du -sh "${CHECKPOINT_DIR}"/epoch*/ 2>/dev/null
+
+echo "=============================================================="
+
+exit ${EXIT_CODE}

@@ -1,0 +1,77 @@
+#!/bin/bash
+#PBS -S /bin/bash
+#PBS -N comp_purity
+#PBS -l nodes=1:ppn=32
+#PBS -l mem=200gb
+#PBS -l walltime=48:00:00
+#PBS -o /user/sutirtha/BallTree_Xmatch/rigorous_comp_purity.log
+#PBS -e /user/sutirtha/BallTree_Xmatch/rigorous_comp_purity.err
+#PBS -m abe
+#PBS -M sutirtharkm@gmail.com
+
+# Memory optimization
+export MALLOC_TRIM_THRESHOLD_=65536
+export MALLOC_MMAP_THRESHOLD_=65536
+export MALLOC_MMAP_MAX_=65536
+export PYTHONHASHSEED=0
+export OMP_NUM_THREADS=1
+export MKL_NUM_THREADS=1
+export NUMEXPR_NUM_THREADS=1
+export OPENBLAS_NUM_THREADS=1
+
+# Activate conda
+source /user/sutirtha/anaconda3/etc/profile.d/conda.sh
+conda activate base
+
+cd /user/sutirtha/BallTree_Xmatch
+
+# File paths
+MASTER_CATALOG_DIR="/user/sutirtha/BallTree_Xmatch"
+GC_MEMBERS_FILE="/user/sutirtha/BallTree_Xmatch/GC_members.csv"
+OC_MEMBERS_FILE="/user/sutirtha/BallTree_Xmatch/OC_members.csv"
+SGR_MEMBERS_FILE="/user/sutirtha/BallTree_Xmatch/Sgr_members.csv"
+OUTPUT_DIR="/user/sutirtha/BallTree_Xmatch/rigorous_comp_purity_results"
+
+echo "=============================================="
+echo "RIGOROUS COMPLETENESS & PURITY ANALYSIS"
+echo "=============================================="
+echo "Job ID: $PBS_JOBID"
+echo "Node: $(hostname)"
+echo "Started: $(date)"
+echo "=============================================="
+
+mkdir -p "$OUTPUT_DIR"
+
+# Memory monitor
+(
+  while true; do
+    echo "=== $(date) ===" >> "${OUTPUT_DIR}/memory.log"
+    free -h >> "${OUTPUT_DIR}/memory.log"
+    sleep 300
+  done
+) &
+MONITOR_PID=$!
+
+# Run analysis
+CMD="python3 -u comp_pu.py"
+CMD="$CMD --master $MASTER_CATALOG_DIR"
+CMD="$CMD --output $OUTPUT_DIR"
+
+[ -f "$GC_MEMBERS_FILE" ] && CMD="$CMD --gc $GC_MEMBERS_FILE"
+[ -f "$OC_MEMBERS_FILE" ] && CMD="$CMD --oc $OC_MEMBERS_FILE"
+[ -f "$SGR_MEMBERS_FILE" ] && CMD="$CMD --sgr $SGR_MEMBERS_FILE"
+
+echo "Command: $CMD"
+$CMD
+
+EXIT_CODE=$?
+
+kill $MONITOR_PID 2>/dev/null
+
+echo "=============================================="
+echo "FINISHED: $(date)"
+echo "Exit code: $EXIT_CODE"
+ls -la "$OUTPUT_DIR"
+echo "=============================================="
+
+exit $EXIT_CODE

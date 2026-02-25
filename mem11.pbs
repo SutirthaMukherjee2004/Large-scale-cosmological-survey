@@ -1,0 +1,163 @@
+#!/bin/bash
+#PBS -S /bin/bash
+#PBS -N v11_adaptive_membership
+#PBS -l nodes=1:ppn=32
+#PBS -l mem=256gb
+#PBS -l walltime=72:00:00
+#PBS -o adaptive_membership_v11.log
+#PBS -e adaptive_membership_v11.err
+#PBS -m abe
+#PBS -M sutirtharkm@gmail.com
+
+# =============================================================================
+# ADAPTIVE MEMBERSHIP ANALYSIS V11 — FULL PHASE-SPACE EM (ALL TYPES)
+# =============================================================================
+# V11: SGR uses full 7-term Bayesian EM (dist+RV+FeH+CMD+PM+logg)
+#      5 kpc bins 15-80 kpc | Navy blue plx dist | Gray BG | Grand summary
+# =============================================================================
+
+source /user/sutirtha/anaconda3/etc/profile.d/conda.sh
+conda activate base
+
+cd /user/sutirtha/BallTree_Xmatch
+
+# ─────────────────────────────────────────────────────────────────────────────
+# FILE PATHS
+# ─────────────────────────────────────────────────────────────────────────────
+
+MASTER_CATALOG="/user/sutirtha/BallTree_Xmatch/Entire_catalogue_chunk*.fits"
+GC_MEMBERS="/user/sutirtha/BallTree_Xmatch/GC_members_with_RV.csv"
+OC_MEMBERS="/user/sutirtha/BallTree_Xmatch/OC_members.csv"
+SGR_MEMBERS="/user/sutirtha/BallTree_Xmatch/Sgr_stream_members.csv"
+DWG_MEMBERS="/user/sutirtha/BallTree_Xmatch/DWG_members_with_RV.csv"
+GC_DIST_FILE="/user/sutirtha/BallTree_Xmatch/GC_dist.csv"
+
+OUTPUT_DIR="./outputs_v11_${PBS_JOBID}"
+CHECKPOINT_DIR="./checkpoints_v11"
+
+PMEM_THRESHOLD=0.5
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SETUP
+# ─────────────────────────────────────────────────────────────────────────────
+
+echo "=============================================================="
+echo "  ADAPTIVE MEMBERSHIP ANALYSIS V11"
+echo "  SGR: full 7-term Bayesian EM (5 kpc bins, 15-80 kpc)"
+echo "=============================================================="
+echo "Job ID     : ${PBS_JOBID}"
+echo "Node       : $(hostname)"
+echo "CPUs       : $(nproc)"
+echo "Started    : $(date)"
+echo "Output dir : ${OUTPUT_DIR}"
+echo "Checkpoints: ${CHECKPOINT_DIR}"
+echo "P_mem thr  : ${PMEM_THRESHOLD}"
+echo "=============================================================="
+
+mkdir -p "${OUTPUT_DIR}"
+mkdir -p "${CHECKPOINT_DIR}"
+
+echo ""
+echo "Checking Python environment..."
+python -c "import astropy; print('astropy version:', astropy.__version__)" \
+    && echo "  ✓ astropy available" \
+    || echo "  ⚠ astropy NOT found — linear fallback"
+
+python -c "import hdbscan; print('hdbscan version:', hdbscan.__version__)" \
+    && echo "  ✓ hdbscan available" \
+    || echo "  ⚠ hdbscan NOT found"
+
+echo ""
+
+# ─────────────────────────────────────────────────────────────────────────────
+# BUILD COMMAND
+# ─────────────────────────────────────────────────────────────────────────────
+
+CMD="python mem11.py"
+CMD="${CMD} --master-catalog '${MASTER_CATALOG}'"
+CMD="${CMD} --output-dir ${OUTPUT_DIR}"
+CMD="${CMD} --checkpoint-dir ${CHECKPOINT_DIR}"
+CMD="${CMD} --pmem-threshold ${PMEM_THRESHOLD}"
+CMD="${CMD} --epoch both"
+
+if [ -f "${GC_MEMBERS}" ]; then
+    CMD="${CMD} --gc-members ${GC_MEMBERS}"
+    echo "✓ GC members    : ${GC_MEMBERS}"
+else
+    echo "⚠ GC members    : NOT FOUND  (${GC_MEMBERS})"
+fi
+
+if [ -f "${OC_MEMBERS}" ]; then
+    CMD="${CMD} --oc-members ${OC_MEMBERS}"
+    echo "✓ OC members    : ${OC_MEMBERS}"
+else
+    echo "⚠ OC members    : NOT FOUND  (${OC_MEMBERS})"
+fi
+
+if [ -f "${SGR_MEMBERS}" ]; then
+    CMD="${CMD} --sgr-members ${SGR_MEMBERS}"
+    echo "✓ SGR members   : ${SGR_MEMBERS}"
+else
+    echo "⚠ SGR members   : NOT FOUND  (${SGR_MEMBERS})"
+fi
+
+if [ -f "${DWG_MEMBERS}" ]; then
+    CMD="${CMD} --dwg-members ${DWG_MEMBERS}"
+    echo "✓ DWG members   : ${DWG_MEMBERS}"
+else
+    echo "⚠ DWG members   : NOT FOUND  (${DWG_MEMBERS})"
+fi
+
+if [ -f "${GC_DIST_FILE}" ]; then
+    CMD="${CMD} --gc-dist ${GC_DIST_FILE}"
+    echo "✓ GC distances  : ${GC_DIST_FILE}"
+else
+    echo "⚠ GC distances  : NOT FOUND  (${GC_DIST_FILE})"
+fi
+
+# ─────────────────────────────────────────────────────────────────────────────
+# RUN
+# ─────────────────────────────────────────────────────────────────────────────
+
+echo ""
+echo "Running: ${CMD}"
+echo "=============================================================="
+echo ""
+
+eval ${CMD}
+EXIT_CODE=$?
+
+# ─────────────────────────────────────────────────────────────────────────────
+# POST-RUN REPORT
+# ─────────────────────────────────────────────────────────────────────────────
+
+echo ""
+echo "=============================================================="
+echo "Finished   : $(date)"
+echo "Exit code  : ${EXIT_CODE}"
+echo ""
+echo "Output directory listing:"
+echo "  ${OUTPUT_DIR}/"
+ls -lh "${OUTPUT_DIR}/" 2>/dev/null || echo "  (empty or not found)"
+
+echo ""
+for EPOCH in 2016 2000; do
+    EDIR="${OUTPUT_DIR}/epoch${EPOCH}"
+    if [ -d "${EDIR}" ]; then
+        N_PNG=$(find "${EDIR}/individual" -name "*.png" 2>/dev/null | wc -l)
+        N_SUM=$(find "${EDIR}" -maxdepth 1 -name "SUMMARY_*.png" 2>/dev/null | wc -l)
+        N_GRAND=$(find "${EDIR}" -maxdepth 1 -name "GRAND_SUMMARY*.png" 2>/dev/null | wc -l)
+        echo "  epoch${EPOCH}/  — ${N_PNG} individual plots | ${N_SUM} summary plots | ${N_GRAND} grand-summary"
+        ls -lh "${EDIR}/catalogs/"*.csv "${EDIR}/catalogs/"*.json 2>/dev/null | awk '{print "    " $NF, $5}'
+    else
+        echo "  epoch${EPOCH}/  — NOT CREATED (skipped or error)"
+    fi
+done
+
+echo ""
+echo "Checkpoint sizes:"
+du -sh "${CHECKPOINT_DIR}" 2>/dev/null
+
+echo "=============================================================="
+
+exit ${EXIT_CODE}

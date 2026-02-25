@@ -1,0 +1,295 @@
+==============================================
+RIGOROUS COMPLETENESS & PURITY ANALYSIS
+==============================================
+Job ID: 2526542.pawna
+Node: node1
+Started: Sat Jan 31 20:02:35 IST 2026
+==============================================
+Command: python3 -u comp_pu.py --master /user/sutirtha/BallTree_Xmatch --output /user/sutirtha/BallTree_Xmatch/rigorous_comp_purity_results --gc /user/sutirtha/BallTree_Xmatch/GC_members.csv --oc /user/sutirtha/BallTree_Xmatch/OC_members.csv
+2026-01-31 20:02:38 | INFO     | ======================================================================
+2026-01-31 20:02:38 | INFO     | RIGOROUS COMPLETENESS & PURITY ANALYSIS v6
+2026-01-31 20:02:38 | INFO     | ======================================================================
+2026-01-31 20:02:38 | INFO     | Started: 2026-01-31T20:02:38.353031
+2026-01-31 20:02:38 | INFO     | Primary mixture method: lognormal
+2026-01-31 20:02:38 | INFO     | η bounds: [0.5, 0.95]
+2026-01-31 20:02:38 | INFO     | η prior: Beta(5.0, 2.0)
+2026-01-31 20:02:38 | INFO     | ======================================================================
+2026-01-31 20:02:38 | INFO     | LOADING MASTER CATALOG
+2026-01-31 20:02:38 | INFO     | ======================================================================
+2026-01-31 20:02:38 | INFO     | Found 8 files
+2026-01-31 20:02:38 | INFO     | [1/8] Entire_catalogue_chunk01.fits
+2026-01-31 20:02:38 | INFO     |   ra -> RA_final
+2026-01-31 20:02:38 | INFO     |   dec -> DEC_final
+2026-01-31 20:02:38 | INFO     |   distance -> distance_final
+2026-01-31 20:02:38 | INFO     |   distance_err -> distance_err_final
+2026-01-31 20:02:38 | INFO     |   rv -> RV_final
+2026-01-31 20:02:38 | INFO     |   rv_err -> RV_err_final
+2026-01-31 20:02:38 | INFO     |   parallax -> parallax_final
+2026-01-31 20:02:38 | INFO     |   parallax_err -> parallax_err_final
+2026-01-31 20:02:38 | INFO     |   ruwe -> RUWE
+2026-01-31 20:02:38 | INFO     |   gmag -> Gmag
+2026-01-31 20:02:39 | INFO     |   Loaded 4,069,110 rows
+2026-01-31 20:02:39 | INFO     | [2/8] Entire_catalogue_chunk02.fits
+2026-01-31 20:02:40 | INFO     |   Loaded 4,069,110 rows
+2026-01-31 20:02:41 | INFO     | [3/8] Entire_catalogue_chunk03.fits
+2026-01-31 20:02:42 | INFO     |   Loaded 4,069,110 rows
+2026-01-31 20:02:42 | INFO     | [4/8] Entire_catalogue_chunk04.fits
+2026-01-31 20:02:44 | INFO     |   Loaded 4,069,110 rows
+2026-01-31 20:02:44 | INFO     | [5/8] Entire_catalogue_chunk05.fits
+2026-01-31 20:02:45 | INFO     |   Loaded 4,069,110 rows
+2026-01-31 20:02:46 | INFO     | [6/8] Entire_catalogue_chunk06.fits
+2026-01-31 20:02:47 | INFO     |   Loaded 4,069,110 rows
+2026-01-31 20:02:47 | INFO     | [7/8] Entire_catalogue_chunk07.fits
+2026-01-31 20:02:48 | INFO     |   Loaded 4,069,110 rows
+2026-01-31 20:02:48 | INFO     | [8/8] Entire_catalogue_chunk08.fits
+2026-01-31 20:02:50 | INFO     |   Loaded 4,069,106 rows
+2026-01-31 20:03:10 | INFO     | Loaded 32,552,876 stars
+2026-01-31 20:03:11 | INFO     | 
+======================================================================
+2026-01-31 20:03:11 | INFO     | LOADING MEMBER CATALOGS
+2026-01-31 20:03:11 | INFO     | ======================================================================
+2026-01-31 20:03:12 | INFO     |   GC members: 1,168,746
+2026-01-31 20:03:14 | INFO     |   OC members: 435,833
+2026-01-31 20:03:14 | INFO     | 
+======================================================================
+2026-01-31 20:03:14 | INFO     | RIGOROUS PURITY ANALYSIS
+2026-01-31 20:03:14 | INFO     | Primary method: lognormal
+2026-01-31 20:03:14 | INFO     | ======================================================================
+2026-01-31 20:03:14 | INFO     | 
+--------------------------------------------------
+2026-01-31 20:03:14 | INFO     | RUWE PURITY ANALYSIS
+2026-01-31 20:03:14 | INFO     | --------------------------------------------------
+2026-01-31 20:03:14 | INFO     |   Valid RUWE values: 32,551,027
+2026-01-31 20:03:14 | INFO     | 
+============================================================
+2026-01-31 20:03:14 | INFO     | REGULARIZED GAUSSIAN MIXTURE: RUWE
+2026-01-31 20:03:14 | INFO     | ============================================================
+2026-01-31 20:03:14 | INFO     |   Valid samples: 32,551,027
+2026-01-31 20:03:14 | INFO     |   Median: 1.0130, Robust std: 0.0682
+2026-01-31 20:07:18 | INFO     | 
+  REGULARIZED GAUSSIAN CONVERGED:
+2026-01-31 20:07:18 | INFO     |     η (core fraction): 0.8933
+2026-01-31 20:07:18 | INFO     |     Core: μ=1.0098, σ=0.0699
+2026-01-31 20:07:18 | INFO     |     Tail: μ=2.3731, σ=2.4186
+2026-01-31 20:07:20 | INFO     |   Mean RUWE purity: 0.8933
+2026-01-31 20:07:20 | INFO     | 
+--------------------------------------------------
+2026-01-31 20:07:20 | INFO     | DISTANCE ERROR PURITY ANALYSIS
+2026-01-31 20:07:20 | INFO     | --------------------------------------------------
+2026-01-31 20:07:20 | INFO     |   Valid relative distance errors: 3,930,793
+2026-01-31 20:07:20 | INFO     | 
+============================================================
+2026-01-31 20:07:20 | INFO     | LOG-NORMAL MIXTURE MODEL: Relative Distance Error
+2026-01-31 20:07:20 | INFO     | ============================================================
+2026-01-31 20:07:20 | INFO     |   Valid samples: 3,930,793
+2026-01-31 20:07:20 | INFO     |   Log-space statistics:
+2026-01-31 20:07:20 | INFO     |     Median: -2.1600 (original: 0.1153)
+2026-01-31 20:07:20 | INFO     |     Robust std: 0.7399
+2026-01-31 20:07:20 | INFO     |     P10/P50/P90: -3.030/-2.160/-1.128
+2026-01-31 20:11:35 | INFO     | 
+  LOG-NORMAL GMM CONVERGED:
+2026-01-31 20:11:35 | INFO     |     η (core fraction): 0.9500
+2026-01-31 20:11:35 | INFO     |     Core: μ_log=-2.1195, σ_log=0.1000
+2026-01-31 20:11:35 | INFO     |            → median=0.1201
+2026-01-31 20:11:35 | INFO     |     Tail: μ_log=-2.0695, σ_log=0.2236
+2026-01-31 20:11:35 | INFO     |            → median=0.1262
+2026-01-31 20:11:35 | INFO     |     Tail/Core median ratio: 1.05x
+2026-01-31 20:11:35 | INFO     |   Mean distance purity: 0.5544
+2026-01-31 20:11:35 | INFO     | 
+--------------------------------------------------
+2026-01-31 20:11:35 | INFO     | RV ERROR PURITY ANALYSIS
+2026-01-31 20:11:35 | INFO     | --------------------------------------------------
+2026-01-31 20:11:35 | INFO     |   Valid relative RV errors: 32,312,272
+2026-01-31 20:11:36 | INFO     | 
+============================================================
+2026-01-31 20:11:36 | INFO     | LOG-NORMAL MIXTURE MODEL: Relative RV Error
+2026-01-31 20:11:36 | INFO     | ============================================================
+2026-01-31 20:11:36 | INFO     |   Valid samples: 32,312,272
+2026-01-31 20:11:37 | INFO     |   Log-space statistics:
+2026-01-31 20:11:37 | INFO     |     Median: -2.6150 (original: 0.0732)
+2026-01-31 20:11:37 | INFO     |     Robust std: 1.6644
+2026-01-31 20:11:37 | INFO     |     P10/P50/P90: -4.965/-2.615/-0.483
+2026-01-31 21:13:47 | INFO     | 
+  LOG-NORMAL GMM CONVERGED:
+2026-01-31 21:13:47 | INFO     |     η (core fraction): 0.9500
+2026-01-31 21:13:47 | INFO     |     Core: μ_log=-2.6936, σ_log=1.3725
+2026-01-31 21:13:47 | INFO     |            → median=0.0676
+2026-01-31 21:13:47 | INFO     |     Tail: μ_log=-2.0073, σ_log=1.6469
+2026-01-31 21:13:47 | INFO     |            → median=0.1343
+2026-01-31 21:13:47 | INFO     |     Tail/Core median ratio: 1.99x
+2026-01-31 21:13:49 | INFO     |   Mean RV purity: 0.9478
+2026-01-31 21:13:49 | INFO     | 
+--------------------------------------------------
+2026-01-31 21:13:49 | INFO     | COMBINED PURITY
+2026-01-31 21:13:49 | INFO     | --------------------------------------------------
+2026-01-31 21:13:50 | INFO     |   Mean combined purity: 0.4755
+2026-01-31 21:13:50 | INFO     |   Median combined purity: 0.4752
+2026-01-31 21:13:50 | INFO     |   Stars with P > 0.8: 3,917,345
+2026-01-31 21:13:50 | INFO     |   Stars with P > 0.95: 0
+2026-01-31 21:13:50 | INFO     | 
+--------------------------------------------------
+2026-01-31 21:13:50 | INFO     | PURITY BY GALACTOCENTRIC RADIUS
+2026-01-31 21:13:50 | INFO     | --------------------------------------------------
+2026-01-31 21:13:50 | INFO     |   0-20 kpc: N=26,144,036, P_mean=0.4883
+2026-01-31 21:13:50 | INFO     |   20-50 kpc: N=97,382, P_mean=0.8804
+2026-01-31 21:13:50 | INFO     |   50-100 kpc: N=14,883, P_mean=0.8879
+2026-01-31 21:13:50 | INFO     |   100-200 kpc: N=3,196, P_mean=0.8925
+2026-01-31 21:13:51 | INFO     |   200-500 kpc: N=840, P_mean=0.8967
+2026-01-31 21:13:51 | INFO     | 
+--------------------------------------------------
+2026-01-31 21:13:51 | INFO     | METHOD COMPARISON
+2026-01-31 21:13:51 | INFO     | --------------------------------------------------
+2026-01-31 21:13:51 | INFO     | 
+============================================================
+2026-01-31 21:13:51 | INFO     | GAMMA MIXTURE MODEL: Distance Error (gamma)
+2026-01-31 21:13:51 | INFO     | ============================================================
+2026-01-31 21:13:51 | INFO     |   Valid samples: 3,930,793
+2026-01-31 21:13:51 | INFO     |   Mean: 0.1601, Median: 0.1153, Std: 0.1418
+2026-01-31 21:45:54 | INFO     | 
+  GAMMA MIXTURE CONVERGED:
+2026-01-31 21:45:54 | INFO     |     η (core fraction): 0.5996
+2026-01-31 21:45:54 | INFO     |     Core: α=3.862, β=38.953
+2026-01-31 21:45:54 | INFO     |            → mean=0.0992
+2026-01-31 21:45:54 | INFO     |     Tail: α=2.173, β=8.647
+2026-01-31 21:45:54 | INFO     |            → mean=0.2513
+2026-01-31 21:45:55 | INFO     | 
+============================================================
+2026-01-31 21:45:55 | INFO     | REGULARIZED GAUSSIAN MIXTURE: Distance Error (reg_gaussian)
+2026-01-31 21:45:55 | INFO     | ============================================================
+2026-01-31 21:45:55 | INFO     |   Valid samples: 3,930,793
+2026-01-31 21:45:55 | INFO     |   Median: 0.1153, Robust std: 0.0785
+2026-01-31 21:47:45 | INFO     | 
+  REGULARIZED GAUSSIAN CONVERGED:
+2026-01-31 21:47:45 | INFO     |     η (core fraction): 0.7076
+2026-01-31 21:47:45 | INFO     |     Core: μ=0.1001, σ=0.0477
+2026-01-31 21:47:45 | INFO     |     Tail: μ=0.3053, σ=0.1830
+2026-01-31 21:47:46 | INFO     | 
+============================================================
+2026-01-31 21:47:46 | INFO     | EXTREME DECONVOLUTION: Distance Error (xd)
+2026-01-31 21:47:46 | INFO     | ============================================================
+2026-01-31 21:47:46 | INFO     |   Valid samples: 3,930,793
+2026-01-31 21:47:46 | INFO     |   Median: 0.1153, Robust std: 0.0785
+2026-01-31 21:47:46 | INFO     |   Mean measurement variance: 0.000457
+2026-01-31 21:54:49 | INFO     | 
+  EXTREME DECONVOLUTION CONVERGED:
+2026-01-31 21:54:49 | INFO     |     Weights: [0.80793332 0.19206668]
+2026-01-31 21:54:49 | INFO     |     Means: [0.11260165 0.35984843]
+2026-01-31 21:54:49 | INFO     |     Intrinsic σ: [0.05959447 0.19489892]
+2026-01-31 21:54:49 | INFO     |     (After deconvolving measurement errors)
+2026-01-31 21:54:49 | INFO     | 
+  Method comparison (distance error):
+2026-01-31 21:54:49 | INFO     |     lognormal: η=0.9500, P_mean=0.5544
+2026-01-31 21:54:49 | INFO     |     gamma: η=0.5996, P_mean=0.5120
+2026-01-31 21:54:49 | INFO     |     reg_gaussian: η=0.7076, P_mean=0.5251
+2026-01-31 21:54:49 | INFO     |     xd: η=0.8079, P_mean=0.5372
+2026-01-31 21:54:49 | INFO     | 
+======================================================================
+2026-01-31 21:54:49 | INFO     | COMPLETENESS ANALYSIS
+2026-01-31 21:54:49 | INFO     | ======================================================================
+2026-01-31 21:54:50 | INFO     |   GC: 8455/654723 = 0.0129
+2026-01-31 21:54:50 | INFO     |   OC: 27931/138781 = 0.2013
+2026-01-31 21:54:50 | INFO     | 
+  Overall: 36386/793504 = 0.0459
+2026-01-31 21:54:50 | INFO     | 
+======================================================================
+2026-01-31 21:54:50 | INFO     | DIAGNOSTIC: PURITY & COMPLETENESS vs DISTANCE
+2026-01-31 21:54:50 | INFO     | Using 100 radial bins
+2026-01-31 21:54:50 | INFO     | ======================================================================
+2026-01-31 21:54:50 | INFO     | 
+--- Relative Distance Error Cuts ---
+2026-01-31 21:54:50 | INFO     |   Processing cut: σ_d/d < 0.05
+2026-01-31 21:54:56 | INFO     |   Processing cut: σ_d/d < 0.1
+2026-01-31 21:55:02 | INFO     |   Processing cut: σ_d/d < 0.15
+2026-01-31 21:55:09 | INFO     |   Processing cut: σ_d/d < 0.2
+2026-01-31 21:55:15 | INFO     |   Processing cut: σ_d/d < 0.25
+2026-01-31 21:55:21 | INFO     |   Processing cut: σ_d/d < 0.3
+2026-01-31 21:55:28 | INFO     |   Processing cut: σ_d/d < 0.4
+2026-01-31 21:55:34 | INFO     |   Processing cut: σ_d/d < 0.5
+2026-01-31 21:55:41 | INFO     |   Processing cut: σ_d/d < 1.0
+2026-01-31 21:55:47 | INFO     | 
+--- Relative RV Error Cuts ---
+2026-01-31 21:55:47 | INFO     |   Processing cut: σ_v/v < 0.05
+2026-01-31 21:55:54 | INFO     |   Processing cut: σ_v/v < 0.1
+2026-01-31 21:56:00 | INFO     |   Processing cut: σ_v/v < 0.15
+2026-01-31 21:56:07 | INFO     |   Processing cut: σ_v/v < 0.2
+2026-01-31 21:56:14 | INFO     |   Processing cut: σ_v/v < 0.25
+2026-01-31 21:56:21 | INFO     |   Processing cut: σ_v/v < 0.3
+2026-01-31 21:56:28 | INFO     |   Processing cut: σ_v/v < 0.4
+2026-01-31 21:56:34 | INFO     |   Processing cut: σ_v/v < 0.5
+2026-01-31 21:56:41 | INFO     |   Processing cut: σ_v/v < 1.0
+2026-01-31 21:56:48 | INFO     | 
+--- RUWE Cuts ---
+2026-01-31 21:56:48 | INFO     |   Processing cut: RUWE < 1.0
+2026-01-31 21:56:55 | INFO     |   Processing cut: RUWE < 1.2
+2026-01-31 21:57:02 | INFO     |   Processing cut: RUWE < 1.4
+2026-01-31 21:57:09 | INFO     |   Processing cut: RUWE < 1.6
+2026-01-31 21:57:16 | INFO     |   Processing cut: RUWE < 2.0
+2026-01-31 21:57:23 | INFO     |   Processing cut: RUWE < 3.0
+2026-01-31 21:57:29 | INFO     |   Processing cut: RUWE < 5.0
+2026-01-31 21:57:36 | INFO     | 
+======================================================================
+2026-01-31 21:57:36 | INFO     | PRECISION-RECALL ANALYSIS
+2026-01-31 21:57:36 | INFO     | ======================================================================
+2026-01-31 21:57:36 | INFO     |   0.3-0.5 kpc: N=276, AUC=0.4978
+2026-01-31 21:57:37 | INFO     |   0.5-0.7 kpc: N=1,214, AUC=0.4968
+2026-01-31 21:57:37 | INFO     |   0.7-1.1 kpc: N=7,846, AUC=0.5052
+2026-01-31 21:57:37 | INFO     |   1.1-1.6 kpc: N=32,434, AUC=0.5162
+2026-01-31 21:57:37 | INFO     |   1.6-2.5 kpc: N=85,024, AUC=0.5268
+2026-01-31 21:57:37 | INFO     |   2.5-3.7 kpc: N=223,310, AUC=0.5196
+2026-01-31 21:57:37 | INFO     |   3.7-5.5 kpc: N=1,187,144, AUC=0.5784
+2026-01-31 21:57:42 | INFO     |   5.5-8.2 kpc: N=12,799,940, AUC=0.7001
+2026-01-31 21:57:46 | INFO     |   8.2-12.2 kpc: N=11,361,249, AUC=0.7562
+2026-01-31 21:57:46 | INFO     |   12.2-18.2 kpc: N=416,530, AUC=0.9112
+2026-01-31 21:57:46 | INFO     |   18.2-27.2 kpc: N=83,165, AUC=0.9321
+2026-01-31 21:57:46 | INFO     |   27.2-40.5 kpc: N=32,492, AUC=0.9324
+2026-01-31 21:57:47 | INFO     |   40.5-60.5 kpc: N=17,308, AUC=0.9284
+2026-01-31 21:57:47 | INFO     |   60.5-90.3 kpc: N=7,222, AUC=0.9248
+2026-01-31 21:57:47 | INFO     |   90.3-134.7 kpc: N=3,042, AUC=0.9208
+2026-01-31 21:57:47 | INFO     |   134.7-201.0 kpc: N=1,202, AUC=0.9193
+2026-01-31 21:57:47 | INFO     |   201.0-300.0 kpc: N=518, AUC=0.9172
+2026-01-31 21:57:47 | INFO     | 
+======================================================================
+2026-01-31 21:57:47 | INFO     | GENERATING PLOTS
+2026-01-31 21:57:47 | INFO     | ======================================================================
+2026-01-31 21:57:57 | INFO     | 
+Plots saved to: /user/sutirtha/BallTree_Xmatch/rigorous_comp_purity_results
+2026-01-31 21:57:57 | INFO     | 
+======================================================================
+2026-01-31 21:57:57 | INFO     | ANALYSIS COMPLETE
+2026-01-31 21:57:57 | INFO     | ======================================================================
+2026-01-31 21:57:57 | INFO     | Time: 115.3 min
+2026-01-31 21:57:57 | INFO     | Method: lognormal
+2026-01-31 21:57:57 | INFO     | Completeness: 0.0459
+2026-01-31 21:57:57 | INFO     | Purity: 0.4755
+2026-01-31 21:57:57 | INFO     | F1 Score: 0.0836
+2026-01-31 21:57:57 | INFO     | Results: /user/sutirtha/BallTree_Xmatch/rigorous_comp_purity_results/rigorous_analysis_results_v6.json
+2026-01-31 21:57:57 | INFO     | 
+--------------------------------------------------
+2026-01-31 21:57:57 | INFO     | KEY IMPROVEMENTS IN v6:
+2026-01-31 21:57:57 | INFO     | --------------------------------------------------
+2026-01-31 21:57:57 | INFO     |   - η (core fraction) properly bounded to [0.5, 0.95]
+2026-01-31 21:57:57 | INFO     |   - Log-normal mixture for positive quantities
+2026-01-31 21:57:57 | INFO     |   - Extreme Deconvolution for error handling
+2026-01-31 21:57:57 | INFO     |   - Gamma mixture alternative
+2026-01-31 21:57:57 | INFO     |   - Regularized Gaussian with priors
+2026-01-31 21:57:57 | INFO     |   - Method comparison included
+==============================================
+FINISHED: Sat Jan 31 21:57:58 IST 2026
+Exit code: 0
+total 2264
+drwx------  2 sutirtha users   4096 Jan 31 21:57 .
+drwxr-xr-x 34 sutirtha users   4096 Jan 31 20:38 ..
+-rw-------  1 sutirtha users  16639 Jan 31 21:57 analysis.log
+-rw-------  1 sutirtha users 227499 Jan 31 21:57 combined_summary.png
+-rw-------  1 sutirtha users  37460 Jan 31 21:57 completeness_summary.png
+-rw-------  1 sutirtha users   5856 Jan 31 21:57 memory.log
+-rw-------  1 sutirtha users  76833 Jan 31 21:57 method_comparison.png
+-rw-------  1 sutirtha users 124093 Jan 31 21:57 mixture_fits.png
+-rw-------  1 sutirtha users 244391 Jan 31 21:57 precision_recall_curves.png
+-rw-------  1 sutirtha users  60039 Jan 31 21:57 purity_by_radius.png
+-rw-------  1 sutirtha users 345291 Jan 31 21:57 purity_completeness_vs_distance_rel_dist_err.png
+-rw-------  1 sutirtha users 431029 Jan 31 21:57 purity_completeness_vs_distance_rel_rv_err.png
+-rw-------  1 sutirtha users 258536 Jan 31 21:57 purity_completeness_vs_distance_ruwe.png
+-rw-------  1 sutirtha users 147465 Jan 31 21:57 purity_distributions.png
+-rw-------  1 sutirtha users 298208 Jan 31 21:57 rigorous_analysis_results_v6.json
+==============================================

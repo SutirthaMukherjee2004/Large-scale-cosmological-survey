@@ -1,0 +1,318 @@
+==============================================
+STELLAR CATALOG VISUALIZATION V5
+==============================================
+Job ID:      2526775.pawna
+Node:        node1
+Started:     Sat Feb 21 17:51:44 IST 2026
+Input dir:   /user/sutirtha/BallTree_Xmatch/
+Output data: stellar_data_v5.npz
+Output dir:  ./plots_v5_2526775.pawna
+Chunk size:  2000000
+DPI:         200
+==============================================
+
+No existing NPZ found — computing from FITS files in /user/sutirtha/BallTree_Xmatch/ ...
+
+[17:51:45] ======================================================================
+[17:51:45] COMPUTE MODE  — input: /user/sutirtha/BallTree_Xmatch/
+[17:51:45] Chunk size: 2,000,000  |  NSIDE: 64
+[17:51:45] ======================================================================
+[17:51:45] Found 10 FITS files in /user/sutirtha/BallTree_Xmatch/
+[17:51:45] Processing 10 FITS file(s) ...
+[17:51:45]   [1/10] Entire_catalogue_chunk01.fits
+[17:51:45]     Total rows: 4,069,110
+[17:51:58]       chunk 0: rows 0-2,000,000  (total so far: 2,000,000, filt: 2,000,000)
+[17:52:09]       chunk 1: rows 2,000,000-4,000,000  (total so far: 4,000,000, filt: 4,000,000)
+[17:52:09]       chunk 2: rows 4,000,000-4,069,110  (total so far: 4,069,110, filt: 4,069,110)
+[17:52:09]   [2/10] Entire_catalogue_chunk02.fits
+[17:52:09]     Total rows: 4,069,110
+[17:52:20]       chunk 0: rows 0-2,000,000  (total so far: 6,069,110, filt: 6,069,110)
+[17:52:30]       chunk 1: rows 2,000,000-4,000,000  (total so far: 8,069,110, filt: 8,069,110)
+[17:52:31]       chunk 2: rows 4,000,000-4,069,110  (total so far: 8,138,220, filt: 8,138,220)
+[17:52:31]   [3/10] Entire_catalogue_chunk03.fits
+[17:52:31]     Total rows: 4,069,110
+[17:52:41]       chunk 0: rows 0-2,000,000  (total so far: 10,138,220, filt: 10,138,220)
+[17:52:50]       chunk 1: rows 2,000,000-4,000,000  (total so far: 12,138,220, filt: 12,138,220)
+[17:52:50]       chunk 2: rows 4,000,000-4,069,110  (total so far: 12,207,330, filt: 12,207,330)
+[17:52:50]   [4/10] Entire_catalogue_chunk04.fits
+[17:52:50]     Total rows: 4,069,110
+[17:53:02]       chunk 0: rows 0-2,000,000  (total so far: 14,207,330, filt: 14,207,330)
+[17:53:13]       chunk 1: rows 2,000,000-4,000,000  (total so far: 16,207,330, filt: 16,207,330)
+[17:53:14]       chunk 2: rows 4,000,000-4,069,110  (total so far: 16,276,440, filt: 16,276,440)
+[17:53:14]   [5/10] Entire_catalogue_chunk05.fits
+[17:53:14]     Total rows: 4,069,110
+[17:53:25]       chunk 0: rows 0-2,000,000  (total so far: 18,276,440, filt: 18,276,440)
+[17:53:36]       chunk 1: rows 2,000,000-4,000,000  (total so far: 20,276,440, filt: 20,276,440)
+[17:53:36]       chunk 2: rows 4,000,000-4,069,110  (total so far: 20,345,550, filt: 20,345,550)
+[17:53:36]   [6/10] Entire_catalogue_chunk06.fits
+[17:53:36]     Total rows: 4,069,110
+[17:53:46]       chunk 0: rows 0-2,000,000  (total so far: 22,345,550, filt: 22,345,550)
+[17:53:55]       chunk 1: rows 2,000,000-4,000,000  (total so far: 24,345,550, filt: 24,345,550)
+[17:53:56]       chunk 2: rows 4,000,000-4,069,110  (total so far: 24,414,660, filt: 24,414,660)
+[17:53:56]   [7/10] Entire_catalogue_chunk07.fits
+[17:53:56]     Total rows: 4,069,110
+[17:54:08]       chunk 0: rows 0-2,000,000  (total so far: 26,414,660, filt: 26,414,660)
+[17:54:20]       chunk 1: rows 2,000,000-4,000,000  (total so far: 28,414,660, filt: 28,414,660)
+[17:54:20]       chunk 2: rows 4,000,000-4,069,110  (total so far: 28,483,770, filt: 28,483,770)
+[17:54:20]   [8/10] Entire_catalogue_chunk08.fits
+[17:54:20]     Total rows: 4,069,106
+[17:54:33]       chunk 0: rows 0-2,000,000  (total so far: 30,483,770, filt: 30,483,770)
+[17:54:46]       chunk 1: rows 2,000,000-4,000,000  (total so far: 32,483,770, filt: 32,483,770)
+[17:54:47]       chunk 2: rows 4,000,000-4,069,106  (total so far: 32,552,876, filt: 32,552,876)
+[17:54:47]   [9/10] FINAL RAW DATA.fits
+[17:54:47]     Total rows: 52,116,459
+[17:54:53]       chunk 0: rows 0-2,000,000  (total so far: 34,552,876, filt: 34,552,876)
+[17:54:56]       chunk 1: rows 2,000,000-4,000,000  (total so far: 36,552,876, filt: 36,552,876)
+[17:55:00]       chunk 2: rows 4,000,000-6,000,000  (total so far: 38,552,876, filt: 38,552,876)
+[17:55:04]       chunk 3: rows 6,000,000-8,000,000  (total so far: 40,552,876, filt: 40,552,876)
+[17:55:08]       chunk 4: rows 8,000,000-10,000,000  (total so far: 42,552,876, filt: 42,552,876)
+[17:55:12]       chunk 5: rows 10,000,000-12,000,000  (total so far: 44,552,876, filt: 44,552,876)
+[17:55:15]       chunk 6: rows 12,000,000-14,000,000  (total so far: 46,552,876, filt: 46,552,876)
+[17:55:19]       chunk 7: rows 14,000,000-16,000,000  (total so far: 48,552,876, filt: 48,552,876)
+[17:55:23]       chunk 8: rows 16,000,000-18,000,000  (total so far: 50,552,876, filt: 50,552,876)
+[17:55:26]       chunk 9: rows 18,000,000-20,000,000  (total so far: 52,552,876, filt: 52,552,876)
+[17:55:30]       chunk 10: rows 20,000,000-22,000,000  (total so far: 54,552,876, filt: 54,552,876)
+[17:55:34]       chunk 11: rows 22,000,000-24,000,000  (total so far: 56,552,876, filt: 56,552,876)
+[17:55:37]       chunk 12: rows 24,000,000-26,000,000  (total so far: 58,552,876, filt: 58,552,876)
+[17:55:41]       chunk 13: rows 26,000,000-28,000,000  (total so far: 60,552,876, filt: 60,552,876)
+[17:55:45]       chunk 14: rows 28,000,000-30,000,000  (total so far: 62,552,876, filt: 62,552,876)
+[17:55:48]       chunk 15: rows 30,000,000-32,000,000  (total so far: 64,552,876, filt: 64,552,876)
+[17:55:52]       chunk 16: rows 32,000,000-34,000,000  (total so far: 66,552,876, filt: 66,552,876)
+[17:55:56]       chunk 17: rows 34,000,000-36,000,000  (total so far: 68,552,876, filt: 68,552,876)
+[17:55:59]       chunk 18: rows 36,000,000-38,000,000  (total so far: 70,552,876, filt: 70,552,876)
+[17:56:03]       chunk 19: rows 38,000,000-40,000,000  (total so far: 72,552,876, filt: 72,552,876)
+[17:56:07]       chunk 20: rows 40,000,000-42,000,000  (total so far: 74,552,876, filt: 74,552,876)
+[17:56:11]       chunk 21: rows 42,000,000-44,000,000  (total so far: 76,552,876, filt: 76,552,876)
+[17:56:14]       chunk 22: rows 44,000,000-46,000,000  (total so far: 78,552,876, filt: 78,552,876)
+[17:56:18]       chunk 23: rows 46,000,000-48,000,000  (total so far: 80,552,876, filt: 80,552,876)
+[17:56:22]       chunk 24: rows 48,000,000-50,000,000  (total so far: 82,552,876, filt: 82,552,876)
+[17:56:25]       chunk 25: rows 50,000,000-52,000,000  (total so far: 84,552,876, filt: 84,552,876)
+[17:56:26]       chunk 26: rows 52,000,000-52,116,459  (total so far: 84,669,335, filt: 84,669,335)
+[17:56:26]   [10/10] Final_weight_cal_gaia_params_duplicate.fits
+[17:56:26]     Total rows: 52,112,379
+[17:58:13]       Detected survey: 'BOSS_HALO' → SDSS
+[17:58:13]       Detected survey: 'DESI_VAC_SPEC' → DESI
+[17:58:13]       Detected survey: 'LAMOST_KG' → LAMOST
+[17:58:13]       Detected survey: 'LAMOST_VMP' → LAMOST
+[17:58:13]       Detected survey: 'Lamost_Var' → LAMOST
+[17:58:13]       Detected survey: 'PGS+DESI_RGB' → DESI
+[17:58:13]       Detected survey: 'PRISTINE+DESI_RGB' → DESI
+[17:58:13]       chunk 0: rows 0-2,000,000  (total so far: 86,669,335, filt: 86,669,335)
+[17:58:16]       Detected survey: 'BOSS_HALO' → SDSS
+[17:58:16]       Detected survey: 'CAT_125M+SOSI' → SOS
+[17:58:16]       Detected survey: 'DESI_VAC_SPEC' → DESI
+[17:58:16]       Detected survey: 'LAMOST_KG' → LAMOST
+[17:58:16]       Detected survey: 'LAMOST_VMP' → LAMOST
+[17:58:16]       Detected survey: 'Lamost_Var' → LAMOST
+[17:58:16]       chunk 1: rows 2,000,000-4,000,000  (total so far: 88,669,335, filt: 88,669,335)
+[17:58:19]       Detected survey: 'BOSS_HALO' → SDSS
+[17:58:19]       Detected survey: 'CAT_125M+SOSI' → SOS
+[17:58:19]       Detected survey: 'DESI_VAC_SPEC' → DESI
+[17:58:19]       Detected survey: 'LAMOST_KG' → LAMOST
+[17:58:19]       chunk 2: rows 4,000,000-6,000,000  (total so far: 90,669,335, filt: 90,669,335)
+[17:58:22]       Detected survey: 'BOSS_HALO' → SDSS
+[17:58:22]       Detected survey: 'CAT_125M+SOSI' → SOS
+[17:58:22]       Detected survey: 'DESI_VAC_SPEC' → DESI
+[17:58:22]       Detected survey: 'LAMOST_KG' → LAMOST
+[17:58:22]       Detected survey: 'LAMOST_VMP' → LAMOST
+[17:58:22]       Detected survey: 'Lamost_Var' → LAMOST
+[17:58:22]       chunk 3: rows 6,000,000-8,000,000  (total so far: 92,669,335, filt: 92,669,335)
+[17:58:24]       Detected survey: 'BOSS_HALO' → SDSS
+[17:58:24]       Detected survey: 'CAT_125M+SOSI' → SOS
+[17:58:24]       Detected survey: 'DESI_VAC_SPEC' → DESI
+[17:58:24]       Detected survey: 'LAMOST_KG' → LAMOST
+[17:58:24]       Detected survey: 'Lamost_Var' → LAMOST
+[17:58:24]       chunk 4: rows 8,000,000-10,000,000  (total so far: 94,669,335, filt: 94,669,335)
+[17:58:27]       Detected survey: 'CAT_125M+SOSI' → SOS
+[17:58:27]       Detected survey: 'DESI_VAC_SPEC' → DESI
+[17:58:27]       chunk 5: rows 10,000,000-12,000,000  (total so far: 96,669,335, filt: 96,669,335)
+[17:58:30]       Detected survey: 'BOSS_HALO' → SDSS
+[17:58:30]       Detected survey: 'CAT_125M+SOSI' → SOS
+[17:58:30]       Detected survey: 'DESI_VAC_SPEC' → DESI
+[17:58:30]       Detected survey: 'LAMOST_KG' → LAMOST
+[17:58:30]       Detected survey: 'LAMOST_VMP' → LAMOST
+[17:58:30]       Detected survey: 'Lamost_Var' → LAMOST
+[17:58:30]       chunk 6: rows 12,000,000-14,000,000  (total so far: 98,669,335, filt: 98,669,335)
+[17:58:33]       Detected survey: 'BOSS_HALO' → SDSS
+[17:58:33]       Detected survey: 'DESI_VAC_SPEC' → DESI
+[17:58:33]       Detected survey: 'LAMOST_KG' → LAMOST
+[17:58:33]       Detected survey: 'LAMOST_VMP' → LAMOST
+[17:58:33]       Detected survey: 'Lamost_Var' → LAMOST
+[17:58:33]       chunk 7: rows 14,000,000-16,000,000  (total so far: 100,669,335, filt: 100,669,335)
+[17:58:35]       Detected survey: 'BOSS_HALO' → SDSS
+[17:58:35]       Detected survey: 'CAT_125M+SOSI' → SOS
+[17:58:35]       Detected survey: 'DESI_VAC_SPEC' → DESI
+[17:58:35]       Detected survey: 'LAMOST_KG' → LAMOST
+[17:58:35]       Detected survey: 'LAMOST_VMP' → LAMOST
+[17:58:36]       Detected survey: 'Lamost_Var' → LAMOST
+[17:58:36]       chunk 8: rows 16,000,000-18,000,000  (total so far: 102,669,335, filt: 102,669,335)
+[17:58:38]       Detected survey: 'BOSS_HALO' → SDSS
+[17:58:38]       Detected survey: 'CAT_125M+SOSI' → SOS
+[17:58:38]       Detected survey: 'DESI_VAC_SPEC' → DESI
+[17:58:38]       Detected survey: 'LAMOST_KG' → LAMOST
+[17:58:38]       Detected survey: 'LAMOST_VMP' → LAMOST
+[17:58:38]       Detected survey: 'Lamost_Var' → LAMOST
+[17:58:38]       chunk 9: rows 18,000,000-20,000,000  (total so far: 104,669,335, filt: 104,669,335)
+[17:58:41]       Detected survey: 'BOSS_HALO' → SDSS
+[17:58:41]       Detected survey: 'CAT_125M+SOSI' → SOS
+[17:58:41]       Detected survey: 'DESI_VAC_SPEC' → DESI
+[17:58:41]       Detected survey: 'LAMOST_KG' → LAMOST
+[17:58:41]       Detected survey: 'LAMOST_VMP' → LAMOST
+[17:58:41]       Detected survey: 'Lamost_Var' → LAMOST
+[17:58:41]       chunk 10: rows 20,000,000-22,000,000  (total so far: 106,669,335, filt: 106,669,335)
+[17:58:44]       Detected survey: 'BOSS_HALO' → SDSS
+[17:58:44]       Detected survey: 'CAT_125M+SOSI' → SOS
+[17:58:44]       Detected survey: 'DESI_VAC_SPEC' → DESI
+[17:58:44]       Detected survey: 'LAMOST_KG' → LAMOST
+[17:58:44]       Detected survey: 'LAMOST_VMP' → LAMOST
+[17:58:44]       Detected survey: 'Lamost_Var' → LAMOST
+[17:58:44]       chunk 11: rows 22,000,000-24,000,000  (total so far: 108,669,335, filt: 108,669,335)
+[17:58:47]       Detected survey: 'CAT_125M+SOSI' → SOS
+[17:58:47]       Detected survey: 'DESI_VAC_SPEC' → DESI
+[17:58:47]       chunk 12: rows 24,000,000-26,000,000  (total so far: 110,669,335, filt: 110,669,335)
+[17:58:50]       Detected survey: 'CAT_125M+SOSI' → SOS
+[17:58:50]       Detected survey: 'DESI_VAC_SPEC' → DESI
+[17:58:50]       Detected survey: 'LAMOST_KG' → LAMOST
+[17:58:50]       Detected survey: 'Lamost_Var' → LAMOST
+[17:58:50]       chunk 13: rows 26,000,000-28,000,000  (total so far: 112,669,335, filt: 112,669,335)
+[17:58:53]       Detected survey: 'DESI_VAC_SPEC' → DESI
+[17:58:53]       chunk 14: rows 28,000,000-30,000,000  (total so far: 114,669,335, filt: 114,669,335)
+[17:58:55]       Detected survey: 'BHB_DESI+LSDR9' → DESI
+[17:58:55]       Detected survey: 'BHB_SDSS' → SDSS
+[17:58:55]       Detected survey: 'BOSS_HALO' → SDSS
+[17:58:55]       Detected survey: 'CAT_125M+SOSI' → SOS
+[17:58:56]       Detected survey: 'DESI_BHB' → DESI
+[17:58:56]       Detected survey: 'DESI_MAIN+RED' → DESI
+[17:58:56]       Detected survey: 'DESI_VAC_SPEC' → DESI
+[17:58:56]       Detected survey: 'LAMOST_KG' → LAMOST
+[17:58:56]       Detected survey: 'LAMOST_VMP' → LAMOST
+[17:58:56]       Detected survey: 'Lamost_Var' → LAMOST
+[17:58:56]       Detected survey: 'PGS+DESI_RGB' → DESI
+[17:58:56]       Detected survey: 'PRISTINE+DESI_RGB' → DESI
+[17:58:56]       Detected survey: 'SOSI' → SOS
+[17:58:56]       chunk 15: rows 30,000,000-32,000,000  (total so far: 116,669,335, filt: 116,669,335)
+[17:58:58]       Detected survey: 'BHB_SDSS' → SDSS
+[17:58:58]       Detected survey: 'BOSS_HALO' → SDSS
+[17:58:58]       Detected survey: 'CAT_125M+SOSI' → SOS
+[17:58:58]       Detected survey: 'DESI_VAC_SPEC' → DESI
+[17:58:59]       Detected survey: 'LAMOST_KG' → LAMOST
+[17:58:59]       Detected survey: 'LAMOST_VMP' → LAMOST
+[17:58:59]       Detected survey: 'Lamost_Var' → LAMOST
+[17:58:59]       chunk 16: rows 32,000,000-34,000,000  (total so far: 118,669,335, filt: 118,669,335)
+[17:59:01]       Detected survey: 'BHB_SDSS' → SDSS
+[17:59:01]       Detected survey: 'CAT_125M+SOSI' → SOS
+[17:59:01]       Detected survey: 'DESI_VAC_SPEC' → DESI
+[17:59:01]       Detected survey: 'Lamost_Var' → LAMOST
+[17:59:02]       chunk 17: rows 34,000,000-36,000,000  (total so far: 120,669,335, filt: 120,669,335)
+[17:59:04]       Detected survey: 'DESI_VAC_SPEC' → DESI
+[17:59:04]       chunk 18: rows 36,000,000-38,000,000  (total so far: 122,669,335, filt: 122,669,335)
+[17:59:07]       Detected survey: 'BHB_DESI+LSDR9' → DESI
+[17:59:07]       Detected survey: 'BHB_SDSS' → SDSS
+[17:59:07]       Detected survey: 'BOSS_HALO' → SDSS
+[17:59:07]       Detected survey: 'CAT_125M+SOSI' → SOS
+[17:59:07]       Detected survey: 'DESI_BHB' → DESI
+[17:59:07]       Detected survey: 'DESI_MAIN+RED' → DESI
+[17:59:07]       Detected survey: 'DESI_VAC_SPEC' → DESI
+[17:59:07]       Detected survey: 'LAMOST_KG' → LAMOST
+[17:59:07]       Detected survey: 'LAMOST_VMP' → LAMOST
+[17:59:07]       Detected survey: 'Lamost_Var' → LAMOST
+[17:59:07]       Detected survey: 'PGS+DESI_RGB' → DESI
+[17:59:07]       Detected survey: 'PRISTINE+DESI_RGB' → DESI
+[17:59:07]       Detected survey: 'SOSI' → SOS
+[17:59:07]       chunk 19: rows 38,000,000-40,000,000  (total so far: 124,669,335, filt: 124,669,335)
+[17:59:10]       Detected survey: 'BOSS_HALO' → SDSS
+[17:59:10]       Detected survey: 'CAT_125M+SOSI' → SOS
+[17:59:10]       Detected survey: 'DESI_VAC_SPEC' → DESI
+[17:59:10]       Detected survey: 'LAMOST_KG' → LAMOST
+[17:59:10]       Detected survey: 'LAMOST_VMP' → LAMOST
+[17:59:10]       Detected survey: 'Lamost_Var' → LAMOST
+[17:59:10]       chunk 20: rows 40,000,000-42,000,000  (total so far: 126,669,335, filt: 126,669,335)
+[17:59:13]       Detected survey: 'BHB_SDSS' → SDSS
+[17:59:13]       Detected survey: 'BOSS_HALO' → SDSS
+[17:59:13]       Detected survey: 'CAT_125M+SOSI' → SOS
+[17:59:13]       Detected survey: 'DESI_VAC_SPEC' → DESI
+[17:59:13]       Detected survey: 'LAMOST_KG' → LAMOST
+[17:59:13]       Detected survey: 'LAMOST_VMP' → LAMOST
+[17:59:13]       Detected survey: 'Lamost_Var' → LAMOST
+[17:59:13]       chunk 21: rows 42,000,000-44,000,000  (total so far: 128,669,335, filt: 128,669,335)
+[17:59:15]       Detected survey: 'BHB_DESI+LSDR9' → DESI
+[17:59:15]       Detected survey: 'BHB_SDSS' → SDSS
+[17:59:16]       Detected survey: 'BOSS_HALO' → SDSS
+[17:59:16]       Detected survey: 'CAT_125M+SOSI' → SOS
+[17:59:16]       Detected survey: 'DESI_MAIN+RED' → DESI
+[17:59:16]       Detected survey: 'DESI_VAC_SPEC' → DESI
+[17:59:16]       Detected survey: 'LAMOST_KG' → LAMOST
+[17:59:16]       Detected survey: 'LAMOST_VMP' → LAMOST
+[17:59:16]       Detected survey: 'Lamost_Var' → LAMOST
+[17:59:16]       Detected survey: 'PGS+DESI_RGB' → DESI
+[17:59:16]       Detected survey: 'PRISTINE+DESI_RGB' → DESI
+[17:59:16]       chunk 22: rows 44,000,000-46,000,000  (total so far: 130,669,335, filt: 130,669,335)
+[17:59:18]       Detected survey: 'BHB_DESI+LSDR9' → DESI
+[17:59:18]       Detected survey: 'BHB_SDSS' → SDSS
+[17:59:19]       Detected survey: 'BOSS_HALO' → SDSS
+[17:59:19]       Detected survey: 'CAT_125M+SOSI' → SOS
+[17:59:19]       Detected survey: 'DESI_MAIN+RED' → DESI
+[17:59:19]       Detected survey: 'DESI_VAC_SPEC' → DESI
+[17:59:19]       Detected survey: 'LAMOST_KG' → LAMOST
+[17:59:19]       Detected survey: 'LAMOST_VMP' → LAMOST
+[17:59:19]       Detected survey: 'Lamost_Var' → LAMOST
+[17:59:19]       Detected survey: 'SOSI' → SOS
+[17:59:19]       chunk 23: rows 46,000,000-48,000,000  (total so far: 132,669,335, filt: 132,669,335)
+[17:59:22]       Detected survey: 'BHB_SDSS' → SDSS
+[17:59:22]       Detected survey: 'BOSS_HALO' → SDSS
+[17:59:22]       Detected survey: 'CAT_125M+SOSI' → SOS
+[17:59:22]       Detected survey: 'DESI_VAC_SPEC' → DESI
+[17:59:22]       Detected survey: 'LAMOST_VMP' → LAMOST
+[17:59:22]       chunk 24: rows 48,000,000-50,000,000  (total so far: 134,669,335, filt: 134,669,335)
+[17:59:24]       Detected survey: 'BHB_SDSS' → SDSS
+[17:59:24]       Detected survey: 'BOSS_HALO' → SDSS
+[17:59:24]       Detected survey: 'CAT_125M+SOSI' → SOS
+[17:59:24]       Detected survey: 'DESI_BHB' → DESI
+[17:59:25]       Detected survey: 'DESI_VAC_SPEC' → DESI
+[17:59:25]       Detected survey: 'Lamost_Var' → LAMOST
+[17:59:25]       Detected survey: 'PRISTINE+DESI_RGB' → DESI
+[17:59:25]       Detected survey: 'SOSI' → SOS
+[17:59:25]       chunk 25: rows 50,000,000-52,000,000  (total so far: 136,669,335, filt: 136,669,335)
+[17:59:25]       Detected survey: 'BHB_DESI+LSDR9' → DESI
+[17:59:25]       Detected survey: 'CAT_125M+SOSI' → SOS
+[17:59:25]       Detected survey: 'DESI_MAIN+RED' → DESI
+[17:59:25]       Detected survey: 'DESI_VAC_SPEC' → DESI
+[17:59:25]       Detected survey: 'LAMOST_KG' → LAMOST
+[17:59:25]       Detected survey: 'LAMOST_VMP' → LAMOST
+[17:59:25]       Detected survey: 'PGS+DESI_RGB' → DESI
+[17:59:25]       Detected survey: 'PRISTINE+DESI_RGB' → DESI
+[17:59:25]       chunk 26: rows 52,000,000-52,112,379  (total so far: 136,781,714, filt: 136,781,714)
+[17:59:25] Finished reading.  Total rows: 136,781,714  |  Filtered: 136,781,714
+[17:59:25] NPZ saved: stellar_data_v5.npz  (0.8 MB)
+[17:59:27] 
+======================================================================
+[17:59:27] PAPER-QUALITY PLOT SUITE v5.0  (4 figures)
+[17:59:27]   Order: Sky Grid → Extinction → HR Diagram → Kiel Diagram
+[17:59:27] ======================================================================
+[17:59:27] [FIG 1] Multi-panel sky grid ...
+[17:59:39]   Saved: ./plots_v5_2526775.pawna/stellar_1_sky_grid.pdf
+[17:59:39] [FIG 2] Extinction sky map ...
+[17:59:39]   Saved: ./plots_v5_2526775.pawna/stellar_2_extinction.pdf
+[17:59:39] [FIG 3] Combined HR Diagram (overlay unfilt+filt, no scatter) ...
+[17:59:39]   No valid HR data -- skipping.
+[17:59:39] [FIG 4] Kiel Diagram (overlay unfilt+filt, turbo, contours) ...
+[17:59:41]   Saved: ./plots_v5_2526775.pawna/stellar_4_Kiel.pdf
+[17:59:41] 
+======================================================================
+[17:59:41] ALL 4 FIGURES SAVED TO: ./plots_v5_2526775.pawna
+[17:59:41] ======================================================================
+
+==============================================
+COMPLETE
+==============================================
+Finished:  Sat Feb 21 17:59:41 IST 2026
+Exit code: 0
+
+Output figures:
+-rw------- 1 sutirtha users 1.3M Feb 21 17:59 ./plots_v5_2526775.pawna/stellar_1_sky_grid.pdf
+-rw------- 1 sutirtha users  27K Feb 21 17:59 ./plots_v5_2526775.pawna/stellar_2_extinction.pdf
+-rw------- 1 sutirtha users 809K Feb 21 17:59 ./plots_v5_2526775.pawna/stellar_4_Kiel.pdf
+
+Output data:
+-rw------- 1 sutirtha users 785K Feb 21 17:59 stellar_data_v5.npz
+==============================================

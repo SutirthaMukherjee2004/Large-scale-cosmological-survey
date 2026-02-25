@@ -1,0 +1,9 @@
+usage: mem3.py [-h] --master MASTER [--gc GC] [--oc OC] [--sgr SGR]
+               [--dwg DWG] [--gc-dist GC_DIST] [--output OUTPUT]
+               [--checkpoint CHECKPOINT] [--log LOG] [--skip-plots]
+               [--pmem-threshold PMEM_THRESHOLD] [--epoch-delta EPOCH_DELTA]
+               [--epochs {2016,2000} [{2016,2000} ...]]
+               [--em-maxiter EM_MAXITER] [--plx-sigma PLX_SIGMA]
+               [--plx-threshold PLX_THRESHOLD] [--sgr-bin-start SGR_BIN_START]
+               [--sgr-bin-end SGR_BIN_END] [--sgr-bin-width SGR_BIN_WIDTH]
+mem3.py: error: unrecognized arguments: /user/sutirtha/BallTree_Xmatch/Entire_catalogue_chunk02.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue_chunk03.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue_chunk04.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue_chunk05.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue_chunk06.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue_chunk07.fits /user/sutirtha/BallTree_Xmatch/Entire_catalogue_chunk08.fits

@@ -1,0 +1,89 @@
+#!/bin/bash
+#PBS -S /bin/bash
+#PBS -N stellar_plots_v2
+#PBS -l nodes=1:ppn=16
+#PBS -l mem=128gb
+#PBS -l walltime=24:00:00
+#PBS -o stellar_plots_v2.log
+#PBS -e stellar_plots_v2.err
+#PBS -m abe
+#PBS -M sutirtharkm@gmail.com
+
+# =============================================================================
+# STELLAR CATALOG VISUALIZATION V2
+# =============================================================================
+# - HR Diagrams: (BP-RP)₀ vs M_G (absolute magnitude, dereddened)
+# - Kiel Diagrams: Teff vs logg
+# - Sky Density Maps: Galactic Mollweide projection
+# =============================================================================
+
+source /user/sutirtha/anaconda3/etc/profile.d/conda.sh
+conda activate base
+
+cd /user/sutirtha/stellar_plots
+
+# ========== FILE PATHS - EDIT THESE ==========
+
+INPUT_FITS="/user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits"
+OUTPUT_DATA="stellar_data_v2.npz"
+OUTPUT_DIR="./plots_v2_${PBS_JOBID}"
+
+# =============================================
+
+echo "=============================================="
+echo "STELLAR CATALOG VISUALIZATION V2"
+echo "=============================================="
+echo "Job ID: $PBS_JOBID"
+echo "Node: $(hostname)"
+echo "Started: $(date)"
+echo ""
+echo "Input: $INPUT_FITS"
+echo "Output data: $OUTPUT_DATA"
+echo "Output plots: $OUTPUT_DIR"
+echo "=============================================="
+
+mkdir -p "$OUTPUT_DIR"
+
+# Check if data file already exists
+if [ -f "$OUTPUT_DATA" ]; then
+    echo "Found existing data file: $OUTPUT_DATA"
+    echo "Skipping computation, generating plots only..."
+    
+    python stellar_plots_v2.py \
+        --load-data "$OUTPUT_DATA" \
+        --plot \
+        --output-dir "$OUTPUT_DIR" \
+        --prefix stellar \
+        --dpi 150
+else
+    echo "Computing data and generating plots..."
+    
+    python stellar_plots_v2.py \
+        --input "$INPUT_FITS" \
+        --compute \
+        --output-data "$OUTPUT_DATA" \
+        --plot \
+        --output-dir "$OUTPUT_DIR" \
+        --prefix stellar \
+        --dpi 150 \
+        --chunk-size 1000000
+fi
+
+EXIT_CODE=$?
+
+echo ""
+echo "=============================================="
+echo "COMPLETE"
+echo "=============================================="
+echo "Finished: $(date)"
+echo "Exit code: $EXIT_CODE"
+
+if [ $EXIT_CODE -eq 0 ]; then
+    echo ""
+    echo "Output files:"
+    ls -la "$OUTPUT_DIR"
+fi
+
+echo "=============================================="
+
+exit $EXIT_CODE

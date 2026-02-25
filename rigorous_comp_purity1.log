@@ -1,0 +1,166 @@
+==============================================
+RIGOROUS COMPLETENESS & PURITY ANALYSIS
+==============================================
+Job ID: 2526749.pawna
+Node: node1
+Started: Thu Feb 19 17:11:12 IST 2026
+==============================================
+Command: python3 -u comp_pu1.py --master /user/sutirtha/BallTree_Xmatch --output /user/sutirtha/BallTree_Xmatch/rigorous_comp_purity_results1 --gc /user/sutirtha/BallTree_Xmatch/GC_members.csv --oc /user/sutirtha/BallTree_Xmatch/OC_members.csv --sgr /user/sutirtha/BallTree_Xmatch/Sgr_stream_members.csv
+2026-02-19 17:11:14 | INFO     | ======================================================================
+COMPLETENESS & PURITY v8
+======================================================================
+2026-02-19 17:11:14 | INFO     | Started: 2026-02-19T17:11:14.852984
+2026-02-19 17:11:14 | INFO     | eta:[0.4,0.9] sep_frac=0.8 tail_ratio=2.0
+2026-02-19 17:11:14 | INFO     | ======================================================================
+LOADING CATALOG
+======================================================================
+2026-02-19 17:11:14 | INFO     | Found 8 files
+2026-02-19 17:11:14 | INFO     | [1/8] Entire_catalogue_chunk01.fits
+2026-02-19 17:11:14 | INFO     |   ra -> RA_final
+2026-02-19 17:11:14 | INFO     |   dec -> DEC_final
+2026-02-19 17:11:14 | INFO     |   distance -> distance_final
+2026-02-19 17:11:14 | INFO     |   distance_err -> distance_err_final
+2026-02-19 17:11:14 | INFO     |   rv -> RV_final
+2026-02-19 17:11:14 | INFO     |   rv_err -> RV_err_final
+2026-02-19 17:11:14 | INFO     |   parallax -> parallax_final
+2026-02-19 17:11:14 | INFO     |   parallax_err -> parallax_err_final
+2026-02-19 17:11:14 | INFO     |   ruwe -> RUWE
+2026-02-19 17:11:14 | INFO     |   gmag -> Gmag
+2026-02-19 17:11:16 | INFO     |   4,069,110 rows
+2026-02-19 17:11:16 | INFO     | [2/8] Entire_catalogue_chunk02.fits
+2026-02-19 17:11:18 | INFO     |   4,069,110 rows
+2026-02-19 17:11:18 | INFO     | [3/8] Entire_catalogue_chunk03.fits
+2026-02-19 17:11:19 | INFO     |   4,069,110 rows
+2026-02-19 17:11:20 | INFO     | [4/8] Entire_catalogue_chunk04.fits
+2026-02-19 17:11:21 | INFO     |   4,069,110 rows
+2026-02-19 17:11:21 | INFO     | [5/8] Entire_catalogue_chunk05.fits
+2026-02-19 17:11:23 | INFO     |   4,069,110 rows
+2026-02-19 17:11:23 | INFO     | [6/8] Entire_catalogue_chunk06.fits
+2026-02-19 17:11:25 | INFO     |   4,069,110 rows
+2026-02-19 17:11:25 | INFO     | [7/8] Entire_catalogue_chunk07.fits
+2026-02-19 17:11:27 | INFO     |   4,069,110 rows
+2026-02-19 17:11:27 | INFO     | [8/8] Entire_catalogue_chunk08.fits
+2026-02-19 17:11:29 | INFO     |   4,069,106 rows
+2026-02-19 17:11:49 | INFO     | Total: 32,552,876 stars
+2026-02-19 17:11:49 | INFO     | 
+======================================================================
+LOADING TRUTH MEMBERS
+======================================================================
+2026-02-19 17:11:49 | INFO     |   Loading GC: /user/sutirtha/BallTree_Xmatch/GC_members.csv
+2026-02-19 17:11:51 | INFO     |   GC: 1,168,746 members with valid coords
+2026-02-19 17:11:51 | INFO     |   Loading OC: /user/sutirtha/BallTree_Xmatch/OC_members.csv
+2026-02-19 17:11:52 | INFO     |   OC: 435,833 members with valid coords
+2026-02-19 17:11:52 | INFO     |   Loading SGR: /user/sutirtha/BallTree_Xmatch/Sgr_stream_members.csv
+2026-02-19 17:11:52 | INFO     |   SGR: 55,192 members with valid coords
+2026-02-19 17:11:52 | INFO     | 
+--- Cross-matching truth members ---
+2026-02-19 17:11:53 | INFO     |   GC: 16,715/1,168,746 matched = 1.4%
+2026-02-19 17:11:53 | INFO     |   OC: 49,399/435,833 matched = 11.3%
+2026-02-19 17:11:53 | INFO     |   SGR: 2,687/55,192 matched = 4.9%
+2026-02-19 17:11:53 | INFO     | 
+======================================================================
+PURITY ANALYSIS
+======================================================================
+2026-02-19 17:11:53 | INFO     | 
+============================================================
+REG GAUSSIAN: RUWE
+============================================================
+2026-02-19 17:11:53 | INFO     |   N=2,000,000, median=1.0130, robust_sig=0.0682
+2026-02-19 17:12:07 | INFO     |   CONVERGED: eta=0.8934, Core:mu=1.0098,sig=0.0698, Tail:mu=2.3748,sig=2.4222
+2026-02-19 17:12:08 | INFO     | 
+============================================================
+LOG-NORMAL (v8): sig_d/d(LN)
+============================================================
+2026-02-19 17:12:08 | INFO     |   Valid: 3,930,793
+2026-02-19 17:12:08 | INFO     |   robust_std=0.7397, abs_min_sep=0.5918, sig_floor=0.1500
+2026-02-19 17:12:26 | INFO     |   CONVERGED: eta=0.9000, Core_med=0.1168, Tail_med=0.2111, ratio=1.81x
+2026-02-19 17:12:26 | INFO     | 
+============================================================
+GAMMA: sig_d/d(Gamma)
+============================================================
+2026-02-19 17:12:26 | INFO     |   Valid: 3,930,793
+2026-02-19 17:12:26 | INFO     |   P25=0.0725 P50=0.1153 P75=0.1980 mean=0.1601
+2026-02-19 17:29:30 | INFO     |   CONVERGED: eta=0.6030, Core=0.0992, Tail=0.2526, ratio=2.55x
+2026-02-19 17:29:31 | INFO     | 
+============================================================
+LOG-NORMAL (v8): sig_v/v(LN)
+============================================================
+2026-02-19 17:29:31 | INFO     |   Valid: 32,312,272
+2026-02-19 17:29:31 | INFO     |   robust_std=1.6667, abs_min_sep=1.3334, sig_floor=0.1667
+2026-02-19 17:29:54 | INFO     |   CONVERGED: eta=0.9000, Core_med=0.0644, Tail_med=0.2444, ratio=3.79x
+2026-02-19 17:29:55 | INFO     | 
+============================================================
+GAMMA: sig_v/v(Gamma)
+============================================================
+2026-02-19 17:29:55 | INFO     |   Valid: 32,312,272
+2026-02-19 17:29:55 | INFO     |   P25=0.0224 P50=0.0731 P75=0.2136 mean=0.2896
+2026-02-19 17:35:31 | INFO     |   CONVERGED: eta=0.7680, Core=0.0908, Tail=0.9476, ratio=10.44x
+2026-02-19 17:35:35 | INFO     |   Combined: mean=0.3527, P>0.8=0
+2026-02-19 17:35:36 | INFO     | 
+======================================================================
+TRADE-OFF & COMPLETENESS
+======================================================================
+2026-02-19 17:41:14 | INFO     |   Saved JSON: /user/sutirtha/BallTree_Xmatch/rigorous_comp_purity_results1/results_v8.json
+Saved extra plot data: /user/sutirtha/BallTree_Xmatch/rigorous_comp_purity_results1/extra_plot_data.json
+2026-02-19 17:41:28 | INFO     | 
+======================================================================
+PLOTTING
+======================================================================
+2026-02-19 17:41:35 | INFO     |   Saved: plot1_mixture_comparison.png
+2026-02-19 17:41:42 | INFO     |   Saved: plot2_purity_curves_and_distributions.png
+2026-02-19 17:41:45 | INFO     |   Saved: plot3_radial_dist.png
+2026-02-19 17:41:49 | INFO     |   Saved: plot3_radial_rv.png
+2026-02-19 17:41:53 | INFO     |   Saved: plot3_radial_ruwe.png
+2026-02-19 17:41:53 | INFO     |   Saved: plot4_core_fraction_eta.png
+2026-02-19 17:41:54 | INFO     |   Saved: plot5_purity_by_method.png
+2026-02-19 17:41:54 | INFO     |   Saved: plot6_gc_oc_sgr_completeness.png
+2026-02-19 17:41:54 | INFO     | 
+======================================================================
+DONE in 30.7 min
+======================================================================
+==============================================
+FINISHED: Thu Feb 19 17:41:54 IST 2026
+Exit code: 0
+total 9584
+drwx------  3 sutirtha users   4096 Feb 19 17:41 .
+drwxr-xr-x 37 sutirtha users   4096 Feb 19 16:48 ..
+-rw-------  1 sutirtha users  17196 Jan 31 20:38 analysis.log
+-rw-------  1 sutirtha users   7553 Feb 19 11:08 analysis_v7.log
+-rw-------  1 sutirtha users  32765 Feb 19 17:41 analysis_v8.log
+-rw-------  1 sutirtha users 227601 Jan 31 20:38 combined_summary.png
+-rw-------  1 sutirtha users  37460 Jan 31 20:38 completeness_summary.png
+-rw-------  1 sutirtha users  51250 Feb 19 17:41 extra_plot_data.json
+-rw-------  1 sutirtha users  15128 Feb 19 17:41 memory.log
+-rw-------  1 sutirtha users  72962 Jan 31 20:38 method_comparison.png
+-rw-------  1 sutirtha users 124217 Jan 31 20:38 mixture_fits.png
+-rw-------  1 sutirtha users   1419 Feb 19 17:41 model_params.json
+-rw-------  1 sutirtha users 373113 Feb 19 17:41 plot1_mixture_comparison.png
+-rw-------  1 sutirtha users 192933 Feb 19 17:41 plot2_purity_curves_and_distributions.png
+-rw-------  1 sutirtha users 127226 Feb 19 11:07 plot2_purity_vs_error.png
+-rw-------  1 sutirtha users 126382 Feb 19 11:07 plot3_purity_distributions.png
+-rw-------  1 sutirtha users 930326 Feb 19 17:41 plot3_radial_dist.png
+-rw-------  1 sutirtha users 732543 Feb 19 17:41 plot3_radial_ruwe.png
+-rw-------  1 sutirtha users 851879 Feb 19 17:41 plot3_radial_rv.png
+-rw-------  1 sutirtha users  58481 Feb 19 17:41 plot4_core_fraction_eta.png
+-rw-------  1 sutirtha users 294124 Feb 19 13:53 plot4_summary.png
+-rw-------  1 sutirtha users 137467 Feb 19 11:07 plot4_tradeoff_curves.png
+-rw-------  1 sutirtha users 614607 Feb 19 11:07 plot5_dist_err_radial.png
+-rw-------  1 sutirtha users  59207 Feb 19 17:41 plot5_purity_by_method.png
+-rw-------  1 sutirtha users 510850 Feb 19 11:07 plot5_ruwe_radial.png
+-rw-------  1 sutirtha users 685551 Feb 19 11:07 plot5_rv_err_radial.png
+-rw-------  1 sutirtha users 202179 Feb 19 17:41 plot6_gc_oc_sgr_completeness.png
+-rw-------  1 sutirtha users 176941 Feb 19 11:08 plot6_radial_error_profiles.png
+-rw-------  1 sutirtha users 106660 Feb 19 11:08 plot7_joint_quality_heatmap.png
+-rw-------  1 sutirtha users  73577 Feb 19 11:08 plot8_purity_by_radius.png
+-rw-------  1 sutirtha users 306482 Feb 19 11:08 plot9_combined_summary.png
+drwxr-xr-x  2 sutirtha users   4096 Feb 19 16:49 plots_rerun
+-rw-------  1 sutirtha users 244763 Jan 31 20:38 precision_recall_curves.png
+-rw-------  1 sutirtha users  60039 Jan 31 20:38 purity_by_radius.png
+-rw-------  1 sutirtha users 345278 Jan 31 20:38 purity_completeness_vs_distance_rel_dist_err.png
+-rw-------  1 sutirtha users 431114 Jan 31 20:38 purity_completeness_vs_distance_rel_rv_err.png
+-rw-------  1 sutirtha users 258506 Jan 31 20:38 purity_completeness_vs_distance_ruwe.png
+-rw-------  1 sutirtha users 147411 Jan 31 20:38 purity_distributions.png
+-rw-------  1 sutirtha users 332235 Feb 19 11:08 results_v7.json
+-rw-------  1 sutirtha users 448221 Feb 19 17:41 results_v8.json
+-rw-------  1 sutirtha users 298264 Jan 31 20:38 rigorous_analysis_results_v6.json
+==============================================

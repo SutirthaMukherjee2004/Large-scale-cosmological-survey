@@ -1,0 +1,10 @@
+=== Wed Jan 28 17:04:55 IST 2026 ===
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi        88Gi       593Gi       7.0Mi        72Gi       662Gi
+Swap:          238Gi       296Mi       238Gi
+USER         PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+harshit+  258410 1796 11.1 111464056 88514288 ?  Rl   Jan27 26118:07 /user/harshit.raj/anaconda3/envs/planck_sz/bin/python szifi/test_files/run_szifi_planck.py
+gdm         3413  0.0  0.0 8782328 132012 tty1   Sl+   2025  27:05 /usr/bin/gnome-shell
+systemd+    2551  0.1  0.0  14836 113664 ?       Ss    2025  44:43 /lib/systemd/systemd-oomd
+root        3935  0.5  0.0 102900 99840 ?        Ssl   2025 250:09 /opt/pbs/sbin/pbs_mom
+

@@ -1,0 +1,75 @@
+#!/bin/bash
+#PBS -S /bin/bash
+#PBS -N adaptive_membership_v6
+#PBS -l nodes=1:ppn=32
+#PBS -l mem=256gb
+#PBS -l walltime=48:00:00
+#PBS -o adaptive_membership_v6.log
+#PBS -e adaptive_membership_v6.err
+#PBS -m abe
+#PBS -M sutirtharkm@gmail.com
+
+# =============================================================================
+# ADAPTIVE MEMBERSHIP ANALYSIS V6
+# =============================================================================
+# Changes from V2:
+#   - Master loaded from Entire_catalogue_chunk*.fits (not single FITS)
+#   - RV column: Weighted_Avg_final (weighted average, non-outlier)
+#   - Median ± MAD bands when no reference distance/RV available
+#   - Yellow stats panel removed from individual plots
+#   - Column mapping: RA_final, DEC_final, pmra_final, etc.
+# =============================================================================
+
+source /user/sutirtha/anaconda3/etc/profile.d/conda.sh
+conda activate base
+
+cd /user/sutirtha/BallTree_Xmatch
+
+# ========== FILE PATHS ==========
+
+# V6: glob pattern for chunk files (MUST be quoted to prevent shell expansion)
+MASTER_CATALOG="/user/sutirtha/BallTree_Xmatch/Entire_catalogue_chunk*.fits"
+
+GC_MEMBERS="/user/sutirtha/BallTree_Xmatch/GC_members_with_RV.csv"
+OC_MEMBERS="/user/sutirtha/BallTree_Xmatch/OC_members.csv"
+SGR_MEMBERS="/user/sutirtha/BallTree_Xmatch/Sgr_stream_members.csv"
+DWG_MEMBERS="/user/sutirtha/BallTree_Xmatch/DWG_members_with_RV.csv"
+
+GC_DIST_FILE="/user/sutirtha/BallTree_Xmatch/GC_dist.csv"
+
+OUTPUT_DIR="./outputs_v6_${PBS_JOBID}"
+CHECKPOINT_DIR="./checkpoints_v6"
+
+# ================================
+
+echo "=============================================="
+echo "ADAPTIVE MEMBERSHIP ANALYSIS V6"
+echo "  Chunk loading | Weighted_Avg_final | MAD bands"
+echo "=============================================="
+echo "Job ID: $PBS_JOBID"
+echo "Node: $(hostname)"
+echo "Started: $(date)"
+echo "=============================================="
+
+mkdir -p "$OUTPUT_DIR"
+mkdir -p "$CHECKPOINT_DIR"
+
+# NOTE: --master must be quoted so the glob is passed to Python, not expanded by shell
+CMD="python mem4.py --master '$MASTER_CATALOG' --output $OUTPUT_DIR --checkpoint $CHECKPOINT_DIR"
+
+[ -f "$GC_MEMBERS" ] && CMD="$CMD --gc $GC_MEMBERS" && echo "✓ GC members"
+[ -f "$OC_MEMBERS" ] && CMD="$CMD --oc $OC_MEMBERS" && echo "✓ OC members"
+[ -f "$SGR_MEMBERS" ] && CMD="$CMD --sgr $SGR_MEMBERS" && echo "✓ SGR members"
+[ -f "$DWG_MEMBERS" ] && CMD="$CMD --dwg $DWG_MEMBERS" && echo "✓ DWG members"
+[ -f "$GC_DIST_FILE" ] && CMD="$CMD --gc-dist $GC_DIST_FILE" && echo "✓ GC distances"
+
+echo ""
+echo "Running: $CMD"
+echo "=============================================="
+
+eval $CMD
+
+echo ""
+echo "Finished: $(date)"
+echo "Exit code: $?"
+ls -la "$OUTPUT_DIR"

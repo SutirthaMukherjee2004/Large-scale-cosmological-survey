@@ -1,0 +1,324 @@
+==============================================
+ADAPTIVE MEMBERSHIP ANALYSIS V2
+==============================================
+Job ID: 2526785.pawna
+Node: node1
+Started: Sun Feb 22 12:17:34 IST 2026
+==============================================
+✓ GC members
+✓ OC members
+✓ SGR members
+✓ DWG members
+✓ GC distances
+
+Running: python mem2.py --master /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits --output ./outputs_v2_2526785.pawna --checkpoint ./checkpoints --gc /user/sutirtha/BallTree_Xmatch/GC_members_with_RV.csv --oc /user/sutirtha/BallTree_Xmatch/OC_members.csv --sgr /user/sutirtha/BallTree_Xmatch/Sgr_stream_members.csv --dwg /user/sutirtha/BallTree_Xmatch/DWG_members_with_RV.csv --gc-dist /user/sutirtha/BallTree_Xmatch/GC_dist.csv
+==============================================
+2026-02-22 12:17:36 | INFO     | ======================================================================
+ADAPTIVE MEMBERSHIP ANALYSIS V4
+======================================================================
+2026-02-22 12:17:36 | INFO     | Started: 2026-02-22T12:17:36.339361
+2026-02-22 12:17:36 | INFO     | ======================================================================
+2026-02-22 12:17:36 | INFO     | LOADING MASTER CATALOG
+2026-02-22 12:17:36 | INFO     | ======================================================================
+2026-02-22 12:17:36 | INFO     | Loading from checkpoint...
+2026-02-22 12:18:04 | INFO     | ✓ Loaded 52,112,379 rows from checkpoint (52,029,670 with RV)
+2026-02-22 12:18:04 | INFO     | Loading GC reference distances from /user/sutirtha/BallTree_Xmatch/GC_dist.csv
+2026-02-22 12:18:04 | INFO     |   Loaded 161 lit + 1 mean = 162 total
+2026-02-22 12:18:04 | INFO     | 
+--------------------------------------------------
+Processing GLOBULAR CLUSTERS...
+--------------------------------------------------
+2026-02-22 12:18:06 | INFO     | Found 189 clusters
+2026-02-22 12:18:06 | INFO     | 
+[1/189] AM_1
+2026-02-22 12:18:06 | INFO     |   Members: 79, Matched: 3 (3.8%)
+2026-02-22 12:18:06 | INFO     |   Ref dist: 118.91 kpc
+2026-02-22 12:18:06 | INFO     | 
+[2/189] AM_4
+2026-02-22 12:18:06 | INFO     |   Members: 41, Matched: 4 (9.8%)
+2026-02-22 12:18:06 | INFO     |   Ref dist: 29.01 kpc
+2026-02-22 12:18:06 | INFO     | 
+[3/189] Arp 2
+2026-02-22 12:18:06 | INFO     |   Members: 72, Matched: 0 (0.0%)
+2026-02-22 12:18:06 | INFO     |   Ref dist: 28.72 kpc
+2026-02-22 12:18:06 | INFO     | 
+[4/189] Arp_2
+2026-02-22 12:18:06 | INFO     |   Members: 582, Matched: 2 (0.3%)
+2026-02-22 12:18:06 | INFO     |   Ref dist: 28.72 kpc
+2026-02-22 12:18:06 | INFO     | 
+[5/189] BH_140
+2026-02-22 12:18:06 | INFO     |   Members: 32950, Matched: 382 (1.2%)
+2026-02-22 12:18:06 | INFO     |   Ref dist: 4.81 kpc
+2026-02-22 12:18:06 | INFO     |   Algo: GMM | n(P>0.8): 332
+2026-02-22 12:18:08 | INFO     | 
+[6/189] BH_176
+2026-02-22 12:18:08 | INFO     |   Members: 3535, Matched: 48 (1.4%)
+2026-02-22 12:18:08 | WARNING  |   No ref dist for 'BH_176'
+2026-02-22 12:18:08 | INFO     |   Algo: GMM | n(P>0.8): 46
+2026-02-22 12:18:09 | INFO     | 
+[7/189] BH_261_AL_3
+2026-02-22 12:18:10 | INFO     |   Members: 2284, Matched: 16 (0.7%)
+2026-02-22 12:18:10 | WARNING  |   No ref dist for 'BH_261_AL_3'
+2026-02-22 12:18:10 | INFO     |   Algo: GMM | n(P>0.8): 10
+2026-02-22 12:18:11 | INFO     | 
+[8/189] Bliss_1
+2026-02-22 12:18:11 | INFO     |   Members: 160, Matched: 3 (1.9%)
+2026-02-22 12:18:11 | WARNING  |   No ref dist for 'Bliss_1'
+2026-02-22 12:18:11 | INFO     | 
+[9/189] Crater
+2026-02-22 12:18:11 | INFO     |   Members: 42, Matched: 4 (9.5%)
+2026-02-22 12:18:11 | INFO     |   Ref dist: 147.23 kpc
+2026-02-22 12:18:11 | INFO     | 
+[10/189] Djorg_1
+2026-02-22 12:18:11 | INFO     |   Members: 1874, Matched: 15 (0.8%)
+2026-02-22 12:18:11 | WARNING  |   No ref dist for 'Djorg_1'
+2026-02-22 12:18:11 | INFO     |   Algo: GMM | n(P>0.8): 2
+2026-02-22 12:18:12 | INFO     | 
+[11/189] Djorg_2
+2026-02-22 12:18:12 | INFO     |   Skipping - 3 members
+2026-02-22 12:18:12 | INFO     | 
+[12/189] Djorg_2_ESO456-
+2026-02-22 12:18:12 | INFO     |   Members: 2322, Matched: 11 (0.5%)
+2026-02-22 12:18:12 | WARNING  |   No ref dist for 'Djorg_2_ESO456-'
+2026-02-22 12:18:12 | INFO     |   Algo: GMM | n(P>0.8): 7
+2026-02-22 12:18:14 | INFO     | 
+[13/189] ESO280-06
+2026-02-22 12:18:14 | INFO     |   Members: 660, Matched: 11 (1.7%)
+2026-02-22 12:18:14 | WARNING  |   No ref dist for 'ESO280-06'
+2026-02-22 12:18:14 | INFO     |   Algo: GMM | n(P>0.8): 9
+2026-02-22 12:18:15 | INFO     | 
+[14/189] ESO452-11
+2026-02-22 12:18:15 | INFO     |   Members: 635, Matched: 11 (1.7%)
+2026-02-22 12:18:15 | WARNING  |   No ref dist for 'ESO452-11'
+2026-02-22 12:18:15 | INFO     |   Algo: GMM | n(P>0.8): 10
+2026-02-22 12:18:16 | INFO     | 
+[15/189] ESO_93-8
+2026-02-22 12:18:16 | INFO     |   Members: 1140, Matched: 8 (0.7%)
+2026-02-22 12:18:16 | WARNING  |   No ref dist for 'ESO_93-8'
+2026-02-22 12:18:16 | INFO     | 
+[16/189] E_3
+2026-02-22 12:18:16 | INFO     |   Members: 738, Matched: 7 (0.9%)
+2026-02-22 12:18:16 | INFO     |   Ref dist: 7.94 kpc
+2026-02-22 12:18:16 | INFO     | 
+[17/189] Eridanus
+2026-02-22 12:18:17 | INFO     |   Members: 99, Matched: 6 (6.1%)
+2026-02-22 12:18:17 | INFO     |   Ref dist: 84.72 kpc
+2026-02-22 12:18:17 | INFO     | 
+[18/189] FSR1758
+2026-02-22 12:18:17 | INFO     |   Skipping - 1 members
+2026-02-22 12:18:17 | INFO     | 
+[19/189] FSR_1716
+2026-02-22 12:18:17 | INFO     |   Members: 6707, Matched: 69 (1.0%)
+2026-02-22 12:18:17 | INFO     |   Ref dist: 7.32 kpc
+2026-02-22 12:18:17 | INFO     |   Algo: GMM | n(P>0.8): 8
+2026-02-22 12:18:18 | INFO     | 
+[20/189] FSR_1735
+2026-02-22 12:18:18 | INFO     |   Members: 830, Matched: 9 (1.1%)
+2026-02-22 12:18:18 | INFO     |   Ref dist: 9.08 kpc
+2026-02-22 12:18:18 | INFO     | 
+[21/189] FSR_1758
+2026-02-22 12:18:18 | INFO     |   Members: 36201, Matched: 445 (1.2%)
+2026-02-22 12:18:18 | INFO     |   Ref dist: 11.48 kpc
+2026-02-22 12:18:18 | INFO     |   Algo: GMM | n(P>0.8): 357
+2026-02-22 12:18:20 | INFO     | 
+[22/189] Gran_1
+2026-02-22 12:18:20 | INFO     |   Members: 2185, Matched: 12 (0.5%)
+2026-02-22 12:18:20 | WARNING  |   No ref dist for 'Gran_1'
+2026-02-22 12:18:20 | INFO     |   Algo: GMM | n(P>0.8): 10
+2026-02-22 12:18:21 | INFO     | 
+[23/189] HP 1
+2026-02-22 12:18:21 | INFO     |   Members: 14, Matched: 0 (0.0%)
+2026-02-22 12:18:21 | INFO     |   Ref dist: 6.94 kpc
+2026-02-22 12:18:21 | INFO     | 
+[24/189] HP1
+2026-02-22 12:18:21 | INFO     |   Members: 17, Matched: 2 (11.8%)
+2026-02-22 12:18:21 | INFO     |   Ref dist: 6.94 kpc
+2026-02-22 12:18:21 | INFO     | 
+[25/189] HP_1_BH_229
+2026-02-22 12:18:21 | INFO     |   Members: 5773, Matched: 22 (0.4%)
+2026-02-22 12:18:21 | WARNING  |   No ref dist for 'HP_1_BH_229'
+2026-02-22 12:18:21 | INFO     |   Algo: GMM | n(P>0.8): 17
+2026-02-22 12:18:22 | INFO     | 
+[26/189] IC_1257
+2026-02-22 12:18:22 | INFO     |   Members: 292, Matched: 2 (0.7%)
+2026-02-22 12:18:22 | INFO     |   Ref dist: 26.63 kpc
+2026-02-22 12:18:23 | INFO     | 
+[27/189] IC_1276_Pal_7
+2026-02-22 12:18:23 | INFO     |   Members: 13335, Matched: 95 (0.7%)
+2026-02-22 12:18:23 | WARNING  |   No ref dist for 'IC_1276_Pal_7'
+2026-02-22 12:18:23 | INFO     |   Algo: GMM | n(P>0.8): 34
+2026-02-22 12:18:24 | INFO     | 
+[28/189] IC_4499
+2026-02-22 12:18:24 | INFO     |   Members: 3410, Matched: 33 (1.0%)
+2026-02-22 12:18:24 | INFO     |   Ref dist: 18.88 kpc
+2026-02-22 12:18:24 | INFO     |   Algo: GMM | n(P>0.8): 26
+2026-02-22 12:18:25 | INFO     | 
+[29/189] Kim_3
+2026-02-22 12:18:26 | INFO     |   Members: 60, Matched: 2 (3.3%)
+2026-02-22 12:18:26 | WARNING  |   No ref dist for 'Kim_3'
+2026-02-22 12:18:26 | INFO     | 
+[30/189] Ko_1
+2026-02-22 12:18:26 | INFO     |   Members: 15, Matched: 0 (0.0%)
+2026-02-22 12:18:26 | WARNING  |   No ref dist for 'Ko_1'
+2026-02-22 12:18:26 | INFO     | 
+[31/189] Ko_2
+2026-02-22 12:18:26 | INFO     |   Members: 29, Matched: 3 (10.3%)
+2026-02-22 12:18:26 | WARNING  |   No ref dist for 'Ko_2'
+2026-02-22 12:18:26 | INFO     | 
+[32/189] Laevens_3
+2026-02-22 12:18:26 | INFO     |   Members: 101, Matched: 5 (5.0%)
+2026-02-22 12:18:26 | INFO     |   Ref dist: 61.77 kpc
+2026-02-22 12:18:26 | INFO     | 
+[33/189] Lil 1
+2026-02-22 12:18:26 | INFO     |   Members: 25, Matched: 0 (0.0%)
+2026-02-22 12:18:26 | WARNING  |   No ref dist for 'Lil 1'
+2026-02-22 12:18:26 | INFO     | 
+[34/189] Liller1
+2026-02-22 12:18:26 | INFO     |   Members: 22, Matched: 0 (0.0%)
+2026-02-22 12:18:26 | INFO     |   Ref dist: 8.06 kpc
+2026-02-22 12:18:26 | INFO     | 
+[35/189] Liller_1
+2026-02-22 12:18:26 | INFO     |   Members: 1205, Matched: 8 (0.7%)
+2026-02-22 12:18:26 | INFO     |   Ref dist: 8.06 kpc
+2026-02-22 12:18:26 | INFO     | 
+[36/189] Lynga_7_BH184
+2026-02-22 12:18:26 | INFO     |   Members: 10367, Matched: 76 (0.7%)
+2026-02-22 12:18:26 | WARNING  |   No ref dist for 'Lynga_7_BH184'
+2026-02-22 12:18:26 | INFO     |   Algo: GMM | n(P>0.8): 74
+2026-02-22 12:18:27 | INFO     | 
+[37/189] Mercer_5
+2026-02-22 12:18:27 | INFO     |   Members: 186, Matched: 3 (1.6%)
+2026-02-22 12:18:27 | INFO     |   Ref dist: 5.50 kpc
+2026-02-22 12:18:28 | INFO     | 
+[38/189] Munoz_1
+2026-02-22 12:18:28 | INFO     |   Members: 26, Matched: 0 (0.0%)
+2026-02-22 12:18:28 | WARNING  |   No ref dist for 'Munoz_1'
+2026-02-22 12:18:28 | INFO     | 
+[39/189] NGC 104
+2026-02-22 12:18:28 | INFO     |   Members: 27, Matched: 0 (0.0%)
+2026-02-22 12:18:28 | INFO     |   Ref dist: 4.51 kpc
+2026-02-22 12:18:28 | INFO     | 
+[40/189] NGC 1851
+2026-02-22 12:18:28 | INFO     |   Skipping - 5 members
+2026-02-22 12:18:28 | INFO     | 
+[41/189] NGC 2808
+2026-02-22 12:18:28 | INFO     |   Skipping - 9 members
+2026-02-22 12:18:28 | INFO     | 
+[42/189] NGC 288
+2026-02-22 12:18:28 | INFO     |   Members: 15, Matched: 0 (0.0%)
+2026-02-22 12:18:28 | INFO     |   Ref dist: 8.98 kpc
+2026-02-22 12:18:28 | INFO     | 
+[43/189] NGC 3201
+2026-02-22 12:18:28 | INFO     |   Skipping - 1 members
+2026-02-22 12:18:28 | INFO     | 
+[44/189] NGC 362
+2026-02-22 12:18:28 | INFO     |   Members: 12, Matched: 0 (0.0%)
+2026-02-22 12:18:28 | INFO     |   Ref dist: 8.77 kpc
+2026-02-22 12:18:28 | INFO     | 
+[45/189] NGC 5139
+2026-02-22 12:18:28 | INFO     |   Members: 128, Matched: 0 (0.0%)
+2026-02-22 12:18:28 | INFO     |   Ref dist: 5.47 kpc
+2026-02-22 12:18:28 | INFO     | 
+[46/189] NGC 5904
+2026-02-22 12:18:28 | INFO     |   Skipping - 9 members
+2026-02-22 12:18:28 | INFO     | 
+[47/189] NGC 5986
+2026-02-22 12:18:28 | INFO     |   Skipping - 2 members
+2026-02-22 12:18:28 | INFO     | 
+[48/189] NGC 6093
+2026-02-22 12:18:28 | INFO     |   Members: 16, Matched: 0 (0.0%)
+2026-02-22 12:18:28 | INFO     |   Ref dist: 10.34 kpc
+2026-02-22 12:18:28 | INFO     | 
+[49/189] NGC 6171
+2026-02-22 12:18:28 | INFO     |   Skipping - 4 members
+2026-02-22 12:18:28 | INFO     | 
+[50/189] NGC 6355
+2026-02-22 12:18:28 | INFO     |   Members: 87, Matched: 61 (70.1%)
+2026-02-22 12:18:28 | INFO     |   Ref dist: 8.53 kpc
+2026-02-22 12:18:28 | INFO     |   Algo: GMM | n(P>0.8): 12
+2026-02-22 12:18:30 | INFO     | 
+[51/189] NGC 6366
+2026-02-22 12:18:30 | INFO     |   Members: 236, Matched: 77 (32.6%)
+2026-02-22 12:18:30 | INFO     |   Ref dist: 3.41 kpc
+2026-02-22 12:18:30 | INFO     |   Algo: GMM | n(P>0.8): 75
+2026-02-22 12:18:31 | INFO     | 
+[52/189] NGC 6388
+2026-02-22 12:18:32 | INFO     |   Members: 144, Matched: 0 (0.0%)
+2026-02-22 12:18:32 | INFO     |   Ref dist: 11.54 kpc
+2026-02-22 12:18:32 | INFO     | 
+[53/189] NGC 6397
+2026-02-22 12:18:32 | INFO     |   Members: 305, Matched: 36 (11.8%)
+2026-02-22 12:18:32 | INFO     |   Ref dist: 2.51 kpc
+2026-02-22 12:18:32 | INFO     |   Algo: GMM | n(P>0.8): 5
+2026-02-22 12:18:33 | INFO     | 
+[54/189] NGC 6440
+2026-02-22 12:18:33 | INFO     |   Members: 15, Matched: 0 (0.0%)
+2026-02-22 12:18:33 | INFO     |   Ref dist: 8.46 kpc
+2026-02-22 12:18:33 | INFO     | 
+[55/189] NGC 6441
+2026-02-22 12:18:33 | INFO     |   Members: 298, Matched: 21 (7.0%)
+2026-02-22 12:18:33 | INFO     |   Ref dist: 13.18 kpc
+2026-02-22 12:18:33 | INFO     |   Algo: GMM | n(P>0.8): 4
+2026-02-22 12:18:35 | INFO     | 
+[56/189] NGC 6522
+2026-02-22 12:18:35 | INFO     |   Members: 445, Matched: 7 (1.6%)
+2026-02-22 12:18:35 | INFO     |   Ref dist: 7.16 kpc
+2026-02-22 12:18:35 | INFO     | 
+[57/189] NGC 6528
+2026-02-22 12:18:35 | INFO     |   Members: 200, Matched: 7 (3.5%)
+2026-02-22 12:18:35 | INFO     |   Ref dist: 7.79 kpc
+2026-02-22 12:18:35 | INFO     | 
+[58/189] NGC 6535
+2026-02-22 12:18:35 | INFO     |   Members: 33, Matched: 3 (9.1%)
+2026-02-22 12:18:35 | INFO     |   Ref dist: 6.35 kpc
+2026-02-22 12:18:35 | INFO     | 
+[59/189] NGC 6541
+2026-02-22 12:18:35 | INFO     |   Members: 187, Matched: 9 (4.8%)
+2026-02-22 12:18:35 | INFO     |   Ref dist: 7.62 kpc
+2026-02-22 12:18:35 | INFO     | 
+[60/189] NGC 6553
+2026-02-22 12:18:35 | INFO     |   Members: 80, Matched: 0 (0.0%)
+2026-02-22 12:18:35 | INFO     |   Ref dist: 5.22 kpc
+2026-02-22 12:18:35 | INFO     | 
+[61/189] NGC 6558
+2026-02-22 12:18:35 | INFO     |   Members: 108, Matched: 11 (10.2%)
+2026-02-22 12:18:35 | INFO     |   Ref dist: 7.50 kpc
+2026-02-22 12:18:35 | INFO     |   Algo: GMM | n(P>0.8): 9
+2026-02-22 12:18:37 | INFO     | 
+[62/189] NGC 6624
+2026-02-22 12:18:37 | INFO     |   Members: 253, Matched: 7 (2.8%)
+2026-02-22 12:18:37 | INFO     |   Ref dist: 8.02 kpc
+2026-02-22 12:18:37 | INFO     | 
+[63/189] NGC 6626
+2026-02-22 12:18:37 | INFO     |   Members: 88, Matched: 35 (39.8%)
+2026-02-22 12:18:37 | INFO     |   Ref dist: 5.31 kpc
+2026-02-22 12:18:37 | INFO     |   Algo: GMM | n(P>0.8): 22
+2026-02-22 12:18:38 | INFO     | 
+[64/189] NGC 6642
+2026-02-22 12:18:38 | INFO     |   Members: 26, Matched: 4 (15.4%)
+2026-02-22 12:18:38 | INFO     |   Ref dist: 8.01 kpc
+2026-02-22 12:18:38 | INFO     | 
+[65/189] NGC 6656
+2026-02-22 12:18:38 | INFO     |   Members: 401, Matched: 71 (17.7%)
+2026-02-22 12:18:38 | INFO     |   Ref dist: 3.33 kpc
+2026-02-22 12:18:39 | INFO     |   Algo: GMM | n(P>0.8): 47
+2026-02-22 12:18:40 | INFO     | 
+[66/189] NGC 6715
+2026-02-22 12:18:40 | INFO     |   Members: 600, Matched: 10 (1.7%)
+2026-02-22 12:18:40 | INFO     |   Ref dist: 26.64 kpc
+2026-02-22 12:18:40 | INFO     |   Algo: GMM | n(P>0.8): 7
+2026-02-22 12:18:41 | INFO     | 
+[67/189] NGC 6752
+2026-02-22 12:18:42 | INFO     |   Members: 432, Matched: 145 (33.6%)
+2026-02-22 12:18:42 | INFO     |   Ref dist: 4.18 kpc
+2026-02-22 12:18:42 | INFO     |   Algo: GMM | n(P>0.8): 124
+2026-02-22 12:18:43 | INFO     | 
+[68/189] NGC 6809
+2026-02-22 12:18:43 | INFO     |   Members: 147, Matched: 40 (27.2%)
+2026-02-22 12:18:43 | INFO     |   Ref dist: 5.37 kpc
+2026-02-22 12:18:43 | INFO     |   Algo: GMM | n(P>0.8): 39
+2026-02-22 12:18:45 | INFO     | 
+[69/189] NGC 6838
+2026-02-22 12:18:45 | INFO     |   Members: 62, Matched: 44 (71.0%)
+2026-02-22 12:18:45 | INFO     |   Ref dist: 3.98 kpc
+2026-02-22 12:18:45 | INFO     |   Algo: GMM | n(P>0.8): 37

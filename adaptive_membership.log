@@ -1,0 +1,51 @@
+==============================================
+ADAPTIVE MEMBERSHIP ANALYSIS
+==============================================
+Job ID: 2526431.pawna
+Node: node4
+Started at: Tue Jan 27 18:57:31 IST 2026
+
+Input Files:
+  Master: /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits
+  GC:     /user/sutirtha/BallTree_Xmatch/GC_members.csv
+  OC:     /user/sutirtha/BallTree_Xmatch/OC_members.csv
+  SGR:    /user/sutirtha/BallTree_Xmatch/Sgr_stream_members.csv
+  DWG:    /user/sutirtha/BallTree_Xmatch/DWG_members.csv
+
+Output: /user/sutirtha/BallTree_Xmatch/outputs_2526431.pawna
+
+System Resources:
+  Total RAM: 755Gi
+  Available RAM: 663Gi
+  CPUs: 1
+==============================================
+
+Running pre-flight checks...
+
+Python 3.12.12
+Pre-flight checks passed!
+
+Starting analysis...
+
+Command: python3 -u mem2.py --master "/user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits" --output "/user/sutirtha/BallTree_Xmatch/outputs_2526431.pawna" --checkpoint "/user/sutirtha/BallTree_Xmatch/checkpoints_2526431.pawna" --log "/user/sutirtha/BallTree_Xmatch/outputs_2526431.pawna/adaptive_membership_2526431.pawna.log" --gc "/user/sutirtha/BallTree_Xmatch/GC_members.csv" --oc "/user/sutirtha/BallTree_Xmatch/OC_members.csv" --sgr "/user/sutirtha/BallTree_Xmatch/Sgr_stream_members.csv" --dwg "/user/sutirtha/BallTree_Xmatch/DWG_members.csv"
+
+
+==============================================
+ANALYSIS COMPLETE
+==============================================
+Finished at: Tue Jan 27 18:57:34 IST 2026
+Exit code: 0
+
+Final memory state:
+               total        used        free      shared  buff/cache   available
+Mem:           755Gi        87Gi       551Gi       7.0Mi       116Gi       663Gi
+Swap:          238Gi       296Mi       238Gi
+
+Success! Cleaning up checkpoints...
+
+Output files in /user/sutirtha/BallTree_Xmatch/outputs_2526431.pawna:
+total 8
+drwx------  2 sutirtha users 4096 Jan 27 18:57 .
+drwxr-xr-x 15 sutirtha users 4096 Jan 27 18:57 ..
+-rw-------  1 sutirtha users    0 Jan 27 18:57 memory_monitor.log
+==============================================

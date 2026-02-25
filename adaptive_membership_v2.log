@@ -1,0 +1,21 @@
+==============================================
+ADAPTIVE MEMBERSHIP ANALYSIS V2
+==============================================
+Job ID: 2526805.pawna
+Node: node1
+Started: Mon Feb 23 15:04:04 IST 2026
+==============================================
+✓ GC members
+✓ OC members
+✓ SGR members
+✓ DWG members
+✓ GC distances
+
+Running: python mem3.py --master /user/sutirtha/BallTree_Xmatch/Entire_catalogue_chunk*.fits --output ./outputs_v2_2526805.pawna --checkpoint ./checkpoints --gc /user/sutirtha/BallTree_Xmatch/GC_members_with_RV.csv --oc /user/sutirtha/BallTree_Xmatch/OC_members.csv --sgr /user/sutirtha/BallTree_Xmatch/Sgr_stream_members.csv --dwg /user/sutirtha/BallTree_Xmatch/DWG_members_with_RV.csv --gc-dist /user/sutirtha/BallTree_Xmatch/GC_dist.csv
+==============================================
+
+Finished: Mon Feb 23 15:04:07 IST 2026
+Exit code: 0
+total 16
+drwx------  2 sutirtha users  4096 Feb 23 15:04 .
+drwxr-xr-x 44 sutirtha users 12288 Feb 23 15:04 ..
