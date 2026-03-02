@@ -1,79 +1,76 @@
 ==============================================
 RV HEATMAP JOB
 ==============================================
-Job ID: 2526778.pawna
-Node: node3
-Started: Sat Feb 21 20:48:42 IST 2026
+Job ID: 2526852.pawna
+Node: node4
+Started: Mon Mar  2 11:13:39 IST 2026
 Work Dir: /user/sutirtha/BallTree_Xmatch
 Script: paper_plot.py
 Output Dir: /user/sutirtha/BallTree_Xmatch/rv_results
-RAM Allocated: 755Gi
+RAM: 755Gi
 ==============================================
 
 Command: python3 -u paper_plot.py
 Starting Analysis...
 
+======================================================================
+PAPER PLOT — RV vs Distance + Error Analysis (V12b style)
+======================================================================
+Loading master from cache: /user/sutirtha/BallTree_Xmatch/rv_results/master_cache.npz
+  [INFO] Mapped cached 'RVNper' → 'n_measurements'
+  32,552,876 rows from cache
+
+  Loaded 521 GC reference distances
+Loading members from cache: /user/sutirtha/BallTree_Xmatch/rv_results/member_cache.pkl
+────────────────────────────────────────────────────────────
+FIGURE 1: RV vs Distance phase-space
+────────────────────────────────────────────────────────────
+  Weighted_Avg pairs: 26,249,397  |  ZP pairs: 26,258,182
+    GC: 3 contour levels, 264514 stars
+    OC: 3 contour levels, 11057 stars
+    SGR: 3 contour levels, 4465 stars
+    DW: 3 contour levels, 8087 stars
+    White combined: 5 levels, 288123 stars
+  ✓ Saved: /user/sutirtha/BallTree_Xmatch/rv_results/RV_vs_Distance_phaseSpace.png
+
+────────────────────────────────────────────────────────────
+FIGURE 2: Error distributions + N(log) + Mean error
+────────────────────────────────────────────────────────────
+    Weighted Avg err: N=31,963,144  Med=2.04  MAD=1.45
+    Raw RV err: N=31,961,948  Med=2.21  MAD=1.70
+    ZP err: N=6,844,669  Med=1.82  MAD=0.53
+  ✓ Saved: /user/sutirtha/BallTree_Xmatch/rv_results/Error_Distributions.png
 
 ======================================================================
-  RV ANALYSIS DASHBOARD  v5
-  inferno | gaussian-smoothed contours | gold ZP | dark-navy panel
+ALL DONE — 11.6 min
 ======================================================================
-
-Cache exists. Pass --replot / -r to skip reprocessing.
-
-Processing 8 chunks...
-  [1/8] Entire_catalogue_chunk01.fits
-  [2/8] Entire_catalogue_chunk02.fits
-  [3/8] Entire_catalogue_chunk03.fits
-  [4/8] Entire_catalogue_chunk04.fits
-  [5/8] Entire_catalogue_chunk05.fits
-  [6/8] Entire_catalogue_chunk06.fits
-  [7/8] Entire_catalogue_chunk07.fits
-  [8/8] Entire_catalogue_chunk08.fits
-
-======================================================================
-  Weighted Avg (error<300, non-outliers): 26,151,903
-======================================================================
-
-Saving cache → RV_Analysis_Cache.npz
-  Saved (328.8 MB)
-
-Generating Dashboard v5 …
-  Contours: 22 levels  min=0.30  max=221788.05
-  Phase space: 26,151,903 stars
-
-  Dashboard saved → /user/sutirtha/BallTree_Xmatch/RV_Analysis_Dashboard_v5.png
-
-======================================================================
-  COMPLETE!
-======================================================================
-
-  python paper_plot.py           # full reprocess + plot
-  python paper_plot.py --replot  # replot from cache only
-======================================================================
-
 
 ==============================================
 FINISHED
 ==============================================
-Time: Sat Feb 21 21:06:29 IST 2026
+Time: Mon Mar  2 11:25:29 IST 2026
 Exit Code: 0
 
-Success! Moving plots to output directory...
+Success!
 Generated Files in /user/sutirtha/BallTree_Xmatch/rv_results:
-total 12100
-drwx------  2 sutirtha users    4096 Feb 21 21:06 .
-drwxr-xr-x 48 sutirtha users    4096 Feb 21 21:06 ..
--rw-------  1 sutirtha users 1113904 Jan 31 18:56 RV_Analysis_Dashboard.png
--rw-------  1 sutirtha users  176047 Jan 31 16:13 RV_Analysis_Dashboard_SideBySide.png
--rw-------  1 sutirtha users 1349574 Feb 21 17:32 RV_Analysis_Dashboard_v2.png
--rw-------  1 sutirtha users 1651190 Feb 21 18:09 RV_Analysis_Dashboard_v3.png
--rw-------  1 sutirtha users 3711494 Feb 21 18:57 RV_Analysis_Dashboard_v4.png
--rw-------  1 sutirtha users 2056277 Feb 21 21:06 RV_Analysis_Dashboard_v5.png
--rw-------  1 sutirtha users  176284 Jan 31 14:04 RV_Distance_Analysis_Heatmap.png
--rw-------  1 sutirtha users   20540 Feb 21 21:03 memory_profile.log
--rw-r--r--  1 sutirtha users  754263 Feb 19 14:00 relative_distance_error_plot.png
--rw-r--r--  1 sutirtha users  539619 Feb 19 14:00 relative_error_gt10kpc.png
--rw-r--r--  1 sutirtha users  484700 Feb 19 14:00 relative_error_lt10kpc.png
--rw-r--r--  1 sutirtha users  314544 Feb 19 14:01 stellar_calibration_plots.png
+-rw------- 1 sutirtha users     724180 Mar  2 11:25 /user/sutirtha/BallTree_Xmatch/rv_results/Error_Distributions.png
+-rw------- 1 sutirtha users    1113904 Jan 31 18:56 /user/sutirtha/BallTree_Xmatch/rv_results/RV_Analysis_Dashboard.png
+-rw------- 1 sutirtha users     176047 Jan 31 16:13 /user/sutirtha/BallTree_Xmatch/rv_results/RV_Analysis_Dashboard_SideBySide.png
+-rw------- 1 sutirtha users    1349574 Feb 21 17:32 /user/sutirtha/BallTree_Xmatch/rv_results/RV_Analysis_Dashboard_v2.png
+-rw------- 1 sutirtha users    1651190 Feb 21 18:09 /user/sutirtha/BallTree_Xmatch/rv_results/RV_Analysis_Dashboard_v3.png
+-rw------- 1 sutirtha users    3711494 Feb 21 18:57 /user/sutirtha/BallTree_Xmatch/rv_results/RV_Analysis_Dashboard_v4.png
+-rw------- 1 sutirtha users    2056277 Feb 21 21:06 /user/sutirtha/BallTree_Xmatch/rv_results/RV_Analysis_Dashboard_v5.png
+-rw------- 1 sutirtha users     176284 Jan 31 14:04 /user/sutirtha/BallTree_Xmatch/rv_results/RV_Distance_Analysis_Heatmap.png
+-rw------- 1 sutirtha users    1558581 Mar  2 11:14 /user/sutirtha/BallTree_Xmatch/rv_results/RV_vs_Distance_phaseSpace.png
+-rw-r--r-- 1 sutirtha users     167335 Feb 22 13:39 /user/sutirtha/BallTree_Xmatch/rv_results/dist_comparison.png
+-rw-r--r-- 1 sutirtha users      88016 Feb 22 13:42 /user/sutirtha/BallTree_Xmatch/rv_results/distributions.png
+-rw------- 1 sutirtha users 1596630339 Feb 28 14:04 /user/sutirtha/BallTree_Xmatch/rv_results/master_cache.npz
+-rw------- 1 sutirtha users    6881960 Feb 28 14:04 /user/sutirtha/BallTree_Xmatch/rv_results/member_cache.pkl
+-rw-r--r-- 1 sutirtha users     746450 Feb 26 09:52 /user/sutirtha/BallTree_Xmatch/rv_results/relative_distance_error_plot.png
+-rw-r--r-- 1 sutirtha users     539883 Feb 26 09:52 /user/sutirtha/BallTree_Xmatch/rv_results/relative_error_gt10kpc.png
+-rw-r--r-- 1 sutirtha users     489458 Feb 26 09:52 /user/sutirtha/BallTree_Xmatch/rv_results/relative_error_lt10kpc.png
+-rw-r--r-- 1 sutirtha users     314544 Feb 19 14:01 /user/sutirtha/BallTree_Xmatch/rv_results/stellar_calibration_plots.png
+
+For replot (plot changes only, no FITS re-read):
+  python3 -u paper_plot.py --replot
 ==============================================
