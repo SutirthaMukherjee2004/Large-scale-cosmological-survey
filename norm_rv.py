@@ -1,49 +1,59 @@
 #!/usr/bin/env python3
 """
 ================================================================================
-RV ERROR NORMALIZATION & CALIBRATION — v6
-Following Tsantaki et al. (2021) "Survey of Surveys I"
+RV ERROR NORMALIZATION & CALIBRATION — v8
+Following Tsantaki et al. (2021) "Survey of Surveys I"  (A&A 659, A95)
 ================================================================================
-FIXES vs v5:
-  [1] SDSS-BOSS + SEGUE merged → single 'SDSS' survey (same telescope / R~2000).
-  [2] Phase 3 checkpoint: stale-structure guard — auto-deletes & rebuilds if
-      old format detected (fixes: TypeError 'int' not subscriptable).
-  [3] DUP: all non-Gaia surveys attempted.  Factor accepted only if N_pairs >=
-      MIN_DUP_PAIRS_SIGNIFICANT (200).  Combined = avg(DUP,TCH) when both
-      reliable; graceful fallback otherwise.
-  [4] Phase 6 Gaia cal: polynomial fitted to BINNED MEDIANS only, not to raw
-      millions of scattered points. Fit/plot clipped to actual data range.
-  [5] Gaia cal plots: before/after panels + per-survey overlay per parameter
-      + single combined all-surveys figure.
-  [6] Survey cal plots: ΔRV axis labelled explicitly; all-surveys overlay plots
-      per calibration parameter.
+CRITICAL FIXES vs v7  (see detailed notes below each phase):
 
-WHAT DOES ΔRV MEAN?
-  Phase 6 (Gaia cal, Eq.5–7):
-      ΔRV = RV_Gaia − RV_survey   [ZP-shifted per survey before fitting]
-      → calibrating Gaia RVs using ground-based surveys as reference
-      → if positive at high G-mag: Gaia overestimates RV for faint stars
-  Phase 7 (survey cal, Eq.8):
-      ΔRV = RV_Gaia_corrected − RV_survey
-      → calibrating each survey to the corrected Gaia reference frame
-      → positive = survey underestimates RV relative to calibrated Gaia
-  Example (DESI):
-      ΔRV_DESI = RV_Gaia_corrected − RV_DESI
-      A positive trend with Teff means DESI underestimates RV for hot stars
+  [FIX-1]  Phase 0: Extract stellar parameters (Teff, logg, FeH, Gmag, SNR)
+           from external survey CSVs so they are available downstream.
 
-MAHALANOBIS DISTANCE (paper §3) — for duplicate verification:
-  The paper uses MD² on (ΔGmag, ΔRV) pairs to confirm spatial "mates" as
-  true duplicates (threshold: χ²_{n=2}(97.5%) = 7.38).  Our code uses spatial
-  KDTree grouping at 1 arcsec which is equivalent for FITS input with Gaia
-  source_ids already present.  Helper function verify_duplicates_md() is
-  provided below if you want to apply MD filtering to a candidate list.
-================================================================================
-Surveys: GAIA, DESI, APOGEE, GALAH, GES, RAVE, LAMOST, SDSS
-External CSV paths (configure below or via CLI):
-  ./astro_data/RAVE_DR6/RAVE_DR6_merged_rv_parallax.csv
-  ./astro_data/APOGEE_DR17/APOGEE_DR17_merged_rv_parallax.csv
-  ./astro_data/GALAH_DR3/GALAH_DR3_merged_rv_parallax.csv
-  ./astro_data/GES_DR5/GES_DR5_merged_rv_parallax.csv
+  [FIX-2]  Phase 3: Propagate stellar parameters to CSV-matched stars.
+           — If the CSV row has its own params, use those.
+           — Otherwise inherit params from the FITS entry for the same
+             spatial group (typically the GAIA or DESI entry).
+           Without this fix, ALL external-survey stars (APOGEE, GALAH, GES,
+           RAVE) had NaN params, making Phase 6 Gaia calibration non-functional
+           (only DESI/SDSS contributed, with near-zero coefficients).
+
+  [FIX-3]  Phase 4 DUP: Quality controls.
+           — Skip GAIA entirely for DUP (paper Table 4 uses TCH for Gaia).
+             The FITS "duplicates" for Gaia are DR2/DR3 median RVs, not
+             independent transit measurements → normMAD ≈ 0 is spurious.
+           — Require error ratio < 5 between pair members to avoid mixing
+             different-pipeline entries (CSV vs A95).
+           — Require minimum combined error > 0.01 km/s.
+           — 5σ clip on normalized diffs before computing MAD.
+
+  [FIX-4]  Phase 5 TCH: Sanity checks on combined factors.
+           — DUP factors outside [0.1, 20] treated as unreliable.
+           — TCH factors outside [0.1, 20] treated as unreliable.
+           — If DESI×GAIA pairwise σ ≈ 0 (because DESI rows in FITS have
+             Gaia-derived RVs), exclude that pair.
+
+  [FIX-5]  Phase 6 Gaia calibration: Paper §5.1 exclusion rules restored.
+           — Eq.5 (Gmag): exclude LAMOST (low resolution).
+           — Eq.6 ([Fe/H]): exclude LAMOST + RAVE (opposite trend).
+           — Eq.7 (Teff): APOGEE only (paper §5.1.3).
+           Now all surveys with valid params contribute, producing non-trivial
+           calibration polynomials.
+
+  [FIX-6]  Phase 9 plots: Paper-quality figures for Fig 6, 7, 8, 9/10/11, 13.
+           Before/after calibration panels match paper Figs. 9-12.
+
+METHODOLOGY SUMMARY (paper):
+  1. Cross-match surveys with Gaia (spatial + source_id)
+  2. Normalize RV errors:
+     - DUP method (repeated measurements): APOGEE, RAVE, LAMOST
+     - TCH method (three-cornered hat):   Gaia, GALAH
+     - GES: average of DUP and TCH
+  3. Gaia internal calibration:
+     - Eq.5: ΔRV vs G mag  (2nd-order polynomial)
+     - Eq.6: ΔRV vs [Fe/H] (linear)
+     - Eq.7: ΔRV vs Teff   (2nd-order polynomial, APOGEE only)
+  4. Survey calibration (Eq.8): multivariate correction to calibrated Gaia frame
+  5. Merge into unified catalogue with weighted average RVs
 ================================================================================
 """
 
@@ -73,22 +83,47 @@ except ImportError:
 
 import matplotlib; matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+import matplotlib.gridspec as gridspec
 
 warnings.filterwarnings('ignore')
 
 # =============================================================================
-# SURVEYS TO INCLUDE — HARD LIST (anything else is excluded)
+# SURVEYS
 # =============================================================================
 VALID_SURVEYS = {'GAIA', 'DESI', 'APOGEE', 'GALAH', 'GES', 'RAVE',
                  'LAMOST', 'SDSS'}
-# SDSS-BOSS and SEGUE are both SDSS-family low-resolution spectrographs — merged.
+DUP_SURVEYS   = {'DESI', 'APOGEE', 'GALAH', 'GES', 'RAVE', 'LAMOST', 'SDSS'}
+#  ^^^ FIX-3: GAIA removed from DUP_SURVEYS — paper uses TCH for Gaia
+MIN_DUP_PAIRS_SIGNIFICANT = 200
 
-# All non-Gaia surveys attempt DUP.  The factor is accepted only when
-# N_pairs >= MIN_DUP_PAIRS_SIGNIFICANT (set below).  Surveys with too few
-# pairs fall back to TCH.  Gaia is excluded: its spatial "duplicates" in the
-# FITS already have weighted-averaged RVs so ΔRV ≈ 0 by construction.
-DUP_SURVEYS = {'DESI', 'APOGEE', 'GALAH', 'GES', 'RAVE', 'LAMOST', 'SDSS'}
-MIN_DUP_PAIRS_SIGNIFICANT = 200   # below this → DUP factor flagged as unreliable
+# Paper Table 4 logic for combining DUP / TCH
+DUP_ONLY_SURVEYS = {'APOGEE', 'RAVE', 'LAMOST'}
+TCH_ONLY_SURVEYS = {'GAIA', 'GALAH'}
+AVG_BOTH_SURVEYS = {'GES'}
+
+# Paper §5.1 exclusion rules for Gaia calibration
+EQ5_GMAG_EXCLUDE = {'LAMOST'}                    # low resolution
+EQ6_FEH_EXCLUDE  = {'LAMOST', 'RAVE'}            # LAMOST: low-res; RAVE: opposite trend
+EQ7_TEFF_SURVEYS = {'APOGEE'}                    # only APOGEE (paper §5.1.3)
+
+# Sanity bounds for normalization factors
+MIN_PLAUSIBLE_FACTOR = 0.1
+MAX_PLAUSIBLE_FACTOR = 20.0
+
+# =============================================================================
+# COLORS
+# =============================================================================
+COLORS = {
+    'GAIA':   '#1f77b4',
+    'APOGEE': '#2ca02c',
+    'LAMOST': '#d62728',
+    'RAVE':   '#ff7f0e',
+    'GALAH':  '#9467bd',
+    'GES':    '#8c564b',
+    'DESI':   '#e377c2',
+    'SDSS':   '#17becf',
+}
+def _c(s): return COLORS.get(s, '#333333')
 
 # =============================================================================
 # CONFIG
@@ -96,60 +131,76 @@ MIN_DUP_PAIRS_SIGNIFICANT = 200   # below this → DUP factor flagged as unrelia
 @dataclass
 class Config:
     input_fits: str = ""
-    output_dir: str = "./rv_norm_output_v5"
-    checkpoint_dir: str = "./rv_norm_ckpt_v5"
+    output_dir: str = "./rv_norm_output_v8"
+    checkpoint_dir: str = "./rv_norm_ckpt_v8"
 
-    # External survey CSVs
     apogee_csv: str = "./astro_data/APOGEE_DR17/APOGEE_DR17_merged_rv_parallax.csv"
     galah_csv:  str = "./astro_data/GALAH_DR3/GALAH_DR3_merged_rv_parallax.csv"
     ges_csv:    str = "./astro_data/GES_DR5/GES_DR5_merged_rv_parallax.csv"
     rave_csv:   str = "./astro_data/RAVE_DR6/RAVE_DR6_merged_rv_parallax.csv"
+    a95_dir:    str = "./astro_data/A95_cds"
 
     ra_col:     str = "RA_all"
     dec_col:    str = "DEC_all"
     survey_col: str = "Survey"
     code_col:   str = "Code"
-    # source_id column in FITS (try these in order)
     sid_cols:   List[str] = field(default_factory=lambda: [
-        "source_id", "Source_ID", "Gaia_Source_ID", "gaia_source_id"
+        "source_id","Source_ID","Gaia_Source_ID","gaia_source_id"])
+
+    rv_columns: List[Tuple[str,str]] = field(default_factory=lambda: [
+        ("radial_velocity_1","radial_velocity_error_1"),
+        ("radial_velocity_2","radial_velocity_error_2"),
+        ("RV","e_RV"),("VRAD","VRAD_ERR"),
+        ("dr2_radial_velocity","dr2_radial_velocity_error"),
     ])
 
-    # RV column pairs in the FITS
-    rv_columns: List[Tuple[str, str]] = field(default_factory=lambda: [
-        ("radial_velocity_1",   "radial_velocity_error_1"),
-        ("radial_velocity_2",   "radial_velocity_error_2"),
-        ("RV",                  "e_RV"),
-        ("VRAD",                "VRAD_ERR"),
-        ("dr2_radial_velocity", "dr2_radial_velocity_error"),
-    ])
-
-    # Stellar parameter columns
-    param_columns: Dict[str, List[str]] = field(default_factory=lambda: {
-        'Gmag': ['Gmag', 'phot_g_mean_mag', 'GMAG', 'G'],
-        'Teff': ['Teff', 'TEFF', 'Teff_x', 'teff'],
-        'logg': ['logg', 'LOGG', 'logg_x', 'log_g'],
-        'FeH':  ['[Fe/H]', 'FEH', 'feh', 'M_H', 'Fe_H'],
-        'SNR':  ['RVSS/N', 'RVS/N', 'rvss_snr', 'rv_snr', 'snr', 'SNR', 'S_N'],
+    param_columns: Dict[str,List[str]] = field(default_factory=lambda: {
+        'Gmag': ['Gmag','phot_g_mean_mag','GMAG','G'],
+        'Teff': ['Teff','TEFF','Teff_x','teff'],
+        'logg': ['logg','LOGG','logg_x','log_g'],
+        'FeH':  ['[Fe/H]','FEH','feh','M_H','Fe_H'],
+        'SNR':  ['RVSS/N','RVS/N','rvss_snr','rv_snr','snr','SNR','S_N'],
     })
 
-    tolerance_arcsec:  float = 1.0
-    healpix_nside:     int   = 32
-    chunk_size:        int   = 3_000_000
-    n_workers:         int   = 1
-
-    min_pairs_dup:     int   = 50
-    min_stars_tch:     int   = 20
-    min_stars_zp:      int   = 30
-    max_obs_per_star:  int   = 30
-    max_pairs_per_star:int   = 200
-    min_bin_count:     int   = 10
+    tolerance_arcsec:   float = 1.0
+    healpix_nside:      int   = 32
+    chunk_size:         int   = 3_000_000
+    n_workers:          int   = 1
+    min_pairs_dup:      int   = 50
+    min_stars_tch:      int   = 20
+    min_stars_zp:       int   = 30
+    max_obs_per_star:   int   = 30
+    max_pairs_per_star: int   = 200
+    min_bin_count:      int   = 10
 
     def __post_init__(self):
         os.makedirs(self.output_dir, exist_ok=True)
         os.makedirs(self.checkpoint_dir, exist_ok=True)
 
+
 # =============================================================================
-# UTILITIES
+# A95 FIXED-WIDTH SPECS  (unchanged from v7)
+# =============================================================================
+A95_SPECS = {
+    'APOGEE': {'gz': 'apogee.dat.gz', 'dat': 'apogee.dat',
+               'sid': (27, 46), 'ra': (47, 71), 'dec': (72, 94),
+               'rv': (95, 104), 'erv': (105, 113), 'srv': (114, 121)},
+    'GALAH':  {'gz': 'galah.dat.gz', 'dat': 'galah.dat',
+               'sid': (25, 44), 'ra': (45, 68), 'dec': (69, 92),
+               'rv': (93, 101), 'erv': (102, 107), 'srv': (107, 108)},
+    'GES':    {'gz': 'ges.dat.gz', 'dat': 'ges.dat',
+               'sid': (25, 44), 'ra': (45, 67), 'dec': (68, 91),
+               'rv': (92, 100), 'erv': (101, 108), 'srv': (109, 114)},
+    'RAVE':   {'gz': 'rave.dat.gz', 'dat': 'rave.dat',
+               'sid': (25, 44), 'ra': (45, 68), 'dec': (69, 91),
+               'rv': (92, 100), 'erv': (101, 107), 'srv': (108, 115)},
+    'LAMOST': {'gz': 'lamost.dat.gz', 'dat': 'lamost.dat',
+               'sid': (28, 47), 'ra': (48, 70), 'dec': (71, 94),
+               'rv': (95, 103), 'erv': (104, 110), 'srv': (111, 118)},
+}
+
+# =============================================================================
+# UTILITIES  (unchanged from v7)
 # =============================================================================
 def get_mem_gb():
     try:
@@ -160,7 +211,7 @@ def get_mem_gb():
             with open(f'/proc/{os.getpid()}/status') as f:
                 for l in f:
                     if l.startswith('VmRSS:'):
-                        return int(l.split()[1]) / 1024 / 1024
+                        return int(l.split()[1])/1024/1024
         except:
             return -1.0
 
@@ -176,267 +227,320 @@ def resolve_survey(survey_val, code_val):
     for x in ('NAN','NONE',''):
         if s == x: s = ''
         if c == x: c = ''
-    blob = s + '|' + c
+    blob = s+'|'+c
     if c.startswith('D33') or c.startswith('D125') or 'GAIA' in blob: return 'GAIA'
-    if 'DESI'  in blob: return 'DESI'
+    if 'DESI'   in blob: return 'DESI'
     if 'APOGEE' in blob: return 'APOGEE'
     if 'LAMOST' in blob: return 'LAMOST'
     if 'GALAH'  in blob: return 'GALAH'
     if 'RAVE'   in blob and 'RAVEL' not in blob: return 'RAVE'
     if c == 'GES' or s == 'GES': return 'GES'
-    # SDSS-BOSS and SEGUE share the same telescope + resolution class → merge as SDSS
     if 'SDSS' in blob or 'BOSS' in blob or 'SEGUE' in blob: return 'SDSS'
-    # Everything else is excluded
-    return None   # ← None means excluded (was 'DSOS','SOSI','UNKNOWN', etc.)
+    return None
 
 def is_exact_duplicate(rv, err, tol=1e-6):
-    """Return True if |RV| == |e_RV| within tol — instrument artefact, discard."""
-    return np.abs(np.abs(rv) - np.abs(err)) < tol
-
-
-def verify_duplicates_md(delta_gmag_arr, delta_rv_arr, quantile=0.975):
-    """
-    Mahalanobis-distance duplicate verification (Tsantaki+2021 §3, Eq. 2).
-
-    Given arrays of (ΔGmag, ΔRV) pairs between candidate duplicates, returns
-    a boolean mask: True = confirmed duplicate (MD² below threshold).
-
-    MD²(Xᵢ) = (Xᵢ − X̄)ᵀ · V̂⁻¹ · (Xᵢ − X̄)
-    where Xᵢ = [ΔGmag_i, ΔRV_i], X̄ = mean vector, V̂ = covariance matrix.
-    Threshold: χ²_{n=2}(q) — paper uses q=97.5% → threshold ≈ 7.38.
-
-    Parameters
-    ----------
-    delta_gmag_arr : array-like, shape (N,)
-        Paired G-mag differences between candidate mates.
-    delta_rv_arr   : array-like, shape (N,)
-        Paired RV differences [km/s] between candidate mates.
-    quantile : float
-        Chi² quantile for threshold. Default 0.975 (paper value).
-
-    Returns
-    -------
-    is_dup  : np.ndarray of bool, shape (N,)
-        True where MD² < threshold → confirmed duplicate.
-    md2     : np.ndarray of float, shape (N,)
-        Raw MD² values for each pair.
-    threshold : float
-        The chi² threshold used.
-
-    Example
-    -------
-    >>> gmag_diffs = np.array([0.02, 0.05, 3.5])   # last one is a mismatch
-    >>> rv_diffs   = np.array([0.1,  0.3, 15.0])
-    >>> is_dup, md2, thr = verify_duplicates_md(gmag_diffs, rv_diffs)
-    >>> print(is_dup)   # [True, True, False]
-    """
-    from scipy.stats import chi2 as _chi2
-    X = np.column_stack([np.asarray(delta_gmag_arr, dtype=float),
-                         np.asarray(delta_rv_arr,   dtype=float)])
-    ok = np.all(np.isfinite(X), axis=1)
-    md2 = np.full(len(X), np.inf)
-    if ok.sum() < 3:
-        return ok, md2, np.inf   # not enough data
-
-    Xok   = X[ok]
-    Xmean = Xok.mean(axis=0)
-    Vcov  = np.cov(Xok.T)
-    try:
-        Vinv = np.linalg.inv(Vcov)
-    except np.linalg.LinAlgError:
-        return ok, md2, np.inf
-
-    diff      = Xok - Xmean
-    md2[ok]   = np.einsum('ij,jk,ik->i', diff, Vinv, diff)
-    threshold = _chi2.ppf(quantile, df=2)
-    is_dup    = md2 < threshold
-    return is_dup, md2, threshold
+    return np.abs(np.abs(rv)-np.abs(err)) < tol
 
 def find_col(avail, possible):
     for n in possible:
         if n in avail: return n
     return None
 
+
+def open_maybe_gzip(path: Path):
+    if path.suffix.lower() == '.gz':
+        import gzip
+        return gzip.open(path, 'rb')
+    return path.open('rb')
+
+
+def _to_float_field(line: bytes, sl: Tuple[int, int]) -> float:
+    tok = line[sl[0]:sl[1]].strip()
+    if not tok:
+        return np.nan
+    try:
+        return float(tok)
+    except Exception:
+        return np.nan
+
+
+def _to_int_field(line: bytes, sl: Tuple[int, int]) -> float:
+    tok = line[sl[0]:sl[1]].strip()
+    if not tok:
+        return np.nan
+    try:
+        return float(int(tok))
+    except Exception:
+        return np.nan
+
+
+def _resolve_a95_file(a95_dir: str, spec: Dict[str, str]) -> Optional[Path]:
+    pdir = Path(a95_dir)
+    cand = [pdir / spec['gz'], pdir / spec['dat']]
+    for p in cand:
+        if p.exists():
+            return p
+    return None
+
+
+def _dedup_by_exact_rv_err(df: pd.DataFrame) -> pd.DataFrame:
+    if len(df) == 0:
+        return df
+    rv_vals = pd.to_numeric(df['rv'], errors='coerce').values
+    err_vals = pd.to_numeric(df['e_rv'], errors='coerce').values
+    valid = np.isfinite(rv_vals) & np.isfinite(err_vals) & (err_vals > 0)
+    vi = np.where(valid)[0]
+    seen = {}
+    keep = np.ones(len(vi), dtype=bool)
+    for pos, oi in enumerate(vi):
+        key = (round(float(rv_vals[oi]), 6), round(float(err_vals[oi]), 6))
+        if key in seen:
+            keep[pos] = False
+        else:
+            seen[key] = oi
+    vi = vi[keep]
+    if len(vi) == 0:
+        return df.iloc[0:0].copy()
+    return df.iloc[vi].copy().reset_index(drop=True)
+
+
+def _load_a95_survey_table(survey: str, path: Path, spec: Dict[str, Tuple[int, int]]) -> pd.DataFrame:
+    sids, ras, decs, rvs, ervs, srvs = [], [], [], [], [], []
+    with open_maybe_gzip(path) as handle:
+        for line in handle:
+            rv = _to_float_field(line, spec['rv'])
+            erv = _to_float_field(line, spec['erv'])
+            if not (np.isfinite(rv) and np.isfinite(erv) and erv > 0):
+                continue
+            sid = _to_int_field(line, spec['sid'])
+            ra = _to_float_field(line, spec['ra'])
+            dec = _to_float_field(line, spec['dec'])
+            srv = _to_float_field(line, spec['srv'])
+            sids.append(sid); ras.append(ra); decs.append(dec)
+            rvs.append(rv); ervs.append(erv); srvs.append(srv)
+
+    if not rvs:
+        return pd.DataFrame(columns=[
+            'source_id', 'ra', 'dec', 'rv', 'e_rv', 'survey',
+            'parallax', 'parallax_error', 's_rvcor',
+            'csv_Teff', 'csv_logg', 'csv_FeH', 'csv_Gmag', 'csv_SNR'
+        ])
+
+    n = len(rvs)
+    out = pd.DataFrame({
+        'source_id': np.array(sids, dtype=np.float64),
+        'ra': np.array(ras, dtype=np.float64),
+        'dec': np.array(decs, dtype=np.float64),
+        'rv': np.array(rvs, dtype=np.float64),
+        'e_rv': np.array(ervs, dtype=np.float64),
+        'survey': survey,
+        'parallax': np.full(n, np.nan, dtype=np.float64),
+        'parallax_error': np.full(n, np.nan, dtype=np.float64),
+        's_rvcor': np.array(srvs, dtype=np.float64),
+        # A95 files don't carry stellar params
+        'csv_Teff': np.full(n, np.nan, dtype=np.float64),
+        'csv_logg': np.full(n, np.nan, dtype=np.float64),
+        'csv_FeH':  np.full(n, np.nan, dtype=np.float64),
+        'csv_Gmag': np.full(n, np.nan, dtype=np.float64),
+        'csv_SNR':  np.full(n, np.nan, dtype=np.float64),
+    })
+    return _dedup_by_exact_rv_err(out)
+
+
 def save_ckpt(path, data):
-    with open(path, 'wb') as f:
+    with open(path,'wb') as f:
         pickle.dump(data, f, protocol=pickle.HIGHEST_PROTOCOL)
     log(f"  Checkpoint saved: {path}")
 
 def load_ckpt(path):
-    with open(path, 'rb') as f:
+    with open(path,'rb') as f:
         return pickle.load(f)
 
-def adaptive_bins(n, lo=0.0, hi=4.0):
-    """Return bin edges with adaptive count: sqrt(N) capped [30, 120]."""
-    nb = int(np.clip(np.sqrt(n), 30, 120))
-    return np.linspace(lo, hi, nb + 1)
+def bin_stat(x, y, n_bins=40, p_lo=1, p_hi=99, min_count=10):
+    """Return (bin_centres, medians, mads) clipping to percentile range."""
+    ok = np.isfinite(x) & np.isfinite(y)
+    if ok.sum() < min_count*2:
+        return np.array([]), np.array([]), np.array([])
+    x, y = x[ok], y[ok]
+    lo, hi = np.percentile(x, p_lo), np.percentile(x, p_hi)
+    be = np.linspace(lo, hi, n_bins+1)
+    bc, meds, mads = [], [], []
+    for j in range(n_bins):
+        m = (x >= be[j]) & (x < be[j+1])
+        if m.sum() < min_count:
+            continue
+        yy = y[m]
+        med = float(np.median(yy))
+        mad = float(np.median(np.abs(yy - med)))
+        bc.append(0.5*(be[j]+be[j+1]))
+        meds.append(med)
+        mads.append(mad)
+    return np.array(bc), np.array(meds), np.array(mads)
+
 
 # =============================================================================
 # PHASE 0: LOAD EXTERNAL SURVEY CSVs
 # =============================================================================
+# FIX-1: Now extracts stellar parameters (Teff, logg, FeH, Gmag, SNR) from CSVs
+# =============================================================================
 def phase0_load_csvs(cfg):
-    """
-    Load APOGEE, GALAH, GES, RAVE CSV files.
-    Returns dict: survey_name → DataFrame with columns [source_id, ra_deg, dec_deg, rv, e_rv]
-    source_id may be NaN for GES (no source_id in file → will use spatial match).
-
-    Column mapping:
-      APOGEE : HRV  (heliocentric RV), e_HRV
-      GALAH  : RVgalah, e_RVgalah
-      GES    : RV, RVprec (precision = error)
-      RAVE   : HRV  (or cHRV if present), e_HRV
-    """
-    ckpt = Path(cfg.checkpoint_dir) / "phase0_v5.pkl"
+    ckpt = Path(cfg.checkpoint_dir)/"phase0_v8b.pkl"
+    cfg.a95_s_rvcor_factors = {}
     if ckpt.exists():
         log("Phase 0: Loading checkpoint")
         d = load_ckpt(ckpt)
-        for s, df in d.items():
-            log(f"  {s:<12s}: {len(df):>8,} rows  (source_id ok: "
-                f"{df['source_id'].notna().sum():,})")
-        return d
+        if isinstance(d, dict) and 'tables' in d:
+            tables = d.get('tables', {})
+            cfg.a95_s_rvcor_factors = d.get('a95_s_rvcor_factors', {})
+        else:
+            tables = d
+        for s, df in tables.items():
+            log(f"  {s:<12s}: {len(df):>8,} rows")
+            # Check if params are present
+            has_params = 'csv_Teff' in df.columns and df['csv_Teff'].notna().any()
+            log(f"    has stellar params: {has_params}")
+        return tables
 
-    log("Phase 0: Loading external survey CSVs...")
-
+    log("Phase 0: Loading external survey CSVs + stellar params...")
     specs = {
-        'APOGEE': (cfg.apogee_csv, 'HRV',     'e_HRV'),
-        'GALAH':  (cfg.galah_csv,  'RVgalah',  'e_RVgalah'),
-        'GES':    (cfg.ges_csv,    'RV',        'RVprec'),
-        'RAVE':   (cfg.rave_csv,   'HRV',       'e_HRV'),
+        'APOGEE': (cfg.apogee_csv,'HRV','e_HRV'),
+        'GALAH':  (cfg.galah_csv,'RVgalah','e_RVgalah'),
+        'GES':    (cfg.ges_csv,'RV','RVprec'),
+        'RAVE':   (cfg.rave_csv,'HRV','e_HRV'),
     }
-    # Fallback RV column if primary missing
     fallback_rv = {
-        'APOGEE': [('RV', 'e_RV')],
-        'RAVE':   [('cHRV', 'e_HRV')],
-        'GALAH':  [('RVsmev2', 'e_RVsmev2'), ('RVobst', 'e_RVobst')],
+        'APOGEE': [('RV','e_RV')],
+        'RAVE':   [('cHRV','e_HRV')],
+        'GALAH':  [('RVsmev2','e_RVsmev2'),('RVobst','e_RVobst')],
         'GES':    [],
     }
 
+    # ── FIX-1: Parameter column search lists per survey ───────────────────
+    param_search = {
+        'Teff': ['Teff','TEFF','teff','Teff_x','teff_gspphot'],
+        'logg': ['logg','LOGG','log_g','logg_x','logg_gspphot'],
+        'FeH':  ['[Fe/H]','FEH','feh','M_H','Fe_H','mh_gspphot','met_N_K'],
+        'Gmag': ['Gmag','phot_g_mean_mag','G','GMAG','gmag'],
+        'SNR':  ['snr','SNR','S_N','snr_c2_iraf','rv_snr','RVSS/N'],
+    }
+
     result = {}
-    for surv, (path, rv_col, err_col) in specs.items():
+    for surv,(path,rv_col,err_col) in specs.items():
         if not os.path.exists(path):
-            log(f"  {surv}: CSV not found at {path}, skipping")
-            continue
+            log(f"  {surv}: CSV not found at {path}, skipping"); continue
         try:
             df = pd.read_csv(path, low_memory=False)
-            log(f"  {surv}: {len(df):,} rows, columns: {list(df.columns)}")
         except Exception as e:
-            log(f"  {surv}: failed to load — {e}")
-            continue
+            log(f"  {surv}: failed — {e}"); continue
 
         cols = set(df.columns)
+        sid_col = find_col(cols,['source_id','Source_ID','gaia_source_id'])
+        df['_sid'] = pd.to_numeric(df[sid_col],errors='coerce').astype('Int64') if sid_col else pd.NA
+        ra_col  = find_col(cols,['ra_deg','RA','ra','RAdeg'])
+        dec_col = find_col(cols,['dec_deg','DEC','dec','DECdeg'])
 
-        # --- source_id ---
-        sid_col = find_col(cols, ['source_id', 'Source_ID', 'gaia_source_id'])
-        if sid_col:
-            df['_sid'] = pd.to_numeric(df[sid_col], errors='coerce').astype('Int64')
-        else:
-            df['_sid'] = pd.NA
-            log(f"    {surv}: no source_id column → will use spatial matching")
-
-        # --- RA / Dec ---
-        ra_col  = find_col(cols, ['ra_deg', 'RA', 'ra', 'RAdeg'])
-        dec_col = find_col(cols, ['dec_deg', 'DEC', 'dec', 'DECdeg'])
-
-        # --- RV primary ---
         if rv_col not in cols:
-            # try fallbacks
             found = False
-            for fb_rv, fb_err in fallback_rv.get(surv, []):
+            for fb_rv,fb_err in fallback_rv.get(surv,[]):
                 if fb_rv in cols and fb_err in cols:
-                    rv_col, err_col = fb_rv, fb_err
-                    log(f"    {surv}: using fallback RV={rv_col}, e_RV={err_col}")
-                    found = True
-                    break
+                    rv_col,err_col = fb_rv,fb_err; found=True; break
             if not found:
-                log(f"    {surv}: no usable RV column found, skipping")
-                continue
+                log(f"    {surv}: no usable RV column, skipping"); continue
 
         rv_vals  = pd.to_numeric(df[rv_col],  errors='coerce').values
-        err_vals = pd.to_numeric(df[err_col], errors='coerce').values if err_col in cols else np.full(len(df), np.nan)
+        err_vals = pd.to_numeric(df[err_col], errors='coerce').values if err_col in cols else np.full(len(df),np.nan)
+        if surv=='RAVE' and 'cHRV' in cols:
+            crv=pd.to_numeric(df['cHRV'],errors='coerce').values; ok=np.isfinite(crv); rv_vals[ok]=crv[ok]
+        ra_vals  = pd.to_numeric(df[ra_col], errors='coerce').values  if ra_col  else np.full(len(df),np.nan)
+        dec_vals = pd.to_numeric(df[dec_col],errors='coerce').values  if dec_col else np.full(len(df),np.nan)
+        plx_col  = find_col(cols,['parallax','Parallax','parallax_mas','plx','PLX','Plx'])
+        plxe_col = find_col(cols,['parallax_error','e_parallax','parallax_err','plx_err','e_plx'])
+        plx_vals = pd.to_numeric(df[plx_col], errors='coerce').values  if plx_col  else np.full(len(df),np.nan)
+        plxe_vals= pd.to_numeric(df[plxe_col],errors='coerce').values  if plxe_col else np.full(len(df),np.nan)
 
-        # For RAVE use cHRV (corrected) if available and e_HRV for error
-        if surv == 'RAVE' and 'cHRV' in cols:
-            crv = pd.to_numeric(df['cHRV'], errors='coerce').values
-            ok  = np.isfinite(crv)
-            rv_vals[ok] = crv[ok]
-            log(f"    RAVE: replaced HRV with cHRV for {ok.sum():,} stars")
-
-        ra_vals  = pd.to_numeric(df[ra_col],  errors='coerce').values if ra_col  else np.full(len(df), np.nan)
-        dec_vals = pd.to_numeric(df[dec_col], errors='coerce').values if dec_col else np.full(len(df), np.nan)
-
-        # --- Exact duplicate filter (|RV| == |e_RV|) ---
-        excl = np.array([
-            is_exact_duplicate(rv_vals[i], err_vals[i])
-            if np.isfinite(rv_vals[i]) and np.isfinite(err_vals[i]) else False
-            for i in range(len(rv_vals))
-        ])
-        if excl.any():
-            log(f"    {surv}: discarding {excl.sum():,} exact-duplicate RV=e_RV rows")
-
-        # --- Valid mask ---
-        valid = (np.isfinite(rv_vals) & (err_vals > 0) & np.isfinite(err_vals)
-                 & ~excl)
-        log(f"    {surv}: {valid.sum():,} / {len(df):,} valid rows after |RV|==|e_RV| filter")
-
-        # --- Within-survey exact (rv, err) deduplication for CSV rows ---
-        # If two rows in this CSV have identical (rv_final, err_final) after
-        # all filtering, keep only the first occurrence.
-        valid_idx   = np.where(valid)[0]
-        seen_csv    = {}
-        dedup_keep  = np.ones(len(valid_idx), dtype=bool)
-        n_csv_dedup = 0
-        for pos, orig_i in enumerate(valid_idx):
-            key = (round(float(rv_vals[orig_i]),  6),
-                   round(float(err_vals[orig_i]), 6))
-            if key in seen_csv:
-                dedup_keep[pos] = False
-                n_csv_dedup    += 1
+        # ── FIX-1: Extract stellar parameters from CSV ────────────────────
+        csv_params = {}
+        for pname, search_names in param_search.items():
+            pcol = find_col(cols, search_names)
+            if pcol:
+                csv_params[pname] = pd.to_numeric(df[pcol], errors='coerce').values.astype(np.float64)
+                n_valid = np.sum(np.isfinite(csv_params[pname]))
+                log(f"    {surv}: found param {pname} in column '{pcol}' ({n_valid:,} valid)")
             else:
-                seen_csv[key] = orig_i
-        if n_csv_dedup:
-            log(f"    {surv}: {n_csv_dedup:,} exact (rv,err) duplicate CSV rows discarded")
-        valid_idx_clean        = valid_idx[dedup_keep]
-        valid_clean            = np.zeros(len(df), dtype=bool)
-        valid_clean[valid_idx_clean] = True
-        valid                  = valid_clean
-        log(f"    {surv}: {valid.sum():,} rows retained after all filters")
+                csv_params[pname] = np.full(len(df), np.nan, dtype=np.float64)
 
-        out = pd.DataFrame({
-            'source_id': df['_sid'].values[valid],
-            'ra':        ra_vals[valid],
-            'dec':       dec_vals[valid],
-            'rv':        rv_vals[valid].astype(np.float64),
-            'e_rv':      err_vals[valid].astype(np.float64),
-            'survey':    surv,
+        raw = pd.DataFrame({
+            'source_id': pd.to_numeric(df['_sid'], errors='coerce').values.astype(np.float64),
+            'ra': ra_vals.astype(np.float64),
+            'dec': dec_vals.astype(np.float64),
+            'rv': rv_vals.astype(np.float64),
+            'e_rv': err_vals.astype(np.float64),
+            'survey': surv,
+            'parallax': plx_vals.astype(np.float64),
+            'parallax_error': plxe_vals.astype(np.float64),
+            's_rvcor': np.full(len(df), np.nan, dtype=np.float64),
+            'csv_Teff': csv_params['Teff'],
+            'csv_logg': csv_params['logg'],
+            'csv_FeH':  csv_params['FeH'],
+            'csv_Gmag': csv_params['Gmag'],
+            'csv_SNR':  csv_params['SNR'],
         })
+        out = _dedup_by_exact_rv_err(raw)
         result[surv] = out
+        log(f"  {surv}: {len(out):,} rows loaded")
 
-    save_ckpt(ckpt, result)
+    # ── A95 tables ─────────────────────────────────────────────────────────
+    log("Phase 0b: Loading A95 survey tables (.dat/.dat.gz)...")
+    a95_factors = {}
+    for surv, spec in A95_SPECS.items():
+        path = _resolve_a95_file(cfg.a95_dir, spec)
+        if path is None:
+            log(f"  {surv}: A95 file not found in {cfg.a95_dir}, skipping"); continue
+        try:
+            df_a95 = _load_a95_survey_table(surv, path, spec)
+        except Exception as e:
+            log(f"  {surv}: failed to read A95 file ({e})"); continue
+        if len(df_a95) == 0:
+            log(f"  {surv}: A95 loaded 0 valid rows"); continue
+
+        ratio = (df_a95['s_rvcor'].values.astype(np.float64)
+                 / df_a95['e_rv'].values.astype(np.float64))
+        ok_ratio = np.isfinite(ratio) & (ratio > 0)
+        if np.any(ok_ratio):
+            a95_factors[surv] = float(np.median(ratio[ok_ratio]))
+
+        if surv in result:
+            merged = pd.concat([result[surv], df_a95], ignore_index=True, sort=False)
+            merged = _dedup_by_exact_rv_err(merged)
+            result[surv] = merged
+            log(f"  {surv}: +A95 {len(df_a95):,} rows → merged {len(merged):,}")
+        else:
+            result[surv] = df_a95
+            log(f"  {surv}: A95 only {len(df_a95):,} rows")
+
+    cfg.a95_s_rvcor_factors = a95_factors
+    if a95_factors:
+        log("  A95 s_RVcor/e_RVcor priors:")
+        for s, f in sorted(a95_factors.items()):
+            log(f"    {s:<12s}: {f:.3f}")
+
+    save_ckpt(ckpt, {'tables': result, 'a95_s_rvcor_factors': a95_factors})
     return result
 
 
 # =============================================================================
-# PHASE 1: EXTRACT FROM FITS — ONE WEIGHTED-AVG RV PER ROW + STELLAR PARAMS
+# PHASE 1: EXTRACT FROM FITS  (unchanged from v7)
 # =============================================================================
 def phase1_extract(cfg):
-    """
-    For each FITS row:
-      - Collect all valid (rv, err) pairs from rv_columns
-      - Exact-duplicate filter: skip pair if |rv| == |err| within 1e-6
-      - Compute weighted average → single (rv_final, err_final)
-      - resolve_survey() → only keep VALID_SURVEYS (None → skip row)
-      - Extract source_id, stellar params
-    """
-    ckpt = Path(cfg.checkpoint_dir) / "phase1_v5.pkl"
+    ckpt = Path(cfg.checkpoint_dir)/"phase1_v8.pkl"
     if ckpt.exists():
         log("Phase 1: Loading checkpoint")
         d = load_ckpt(ckpt)
-        log(f"  {d['n_valid']:,} valid rows / {d['total_rows']:,} total")
+        log(f"  {d['n_valid']:,} valid / {d['total_rows']:,} total")
         surv_arr = np.array(d['surveys'])
         for sn in sorted(VALID_SURVEYS):
-            n = np.sum(surv_arr == sn)
-            if n > 0:
-                log(f"    {sn:<16s}: {n:>10,}")
+            n = np.sum(surv_arr==sn)
+            if n>0: log(f"    {sn:<16s}: {n:>10,}")
         return d
 
     log("Phase 1: Extracting one RV per row from FITS...")
@@ -444,714 +548,645 @@ def phase1_extract(cfg):
     fdata = hdu[1].data
     acols = {col.name for col in hdu[1].columns}
     total = len(fdata)
-    log(f"  Total FITS rows: {total:,}")
 
-    # Find RV column pairs
     valid_rv = [(v,e) for v,e in cfg.rv_columns if v in acols and e in acols]
-    log(f"  RV pairs: {[(v,e) for v,e in valid_rv]}")
-
-    # Stellar param columns
-    param_col_map = {}
-    for pname, possible in cfg.param_columns.items():
-        found = find_col(acols, possible)
-        param_col_map[pname] = found
-        log(f"  {pname}: {found}")
-
-    # source_id column
-    sid_col = find_col(acols, cfg.sid_cols)
-    log(f"  source_id column: {sid_col}")
-
+    param_col_map = {pn: find_col(acols,possible) for pn,possible in cfg.param_columns.items()}
+    sid_col  = find_col(acols, cfg.sid_cols)
     has_surv = cfg.survey_col in acols
-    has_code = cfg.code_col  in acols
+    has_code = cfg.code_col   in acols
+    plx_col  = find_col(acols,['parallax','Parallax','parallax_1','plx','PLX'])
+    plxe_col = find_col(acols,['parallax_error','parallax_error_1','e_parallax','plx_err'])
+    log(f"  Parallax col: {plx_col}, error col: {plxe_col}")
+    log(f"  Param cols: {param_col_map}")
 
-    all_ra=[]; all_dec=[]; all_rv=[]; all_err=[]; all_surveys=[]; all_row_idx=[]
-    all_sid = []
-    all_params = {p: [] for p in cfg.param_columns}
+    all_ra,all_dec,all_rv,all_err,all_surveys,all_row_idx,all_sid = [],[],[],[],[],[],[]
+    all_plx,all_plxe = [],[]
+    all_params = {p:[] for p in cfg.param_columns}
 
-    n_excl_survey = 0
-    n_excl_exact  = 0
-    n_chunks = (total + cfg.chunk_size - 1) // cfg.chunk_size
+    for start in tqdm(range(0,total,cfg.chunk_size),
+                      total=(total+cfg.chunk_size-1)//cfg.chunk_size, desc="Phase1"):
+        end  = min(start+cfg.chunk_size, total)
+        clen = end-start
+        ra_c  = np.array(fdata[cfg.ra_col][start:end],  dtype=np.float64)
+        dec_c = np.array(fdata[cfg.dec_col][start:end], dtype=np.float64)
+        surv_c= np.array(fdata[cfg.survey_col][start:end]).astype(str) if has_surv else np.full(clen,'')
+        code_c= np.array(fdata[cfg.code_col][start:end]).astype(str)  if has_code else np.full(clen,'')
+        sid_c = np.array(fdata[sid_col][start:end],dtype=np.int64)    if sid_col  else np.zeros(clen,dtype=np.int64)
 
-    for start in tqdm(range(0, total, cfg.chunk_size),
-                      total=n_chunks, desc="Phase1", unit="chunk"):
-        end  = min(start + cfg.chunk_size, total)
-        clen = end - start
-
-        ra_c   = np.array(fdata[cfg.ra_col][start:end],  dtype=np.float64)
-        dec_c  = np.array(fdata[cfg.dec_col][start:end], dtype=np.float64)
-        surv_c = np.array(fdata[cfg.survey_col][start:end]).astype(str) if has_surv else np.full(clen,'')
-        code_c = np.array(fdata[cfg.code_col][start:end]).astype(str)  if has_code else np.full(clen,'')
-        sid_c  = np.array(fdata[sid_col][start:end], dtype=np.int64) if sid_col else np.zeros(clen, dtype=np.int64)
-
-        # Load all RV arrays
         rv_arrs = {}
-        for v, e in valid_rv:
-            rv_arrs[v] = np.array(fdata[v][start:end], dtype=np.float64)
-            rv_arrs[e] = np.array(fdata[e][start:end], dtype=np.float64)
-
-        # Load stellar params
+        for v,e in valid_rv:
+            rv_arrs[v]=np.array(fdata[v][start:end],dtype=np.float64)
+            rv_arrs[e]=np.array(fdata[e][start:end],dtype=np.float64)
         param_arrs = {}
-        for pname, col in param_col_map.items():
-            if col is not None:
-                try:    param_arrs[pname] = np.array(fdata[col][start:end], dtype=np.float64)
-                except: param_arrs[pname] = np.full(clen, np.nan)
-            else:
-                param_arrs[pname] = np.full(clen, np.nan)
+        for pn,col in param_col_map.items():
+            try:    param_arrs[pn]=np.array(fdata[col][start:end],dtype=np.float64) if col else np.full(clen,np.nan)
+            except: param_arrs[pn]=np.full(clen,np.nan)
+        try:    plx_c = np.array(fdata[plx_col][start:end],dtype=np.float64)  if plx_col  else np.full(clen,np.nan)
+        except: plx_c = np.full(clen,np.nan)
+        try:    plxe_c= np.array(fdata[plxe_col][start:end],dtype=np.float64) if plxe_col else np.full(clen,np.nan)
+        except: plxe_c= np.full(clen,np.nan)
 
-        # --- Per-row weighted average ---
-        all_rvs_stack  = np.full((clen, len(valid_rv)), np.nan)
-        all_errs_stack = np.full((clen, len(valid_rv)), np.nan)
+        all_rvs_s  = np.full((clen,len(valid_rv)),np.nan)
+        all_errs_s = np.full((clen,len(valid_rv)),np.nan)
+        for j,(v,e) in enumerate(valid_rv):
+            vj = np.isfinite(rv_arrs[v])&np.isfinite(rv_arrs[e])&(rv_arrs[e]>0)
+            all_rvs_s[vj,j]=rv_arrs[v][vj]; all_errs_s[vj,j]=rv_arrs[e][vj]
+        wts   = np.where(np.isfinite(all_errs_s)&(all_errs_s>0),1.0/all_errs_s**2,0.0)
+        w_sum = np.nansum(wts,axis=1); has_any=(w_sum>0)
+        best_rv=np.full(clen,np.nan); best_err=np.full(clen,np.nan)
+        best_rv[has_any] =np.nansum(all_rvs_s[has_any]*wts[has_any],axis=1)/w_sum[has_any]
+        best_err[has_any]=1.0/np.sqrt(w_sum[has_any])
+        no_err_mask=~has_any&np.any(np.isfinite(all_rvs_s),axis=1)
+        if np.any(no_err_mask): best_rv[no_err_mask]=np.nanmean(all_rvs_s[no_err_mask],axis=1)
 
-        for j, (v, e) in enumerate(valid_rv):
-            rv_v = rv_arrs[v]
-            rv_e = rv_arrs[e]
-            # Exact-duplicate filter per column
-            exact = np.array([is_exact_duplicate(rv_v[i], rv_e[i])
-                               if (np.isfinite(rv_v[i]) and np.isfinite(rv_e[i])) else False
-                               for i in range(clen)])
-            valid_j = np.isfinite(rv_v) & np.isfinite(rv_e) & (rv_e > 0) & ~exact
-            all_rvs_stack[valid_j, j]  = rv_v[valid_j]
-            all_errs_stack[valid_j, j] = rv_e[valid_j]
-
-        weights = np.where(np.isfinite(all_errs_stack) & (all_errs_stack > 0),
-                           1.0 / all_errs_stack**2, 0.0)
-        w_sum   = np.nansum(weights, axis=1)
-        has_any = w_sum > 0
-
-        best_rv  = np.full(clen, np.nan)
-        best_err = np.full(clen, np.nan)
-        best_rv[has_any]  = np.nansum(all_rvs_stack[has_any] * weights[has_any], axis=1) / w_sum[has_any]
-        best_err[has_any] = 1.0 / np.sqrt(w_sum[has_any])
-
-        # Fallback: some RVs but all errs bad → simple mean (no error)
-        has_rv_no_err = ~has_any & np.any(np.isfinite(all_rvs_stack), axis=1)
-        if np.any(has_rv_no_err):
-            best_rv[has_rv_no_err] = np.nanmean(all_rvs_stack[has_rv_no_err], axis=1)
-
-        # Resolve survey — only keep VALID_SURVEYS
-        resolved = [resolve_survey(surv_c[i], code_c[i]) for i in range(clen)]
-
-        valid_mask = (
-            np.isfinite(best_rv) & np.isfinite(ra_c) & np.isfinite(dec_c)
-            & np.array([r is not None for r in resolved])
-        )
-        vi = np.where(valid_mask)[0]
-
-        n_excl_survey += int(clen - np.sum(np.array([r is not None for r in resolved])))
-
+        resolved=[resolve_survey(surv_c[i],code_c[i]) for i in range(clen)]
+        valid_mask=(np.isfinite(best_rv)&np.isfinite(ra_c)&np.isfinite(dec_c)
+                    &np.array([r is not None for r in resolved]))
+        vi=np.where(valid_mask)[0]
         all_ra.append(ra_c[vi]); all_dec.append(dec_c[vi])
         all_rv.append(best_rv[vi]); all_err.append(best_err[vi])
-        all_row_idx.append(np.arange(start, end, dtype=np.int64)[vi])
+        all_row_idx.append(np.arange(start,end,dtype=np.int64)[vi])
         all_sid.append(sid_c[vi])
-
-        for i in vi:
-            all_surveys.append(resolved[i])
-
-        for pname in cfg.param_columns:
-            all_params[pname].append(param_arrs[pname][vi])
-
-        del ra_c, dec_c, surv_c, code_c, rv_arrs, param_arrs
-        del all_rvs_stack, all_errs_stack, weights
+        for i in vi: all_surveys.append(resolved[i])
+        for pn in cfg.param_columns: all_params[pn].append(param_arrs[pn][vi])
+        all_plx.append(plx_c[vi]); all_plxe.append(plxe_c[vi])
+        del ra_c,dec_c,surv_c,code_c,rv_arrs,param_arrs,all_rvs_s,all_errs_s,wts,plx_c,plxe_c
         gc.collect()
-
     hdu.close()
 
-    ra      = np.concatenate(all_ra)
-    dec     = np.concatenate(all_dec)
-    rv      = np.concatenate(all_rv)
-    err     = np.concatenate(all_err)
-    row_idx = np.concatenate(all_row_idx)
-    sid     = np.concatenate(all_sid)
-    params  = {p: np.concatenate(all_params[p]) for p in cfg.param_columns}
-    surveys = all_surveys
-    del all_ra, all_dec, all_rv, all_err, all_row_idx, all_params, all_surveys
+    ra=np.concatenate(all_ra); dec=np.concatenate(all_dec)
+    rv=np.concatenate(all_rv); err=np.concatenate(all_err)
+    row_idx=np.concatenate(all_row_idx); sid=np.concatenate(all_sid)
+    plx=np.concatenate(all_plx); plxe=np.concatenate(all_plxe)
+    params={p:np.concatenate(all_params[p]) for p in cfg.param_columns}
+    surveys=all_surveys
 
-    n_before_dedup = len(ra)
-    log(f"\n  Rows after survey filter: {n_before_dedup:,} / {total:,}")
-    log(f"  Excluded (non-survey): {n_excl_survey:,}")
-
-    # -------------------------------------------------------------------------
-    # WITHIN-SURVEY EXACT (rv, err) DEDUPLICATION
-    # -------------------------------------------------------------------------
-    # After the weighted average, if two rows from the SAME survey have
-    # bit-for-bit identical (rv_final, err_final), they are the same
-    # measurement entered twice in the catalog.  Keep the first occurrence,
-    # discard all later ones.
-    #
-    # Why within-survey only?
-    #   The same (rv, err) appearing in LAMOST AND GALAH is a genuine
-    #   cross-survey match of the same star — those rows MUST be kept as
-    #   independent measurements for DUP/TCH.
-    #
-    # Tolerance: round to 6 decimal places (= 1e-6 km/s precision).
-    #   This catches exact floating-point copies without accidentally
-    #   merging genuinely close but distinct measurements.
-    # -------------------------------------------------------------------------
-    log("\n  Within-survey exact (rv, err) deduplication...")
-    surveys_arr = np.array(surveys)
-    keep_mask   = np.ones(n_before_dedup, dtype=bool)
-    n_total_discarded = 0
-
+    # within-survey exact dedup
+    surveys_arr=np.array(surveys); keep_mask=np.ones(len(ra),dtype=bool)
     for surv in sorted(VALID_SURVEYS):
-        surv_idx = np.where(surveys_arr == surv)[0]
-        if len(surv_idx) < 2:
-            continue
+        si=np.where(surveys_arr==surv)[0]
+        if len(si)<2: continue
+        rv_s=rv[si]; err_s=err[si]; seen={}; disc=[]
+        for pos,gi in enumerate(si):
+            if not np.isfinite(rv_s[pos]) or not np.isfinite(err_s[pos]): continue
+            key=(round(float(rv_s[pos]),6),round(float(err_s[pos]),6))
+            if key in seen: disc.append(gi)
+            else: seen[key]=gi
+        if disc: keep_mask[disc]=False
+    ra=ra[keep_mask]; dec=dec[keep_mask]; rv=rv[keep_mask]; err=err[keep_mask]
+    sid=sid[keep_mask]; row_idx=row_idx[keep_mask]
+    plx=plx[keep_mask]; plxe=plxe[keep_mask]
+    surveys=[s for s,k in zip(surveys,keep_mask) if k]
+    params={p:params[p][keep_mask] for p in params}
+    n_valid=len(ra)
 
-        rv_s  = rv[surv_idx]
-        err_s = err[surv_idx]
-
-        seen    = {}   # key: (rv_rounded, err_rounded) → first index in surv_idx
-        discard = []
-
-        for pos, global_i in enumerate(surv_idx):
-            # NaN errors mean the weighted avg had no valid error — keep those
-            # rows as-is (they can't meaningfully match another row's NaN)
-            if not np.isfinite(rv_s[pos]) or not np.isfinite(err_s[pos]):
-                continue
-            key = (round(float(rv_s[pos]),  6),
-                   round(float(err_s[pos]), 6))
-            if key in seen:
-                discard.append(global_i)   # duplicate → discard
-            else:
-                seen[key] = global_i       # first occurrence → keep
-
-        if discard:
-            keep_mask[discard] = False
-            n_total_discarded += len(discard)
-            log(f"    {surv:<16s}: {len(discard):>8,} exact (rv,err) duplicate rows discarded")
-        else:
-            log(f"    {surv:<16s}: no exact (rv,err) duplicates found")
-
-    # Apply mask to every array
-    ra      = ra[keep_mask]
-    dec     = dec[keep_mask]
-    rv      = rv[keep_mask]
-    err     = err[keep_mask]
-    sid     = sid[keep_mask]
-    row_idx = row_idx[keep_mask]
-    surveys = [s for s, k in zip(surveys, keep_mask) if k]
-    params  = {p: params[p][keep_mask] for p in params}
-
-    n_valid = len(ra)
-    log(f"\n  Total exact (rv,err) duplicates discarded: {n_total_discarded:,}")
-    log(f"  Final valid rows after deduplication: {n_valid:,}")
-    log(f"\n  Per-survey counts after deduplication:")
-    surv_arr = np.array(surveys)
+    log(f"  Final valid rows: {n_valid:,}")
+    surveys_arr=np.array(surveys)
     for sn in sorted(VALID_SURVEYS):
-        n = int(np.sum(surv_arr == sn))
-        if n > 0:
-            log(f"    {sn:<16s}: {n:>10,}")
+        n=int(np.sum(surveys_arr==sn))
+        if n>0: log(f"    {sn:<16s}: {n:>10,}")
 
-    result = {
-        'ra': ra, 'dec': dec, 'rv': rv, 'err': err,
-        'surveys': surveys, 'params': params, 'row_idx': row_idx,
-        'sid': sid,
-        'n_valid': n_valid, 'total_rows': total,
-    }
-    save_ckpt(ckpt, result)
+    result={'ra':ra,'dec':dec,'rv':rv,'err':err,'surveys':surveys,
+            'params':params,'row_idx':row_idx,'sid':sid,
+            'plx':plx,'plxe':plxe,
+            'n_valid':n_valid,'total_rows':total}
+    save_ckpt(ckpt,result)
     gc.collect()
     return result
 
 
 # =============================================================================
-# PHASE 2: SPATIAL GROUPING
+# PHASE 2: SPATIAL GROUPING  (unchanged)
 # =============================================================================
 def phase2_spatial(cfg, data):
-    ckpt = Path(cfg.checkpoint_dir) / "phase2_v5.pkl"
+    ckpt = Path(cfg.checkpoint_dir)/"phase2_v8.pkl"
     if ckpt.exists():
         log("Phase 2: Loading checkpoint")
-        d = load_ckpt(ckpt)
-        ug, gc_ = np.unique(d['labels'], return_counts=True)
-        log(f"  {len(ug):,} unique groups, {np.sum(gc_>1):,} multi-row, max={np.max(gc_)}")
+        d=load_ckpt(ckpt)
+        ug,gc_=np.unique(d['labels'],return_counts=True)
+        log(f"  {len(ug):,} groups, {np.sum(gc_>1):,} multi-row, max={np.max(gc_)}")
         return d
-
-    ra, dec = data['ra'], data['dec']
-    n = len(ra)
+    ra,dec=data['ra'],data['dec']; n=len(ra)
     log(f"\nPhase 2: Spatial matching on {n:,} rows...")
-
     if HAS_HEALPY:
-        pix = hp.ang2pix(cfg.healpix_nside, np.radians(90-dec), np.radians(ra), nest=True)
+        pix=hp.ang2pix(cfg.healpix_nside,np.radians(90-dec),np.radians(ra),nest=True)
     else:
-        pix = (np.floor(ra).astype(np.int32)%360)*180 + (np.floor(dec+90).astype(np.int32)%180)
-
-    upix = np.unique(pix)
-    log(f"  HEALPix regions: {len(upix):,}")
-
-    parent = np.arange(n, dtype=np.int64)
-    rank   = np.zeros(n, dtype=np.int32)
-
+        pix=(np.floor(ra).astype(np.int32)%360)*180+(np.floor(dec+90).astype(np.int32)%180)
+    upix=np.unique(pix)
+    parent=np.arange(n,dtype=np.int64); rank=np.zeros(n,dtype=np.int32)
     def find(x):
-        r = x
-        while parent[r] != r: r = parent[r]
-        while parent[x] != r: parent[x], x = r, parent[x]
+        r=x
+        while parent[r]!=r: r=parent[r]
+        while parent[x]!=r: parent[x],x=r,parent[x]
         return r
-
-    def union(a, b):
-        pa, pb = find(a), find(b)
-        if pa == pb: return
-        if rank[pa] < rank[pb]: pa, pb = pb, pa
-        parent[pb] = pa
-        if rank[pa] == rank[pb]: rank[pa] += 1
-
-    tol = 2 * np.sin(np.radians(cfg.tolerance_arcsec / 3600) / 2)
-    si  = np.argsort(pix); sp = pix[si]
-    pl  = np.searchsorted(sp, upix, side='left')
-    pr  = np.searchsorted(sp, upix, side='right')
-
-    total_pairs = 0
-    for pi in tqdm(range(len(upix)), desc="Phase2 spatial", unit="rgn"):
-        l, r = pl[pi], pr[pi]
-        if r - l < 2: continue
-        idx = si[l:r]
-        rr, dr = np.radians(ra[idx]), np.radians(dec[idx])
-        xyz   = np.column_stack([np.cos(dr)*np.cos(rr), np.cos(dr)*np.sin(rr), np.sin(dr)])
-        pairs = cKDTree(xyz).query_pairs(r=tol, output_type='ndarray')
-        if len(pairs) > 0:
-            for li, lj in pairs: union(idx[li], idx[lj])
-            total_pairs += len(pairs)
-
-    log(f"  Pairs: {total_pairs:,}")
-    labels = np.array([find(i) for i in range(n)], dtype=np.int64)
-    ug, gcounts = np.unique(labels, return_counts=True)
+    def union(a,b):
+        pa,pb=find(a),find(b)
+        if pa==pb: return
+        if rank[pa]<rank[pb]: pa,pb=pb,pa
+        parent[pb]=pa
+        if rank[pa]==rank[pb]: rank[pa]+=1
+    tol=2*np.sin(np.radians(cfg.tolerance_arcsec/3600)/2)
+    si=np.argsort(pix); sp=pix[si]
+    pl=np.searchsorted(sp,upix,side='left'); pr=np.searchsorted(sp,upix,side='right')
+    for pi in tqdm(range(len(upix)),desc="Phase2",unit="rgn"):
+        l,r=pl[pi],pr[pi]
+        if r-l<2: continue
+        idx=si[l:r]; rr,dr=np.radians(ra[idx]),np.radians(dec[idx])
+        xyz=np.column_stack([np.cos(dr)*np.cos(rr),np.cos(dr)*np.sin(rr),np.sin(dr)])
+        pairs=cKDTree(xyz).query_pairs(r=tol,output_type='ndarray')
+        if len(pairs)>0:
+            for li,lj in pairs: union(idx[li],idx[lj])
+    labels=np.array([find(i) for i in range(n)],dtype=np.int64)
+    ug,gcounts=np.unique(labels,return_counts=True)
     log(f"  Groups: {len(ug):,}, multi: {np.sum(gcounts>1):,}, max: {np.max(gcounts)}")
-
-    result = {'labels': labels}
-    save_ckpt(ckpt, result)
-    del parent, rank, pix, si, sp, ug, gcounts
-    gc.collect()
+    result={'labels':labels}
+    save_ckpt(ckpt,result)
+    del parent,rank,pix,si,sp; gc.collect()
     return result
 
 
 # =============================================================================
-# PHASE 2b: BUILD SOURCE_ID → GROUP_ID MAP (for CSV matching)
+# PHASE 2b: SOURCE_ID → GROUP_ID MAP  (unchanged)
 # =============================================================================
 def phase2b_sid_map(cfg, data, groups):
-    """
-    Build source_id → group_id mapping from the FITS rows that have a valid source_id.
-    Returns dict: source_id (int) → group_id (int)
-    """
-    ckpt = Path(cfg.checkpoint_dir) / "phase2b_v5.pkl"
+    ckpt=Path(cfg.checkpoint_dir)/"phase2b_v8.pkl"
     if ckpt.exists():
-        log("Phase 2b: Loading checkpoint (source_id→group_id map)")
-        d = load_ckpt(ckpt)
-        log(f"  Map size: {len(d):,}")
-        return d
-
+        log("Phase 2b: Loading checkpoint")
+        d=load_ckpt(ckpt); log(f"  Map size: {len(d):,}"); return d
     log("\nPhase 2b: Building source_id → group_id map...")
-    sids   = data['sid']
-    labels = groups['labels']
-
-    sid_map = {}
-    for i, (sid, gid) in enumerate(zip(sids, labels)):
-        if sid != 0 and sid > 0:
-            sid_map[int(sid)] = int(gid)
-
+    sids=data['sid']; labels=groups['labels']
+    sid_map={}
+    for i,(sid,gid) in enumerate(zip(sids,labels)):
+        if sid!=0 and sid>0: sid_map[int(sid)]=int(gid)
     log(f"  Map size: {len(sid_map):,}")
-    save_ckpt(ckpt, sid_map)
+    save_ckpt(ckpt,sid_map)
     return sid_map
 
 
 # =============================================================================
-# PHASE 3: BUILD PER-SURVEY STAR DATA (FITS + External CSVs)
+# PHASE 3: BUILD PER-SURVEY STAR DATA
+# =============================================================================
+# FIX-2: Propagate params from (a) CSV columns, (b) FITS group entries
 # =============================================================================
 def phase3_build(cfg, data, groups, csv_data, sid_map):
-    """
-    survey_stars[survey][group_id] = {
-        'rvs':    [(rv, err), ...],   # independent measurements
-        'params': {Gmag, Teff, logg, FeH, SNR}
-    }
-
-    FITS rows → grouped by spatial labels.
-    CSV rows  → matched via source_id → same group_id as Gaia row.
-               If no source_id (GES) → spatial match using RA/Dec.
-    """
-    ckpt = Path(cfg.checkpoint_dir) / "phase3_v5.pkl"
+    ckpt=Path(cfg.checkpoint_dir)/"phase3_v8b.pkl"
     if ckpt.exists():
         log("Phase 3: Loading checkpoint")
-        d = load_ckpt(ckpt)
-        # ── Structure guard ──────────────────────────────────────────────────
-        # Old checkpoints stored {survey: int} instead of {survey: {gid: {rvs,params}}}.
-        # If any value is not a dict, the checkpoint is stale → delete and rebuild.
+        d=load_ckpt(ckpt)
         try:
             for s in sorted(d.keys()):
-                sample = next(iter(d[s].values()))
-                if not isinstance(sample, dict) or 'rvs' not in sample:
-                    raise ValueError("stale checkpoint structure")
-                n_multi = sum(1 for g in d[s].values() if len(g['rvs']) >= 2)
-                log(f"  {s:<16s}: {len(d[s]):>10,} unique stars, {n_multi:>8,} >=2 obs")
+                sample=next(iter(d[s].values()))
+                if not isinstance(sample,dict) or 'rvs' not in sample:
+                    raise ValueError("stale")
+                n_multi=sum(1 for g in d[s].values() if len(g['rvs'])>=2)
+                # Check param coverage
+                n_has_teff=sum(1 for g in d[s].values()
+                               if np.isfinite(g['params'].get('Teff',np.nan)))
+                log(f"  {s:<16s}: {len(d[s]):>10,} stars, {n_multi:>8,} >=2obs, "
+                    f"{n_has_teff:>8,} with Teff")
             return d
         except Exception as e:
-            log(f"  Phase 3 checkpoint stale ({e}), rebuilding...")
+            log(f"  Stale checkpoint ({e}), rebuilding...")
             ckpt.unlink(missing_ok=True)
 
-    log("\nPhase 3: Building per-survey star data...")
-    gl      = groups['labels']
-    rv      = data['rv']
-    err     = data['err']
-    surveys = data['surveys']
-    params  = data['params']
-    n       = len(gl)
+    log("\nPhase 3: Building per-survey star data (with param propagation)...")
+    gl=groups['labels']; rv=data['rv']; err=data['err']
+    surveys=data['surveys']; params=data['params']; n=len(gl)
+    fits_plx =data.get('plx',  np.full(n, np.nan))
+    fits_plxe=data.get('plxe', np.full(n, np.nan))
+    ss=defaultdict(dict)
 
-    ss = defaultdict(dict)   # ss[survey][gid] = {'rvs':[], 'params':{}}
-
-    # --- FITS rows ---
     log("  Adding FITS rows...")
-    for i in tqdm(range(n), desc="Phase3-FITS", mininterval=5.0):
-        surv = surveys[i]
-        gid  = int(gl[i])
-        if surv not in VALID_SURVEYS:
-            continue
+    for i in tqdm(range(n),desc="Phase3-FITS",mininterval=5.0):
+        surv=surveys[i]; gid=int(gl[i])
+        if surv not in VALID_SURVEYS: continue
         if gid not in ss[surv]:
-            ss[surv][gid] = {
-                'rvs':    [],
-                'params': {p: float(params[p][i]) for p in params}
-            }
-        ss[surv][gid]['rvs'].append((float(rv[i]), float(err[i])))
+            ss[surv][gid]={'rvs':[],'params':{p:float(params[p][i]) for p in params},
+                           'plx':float(fits_plx[i]),'plxe':float(fits_plxe[i])}
+        ss[surv][gid]['rvs'].append((float(rv[i]),float(err[i])))
 
-    # --- External CSV rows via source_id ---
-    log("  Adding CSV rows via source_id / spatial match...")
-    # Build spatial KD-tree from FITS for GES fallback
-    fits_xyz = None
-    fits_gids = None
+    # ── Build FITS spatial KDTree ONCE ─────────────────────────────────────
+    log("  Building FITS spatial KDTree...")
+    ra_f=data['ra']; dec_f=data['dec']
+    rr_f=np.radians(ra_f); dr_f=np.radians(dec_f)
+    fits_xyz=np.column_stack([np.cos(dr_f)*np.cos(rr_f),
+                              np.cos(dr_f)*np.sin(rr_f),
+                              np.sin(dr_f)])
+    fits_tree=cKDTree(fits_xyz)
+    spatial_tol=2*np.sin(np.radians(cfg.tolerance_arcsec/3600)/2)
 
+    def _plx_ok(plx_csv, plxe_csv, fits_idx_list):
+        if not np.isfinite(plx_csv): return True
+        for fi in fits_idx_list:
+            plx_f = float(fits_plx[fi])
+            if not np.isfinite(plx_f): return True
+            plxe_f = float(fits_plxe[fi]) if np.isfinite(fits_plxe[fi]) else 0.5
+            plxe_c = float(plxe_csv) if np.isfinite(plxe_csv) else 0.5
+            sigma_comb = np.sqrt(plxe_f**2 + plxe_c**2)
+            thr = max(3.0 * sigma_comb, 1.0)
+            if abs(plx_csv - plx_f) < thr:
+                return True
+        return False
+
+    # ── FIX-2: Helper to get best params for a group ──────────────────────
+    def _get_group_params(gid):
+        """Get stellar params from FITS entries for this group."""
+        # Prefer GAIA params, then DESI, then any other FITS survey
+        for prefer in ['GAIA', 'DESI', 'APOGEE', 'GALAH', 'RAVE', 'LAMOST', 'GES', 'SDSS']:
+            if prefer in ss and gid in ss[prefer]:
+                pr = ss[prefer][gid]['params']
+                if any(np.isfinite(pr.get(p, np.nan)) for p in ['Teff','logg','FeH','Gmag']):
+                    return dict(pr)
+        return {p: np.nan for p in params}
+
+    log("  Adding CSV rows (with parameter propagation)...")
     for surv, df in csv_data.items():
-        n_added = 0; n_new_gid = 0; n_skip = 0
+        n_sid=0; n_spatial=0; n_skip=0; n_plx_reject=0; n_params_from_csv=0; n_params_from_fits=0
         has_sid = df['source_id'].notna().any()
+        has_plx = 'parallax' in df.columns and df['parallax'].notna().any()
+        # ── FIX-1: Check for CSV stellar params ──────────────────────────
+        has_csv_teff = 'csv_Teff' in df.columns and df['csv_Teff'].notna().any()
 
-        if has_sid:
-            # source_id matching
-            for _, row in df.iterrows():
-                sid = row['source_id']
-                if pd.isna(sid): continue
-                sid = int(sid)
-                if sid not in sid_map:
-                    n_skip += 1
-                    continue
-                gid = sid_map[sid]
-                rv_v  = float(row['rv'])
-                err_v = float(row['e_rv'])
-                if not (np.isfinite(rv_v) and np.isfinite(err_v) and err_v > 0):
-                    continue
-                if is_exact_duplicate(rv_v, err_v):
-                    continue
-                if gid not in ss[surv]:
-                    ss[surv][gid] = {'rvs': [], 'params': {p: np.nan for p in params}}
-                    n_new_gid += 1
-                ss[surv][gid]['rvs'].append((rv_v, err_v))
-                n_added += 1
-        else:
-            # Spatial matching (GES: no source_id)
-            log(f"    {surv}: using spatial matching (no source_id)")
-            if fits_xyz is None:
-                log("      Building FITS spatial KDTree for GES matching...")
-                ra_f   = data['ra']
-                dec_f  = data['dec']
-                rr_f   = np.radians(ra_f)
-                dr_f   = np.radians(dec_f)
-                fits_xyz  = np.column_stack([
-                    np.cos(dr_f)*np.cos(rr_f),
-                    np.cos(dr_f)*np.sin(rr_f),
-                    np.sin(dr_f)
-                ])
-                fits_gids = gl
-                fits_tree = cKDTree(fits_xyz)
+        ra_csv  = df['ra'].values.astype(np.float64)
+        dec_csv = df['dec'].values.astype(np.float64)
+        rv_csv  = df['rv'].values.astype(np.float64)
+        erv_csv = df['e_rv'].values.astype(np.float64)
+        sid_csv = df['source_id'].values if has_sid else np.full(len(df), np.nan)
+        plx_csv = df['parallax'].values.astype(np.float64) if has_plx else np.full(len(df),np.nan)
+        plxe_csv= df['parallax_error'].values.astype(np.float64) if has_plx and 'parallax_error' in df.columns else np.full(len(df),np.nan)
 
-            tol = 2 * np.sin(np.radians(cfg.tolerance_arcsec / 3600) / 2)
-            for _, row in df.iterrows():
-                ra_v  = float(row['ra'])  if np.isfinite(float(row['ra']))  else np.nan
-                dec_v = float(row['dec']) if np.isfinite(float(row['dec'])) else np.nan
-                if not (np.isfinite(ra_v) and np.isfinite(dec_v)): continue
-                rr = np.radians(ra_v); dr = np.radians(dec_v)
-                qxyz = np.array([np.cos(dr)*np.cos(rr), np.cos(dr)*np.sin(rr), np.sin(dr)])
-                idx = fits_tree.query_ball_point(qxyz, r=tol)
-                if not idx: n_skip += 1; continue
-                gid   = int(fits_gids[idx[0]])
-                rv_v  = float(row['rv'])
-                err_v = float(row['e_rv'])
-                if not (np.isfinite(rv_v) and np.isfinite(err_v) and err_v > 0): continue
-                if is_exact_duplicate(rv_v, err_v): continue
-                if gid not in ss[surv]:
-                    ss[surv][gid] = {'rvs': [], 'params': {p: np.nan for p in params}}
-                    n_new_gid += 1
-                ss[surv][gid]['rvs'].append((rv_v, err_v))
-                n_added += 1
+        # FIX-1: Load CSV stellar params
+        csv_teff = df['csv_Teff'].values.astype(np.float64) if 'csv_Teff' in df.columns else np.full(len(df),np.nan)
+        csv_logg = df['csv_logg'].values.astype(np.float64) if 'csv_logg' in df.columns else np.full(len(df),np.nan)
+        csv_feh  = df['csv_FeH'].values.astype(np.float64)  if 'csv_FeH'  in df.columns else np.full(len(df),np.nan)
+        csv_gmag = df['csv_Gmag'].values.astype(np.float64) if 'csv_Gmag' in df.columns else np.full(len(df),np.nan)
+        csv_snr  = df['csv_SNR'].values.astype(np.float64)  if 'csv_SNR'  in df.columns else np.full(len(df),np.nan)
 
-        log(f"    {surv}: {n_added:,} measurements added, "
-            f"{n_new_gid:,} new stars, {n_skip:,} unmatched")
+        valid_pos = np.isfinite(ra_csv) & np.isfinite(dec_csv)
+        rr_csv  = np.radians(ra_csv[valid_pos])
+        dr_csv  = np.radians(dec_csv[valid_pos])
+        xyz_csv = np.column_stack([np.cos(dr_csv)*np.cos(rr_csv),
+                                   np.cos(dr_csv)*np.sin(rr_csv),
+                                   np.sin(dr_csv)])
+        matches = fits_tree.query_ball_point(xyz_csv, r=spatial_tol)
+        valid_idx_list = np.where(valid_pos)[0]
 
-    ss = dict(ss)
-    log("\n  Per-survey unique star counts:")
+        for pos, orig_i in enumerate(valid_idx_list):
+            rv_v  = rv_csv[orig_i];  err_v = erv_csv[orig_i]
+            if not (np.isfinite(rv_v) and np.isfinite(err_v) and err_v > 0): continue
+            if is_exact_duplicate(rv_v, err_v): continue
+
+            gid = None
+            if has_sid:
+                sid_v = sid_csv[orig_i]
+                if not pd.isna(sid_v):
+                    sid_int = int(sid_v)
+                    if sid_int in sid_map:
+                        gid = sid_map[sid_int]; n_sid += 1
+
+            if gid is None:
+                cands = matches[pos]
+                if not cands: n_skip += 1; continue
+                if not _plx_ok(plx_csv[orig_i], plxe_csv[orig_i], cands):
+                    n_plx_reject += 1; continue
+                if len(cands) == 1:
+                    gid = int(gl[cands[0]])
+                else:
+                    dists = np.linalg.norm(fits_xyz[cands] - xyz_csv[pos], axis=1)
+                    gid   = int(gl[cands[int(np.argmin(dists))]])
+                n_spatial += 1
+
+            if gid is None: n_skip += 1; continue
+
+            # ── FIX-2: Build params for this CSV star ─────────────────────
+            if gid not in ss[surv]:
+                # Try CSV params first
+                csv_pr = {
+                    'Teff': float(csv_teff[orig_i]),
+                    'logg': float(csv_logg[orig_i]),
+                    'FeH':  float(csv_feh[orig_i]),
+                    'Gmag': float(csv_gmag[orig_i]),
+                    'SNR':  float(csv_snr[orig_i]),
+                }
+                has_any_csv_param = any(np.isfinite(v) for v in csv_pr.values())
+
+                if has_any_csv_param:
+                    # Fill missing CSV params from FITS group
+                    fits_pr = _get_group_params(gid)
+                    for p in csv_pr:
+                        if not np.isfinite(csv_pr[p]) and np.isfinite(fits_pr.get(p, np.nan)):
+                            csv_pr[p] = fits_pr[p]
+                    use_pr = csv_pr
+                    n_params_from_csv += 1
+                else:
+                    # No CSV params at all — inherit from FITS group
+                    use_pr = _get_group_params(gid)
+                    n_params_from_fits += 1
+
+                ss[surv][gid]={'rvs':[],'params':use_pr,
+                               'plx':float(plx_csv[orig_i]),'plxe':float(plxe_csv[orig_i])}
+            ss[surv][gid]['rvs'].append((rv_v, err_v))
+
+        n_added = n_sid + n_spatial
+        log(f"    {surv}: {n_added:,} added "
+            f"(sid={n_sid:,} spatial={n_spatial:,} plx_reject={n_plx_reject:,} unmatched={n_skip:,})"
+            f"\n      params: {n_params_from_csv:,} from CSV, {n_params_from_fits:,} from FITS")
+
+    ss=dict(ss)
+    log("\n  Per-survey unique star counts (with param coverage):")
     for s in sorted(ss.keys()):
-        n_multi = sum(1 for g in ss[s].values() if len(g['rvs']) >= 2)
-        log(f"    {s:<16s}: {len(ss[s]):>10,} unique stars, {n_multi:>8,} >=2 obs")
-
-    save_ckpt(ckpt, ss)
+        n_m=sum(1 for g in ss[s].values() if len(g['rvs'])>=2)
+        n_teff=sum(1 for g in ss[s].values() if np.isfinite(g['params'].get('Teff',np.nan)))
+        n_gmag=sum(1 for g in ss[s].values() if np.isfinite(g['params'].get('Gmag',np.nan)))
+        log(f"    {s:<16s}: {len(ss[s]):>10,} stars, {n_m:>8,} >=2obs, "
+            f"Teff:{n_teff:,} Gmag:{n_gmag:,}")
+    save_ckpt(ckpt,ss)
     gc.collect()
     return ss
 
 
 # =============================================================================
-# HELPER: WEIGHTED BEST RV PER STAR PER SURVEY
+# HELPER: WEIGHTED BEST RV PER STAR
 # =============================================================================
 def _best_rv(survey_stars):
-    """Returns survey_best[survey][gid] = (rv, err, params_dict)"""
-    out = {}
-    for surv, stars in survey_stars.items():
-        best = {}
-        for gid, sdata in stars.items():
-            obs = sdata['rvs']
-            pr  = sdata['params']
-            if len(obs) == 1:
-                best[gid] = (obs[0][0], obs[0][1], pr)
+    out={}
+    for surv,stars in survey_stars.items():
+        best={}
+        for gid,sdata in stars.items():
+            obs=sdata['rvs']; pr=sdata['params']
+            if len(obs)==1:
+                best[gid]=(obs[0][0],obs[0][1],pr)
             else:
-                v = np.array([x[0] for x in obs])
-                e = np.array([x[1] for x in obs])
-                ok = np.isfinite(v) & np.isfinite(e) & (e > 0)
+                v=np.array([x[0] for x in obs]); e=np.array([x[1] for x in obs])
+                ok=np.isfinite(v)&np.isfinite(e)&(e>0)
                 if np.any(ok):
-                    w = 1.0 / e[ok]**2
-                    best[gid] = (float(np.sum(v[ok]*w)/np.sum(w)),
-                                 float(1.0/np.sqrt(np.sum(w))), pr)
+                    w=1.0/e[ok]**2
+                    best[gid]=(float(np.sum(v[ok]*w)/np.sum(w)),float(1.0/np.sqrt(np.sum(w))),pr)
                 else:
-                    best[gid] = (float(np.nanmean(v)), np.nan, pr)
-        out[surv] = best
+                    best[gid]=(float(np.nanmean(v)),np.nan,pr)
+        out[surv]=best
     return out
 
 
 # =============================================================================
-# PHASE 4: DUP METHOD (Sec 4.1)  — GAIA EXCLUDED
+# PHASE 4: DUP METHOD
+# =============================================================================
+# FIX-3: Skip GAIA; quality controls on pairs
 # =============================================================================
 def phase4_dup(cfg, survey_stars):
-    ckpt = Path(cfg.checkpoint_dir) / "phase4_v5.pkl"
+    ckpt=Path(cfg.checkpoint_dir)/"phase4_v8.pkl"
     if ckpt.exists():
-        log("Phase 4: Loading checkpoint")
-        return load_ckpt(ckpt)
-
-    log("\nPhase 4: DUP method (Sec 4.1) [GAIA excluded — spatial dups already averaged]...")
-    results = {}
-
+        log("Phase 4: Loading checkpoint"); return load_ckpt(ckpt)
+    log("\nPhase 4: DUP method (with quality controls)...")
+    results={}
     for surv in sorted(survey_stars.keys()):
-        # ← KEY FIX: skip GAIA
         if surv not in DUP_SURVEYS:
-            log(f"  {surv:<12s}: skipped (not in DUP_SURVEYS)")
+            log(f"  {surv}: excluded from DUP (using TCH)")
             continue
-
-        stars = survey_stars[surv]
-        # Only stars with >=2 INDEPENDENT measurements (from CSV or FITS multi-epoch)
-        multi = {g: d for g, d in stars.items() if len(d['rvs']) >= 2}
-        if len(multi) < 5:
-            log(f"  {surv:<12s}: {len(multi)} multi-obs stars, skip DUP")
+        stars=survey_stars[surv]
+        multi={g:d for g,d in stars.items() if len(d['rvs'])>=2}
+        if len(multi)<5: log(f"  {surv}: {len(multi)} multi-obs, skip DUP"); continue
+        norms,raws=[],[]
+        n_err_ratio_skip=0
+        for gid,sdata in tqdm(multi.items(),desc=f"DUP {surv}",leave=False):
+            obs=sdata['rvs']
+            if len(obs)>cfg.max_obs_per_star:
+                obs=sorted(obs,key=lambda x:x[1])[:cfg.max_obs_per_star]
+            np_s=0
+            for (v1,e1),(v2,e2) in combinations(obs,2):
+                if abs(v1-v2)<1e-6 and abs(e1-e2)<1e-6: continue
+                # FIX-3: Quality control — reject pairs with very different errors
+                # (likely from different pipelines: CSV vs A95)
+                if e1 > 0 and e2 > 0:
+                    err_ratio = max(e1,e2)/min(e1,e2)
+                    if err_ratio > 5.0:
+                        n_err_ratio_skip += 1
+                        continue
+                d=v1-v2; sc=np.sqrt(e1**2+e2**2)
+                if sc > 0.01:  # FIX-3: minimum combined error
+                    norms.append(d/sc); raws.append(d); np_s+=1
+                    if np_s>=cfg.max_pairs_per_star: break
+        if len(norms)<cfg.min_pairs_dup:
+            log(f"  {surv}: {len(norms)} pairs (skipped {n_err_ratio_skip} err-ratio), skip DUP")
             continue
+        nd=np.array(norms); rd=np.array(raws)
+        # FIX-3: 5σ clip before computing MAD
+        nd_c=nd[np.abs(nd)<50]; rd_c=rd[np.abs(rd)<500]
+        mad_raw=float(np.median(np.abs(nd_c)))
+        nf_raw=1.4826*mad_raw
+        # 5σ clip
+        clip_thr = 5.0 * nf_raw if nf_raw > 0 else 50.0
+        nd_clipped = nd_c[np.abs(nd_c) < clip_thr]
+        if len(nd_clipped) < cfg.min_pairs_dup:
+            nd_clipped = nd_c
+        mad=float(np.median(np.abs(nd_clipped)))
+        nf=1.4826*mad
+        mu,std=norm.fit(nd_clipped)
 
-        norms, raws = [], []
-        for gid, sdata in tqdm(multi.items(), desc=f"DUP {surv}",
-                                leave=False, mininterval=2.0):
-            obs = sdata['rvs']
-            if len(obs) > cfg.max_obs_per_star:
-                obs = sorted(obs, key=lambda x: x[1])[:cfg.max_obs_per_star]
-            np_s = 0
-            for (v1, e1), (v2, e2) in combinations(obs, 2):
-                # Skip exact-duplicate pairs
-                if abs(v1-v2) < 1e-6 and abs(e1-e2) < 1e-6: continue
-                d  = v1 - v2
-                sc = np.sqrt(e1**2 + e2**2)
-                if sc > 0:
-                    norms.append(d/sc); raws.append(d)
-                    np_s += 1
-                    if np_s >= cfg.max_pairs_per_star: break
-
-        if len(norms) < cfg.min_pairs_dup:
-            log(f"  {surv:<12s}: {len(norms)} pairs, skip DUP"); continue
-
-        nd   = np.array(norms); rd = np.array(raws)
-        nd_c = nd[np.abs(nd) < 50]
-        mad  = float(np.median(np.abs(nd_c)))
-        nf   = 1.4826 * mad          # ← normalization factor (MAD-based)
-        mu, std = norm.fit(nd_c)
-        rd_c    = rd[np.abs(rd) < 500]
-
-        results[surv] = {
-            'norm_diffs':  nd,
-            'raw_diffs':   rd,
-            'norm_factor': nf,
-            'mad':         mad,
-            'n_pairs':     len(nd),
-            'n_stars':     len(multi),
-            'mean_norm':   mu,
-            'std_norm':    std,
-            'mean_raw':    float(np.mean(rd_c)),
-            'std_raw':     float(np.std(rd_c)),
-            'median_raw':  float(np.median(rd_c)),
-            'mad_raw':     float(np.median(np.abs(rd_c - np.median(rd_c)))),
-            'norm_mad':    nf,
-            'norm_std':    std,
+        results[surv]={
+            'norm_diffs':nd,'raw_diffs':rd,'norm_factor':nf,'mad':mad,
+            'n_pairs':len(nd),'n_stars':len(multi),'mean_norm':mu,'std_norm':std,
+            'mean_raw':float(np.mean(rd_c)),'std_raw':float(np.std(rd_c)),
+            'median_raw':float(np.median(rd_c)),
+            'mad_raw':float(np.median(np.abs(rd_c-np.median(rd_c)))),
+            'norm_mad':nf,'norm_std':std,
+            'n_err_ratio_skip':n_err_ratio_skip,
         }
-        log(f"  {surv:<12s}: {len(multi):>8,} stars {len(nd):>10,} pairs | "
-            f"normMAD={nf:.3f}  normStd={std:.3f}")
-
-    save_ckpt(ckpt, results)
+        log(f"  {surv:<12s}: {len(multi):>8,} stars {len(nd):>10,} pairs "
+            f"(skip_err_ratio={n_err_ratio_skip:,}) | normMAD={nf:.3f}")
+    save_ckpt(ckpt,results)
     return results
 
 
 # =============================================================================
-# PHASE 5: TCH METHOD (Sec 4.2)
+# PHASE 5: TCH METHOD
+# =============================================================================
+# FIX-4: Sanity checks; proper combined factor logic
 # =============================================================================
 def phase5_tch(cfg, survey_stars, dup_results):
-    ckpt = Path(cfg.checkpoint_dir) / "phase5_v5.pkl"
+    ckpt=Path(cfg.checkpoint_dir)/"phase5_v8b.pkl"
     if ckpt.exists():
-        log("Phase 5: Loading checkpoint")
-        return load_ckpt(ckpt)
+        log("Phase 5: Loading checkpoint"); return load_ckpt(ckpt)
+    log("\nPhase 5: TCH method...")
+    sb=_best_rv(survey_stars); surveys=sorted(sb.keys())
+    a95_fallback = getattr(cfg, 'a95_s_rvcor_factors', {}) or {}
 
-    log("\nPhase 5: TCH method (Sec 4.2)...")
-    sb      = _best_rv(survey_stars)
-    surveys = sorted(sb.keys())
+    # Pairwise ZP
+    pzp={}
+    for si,sj in combinations(surveys,2):
+        common=set(sb[si])&set(sb[sj])
+        if len(common)<cfg.min_stars_tch: continue
+        diffs=[sb[si][g][0]-sb[sj][g][0] for g in common
+               if np.isfinite(sb[si][g][0]) and np.isfinite(sb[sj][g][0])]
+        if len(diffs)>=cfg.min_stars_tch:
+            pzp[(si,sj)]=float(np.median(diffs))
 
-    # Simple pairwise ZP (median offset)
-    pzp = {}
-    for si, sj in combinations(surveys, 2):
-        common = set(sb[si]) & set(sb[sj])
-        if len(common) < cfg.min_stars_tch: continue
-        diffs = [sb[si][g][0] - sb[sj][g][0] for g in common
-                 if np.isfinite(sb[si][g][0]) and np.isfinite(sb[sj][g][0])]
-        if len(diffs) >= cfg.min_stars_tch:
-            pzp[(si, sj)] = float(np.median(diffs))
+    # Pairwise variances
+    pw={}
+    for si,sj in combinations(surveys,2):
+        common=set(sb[si])&set(sb[sj])
+        if len(common)<cfg.min_stars_tch: continue
+        zpc=pzp.get((si,sj),-pzp.get((sj,si),0.0) if (sj,si) in pzp else 0.0)
+        diffs=np.array([(sb[si][g][0]-sb[sj][g][0])-zpc for g in common
+                        if np.isfinite(sb[si][g][0]) and np.isfinite(sb[sj][g][0])])
+        if len(diffs)<cfg.min_stars_tch: continue
+        mad_raw=float(np.median(np.abs(diffs-np.median(diffs))))
+        sig_rob=1.4826*mad_raw; clip_thr=5.0*sig_rob if sig_rob>0 else np.inf
+        mask=np.abs(diffs-np.median(diffs))<=clip_thr
+        d_clean=diffs[mask]
+        if len(d_clean)<cfg.min_stars_tch: d_clean=diffs
+        mad_c=float(np.median(np.abs(d_clean-np.median(d_clean))))
+        var=(1.4826*mad_c)**2
 
-    # Pairwise variances (ZP-corrected)
-    pw = {}
-    for si, sj in combinations(surveys, 2):
-        common = set(sb[si]) & set(sb[sj])
-        if len(common) < cfg.min_stars_tch: continue
-        zpc = pzp.get((si, sj), -pzp.get((sj, si), 0) if (sj, si) in pzp else 0)
-        diffs = [(sb[si][g][0] - sb[sj][g][0]) - zpc for g in common
-                 if np.isfinite(sb[si][g][0]) and np.isfinite(sb[sj][g][0])]
-        if len(diffs) < cfg.min_stars_tch: continue
-        d   = np.array(diffs)
-        var = float(np.sum(d**2) / len(d))
-        pw[(si, sj)] = {'var': var, 'n': len(d), 'sigma': np.sqrt(var)}
-        log(f"  {si}-{sj}: {len(d):,} common, σ={np.sqrt(var):.3f} km/s")
+        # FIX-4: Flag suspiciously low variances
+        if var < 1e-6:
+            log(f"  WARNING: {si}-{sj}: σ²≈0 ({var:.2e}), likely same RV source — skipping pair")
+            continue
 
-    tch = {'pairwise': pw, 'survey_sigma': {}, 'norm_factors': {},
-           'triplets_used': {}}
+        pw[(si,sj)]={'var':var,'n':len(d_clean),'sigma':np.sqrt(var)}
+        log(f"  {si}-{sj}: {len(d_clean):,} clean, σ_robust={np.sqrt(var):.3f} km/s")
 
+    tch={'pairwise':pw,'survey_sigma':{},'norm_factors':{},'triplets_used':{}}
     for target in surveys:
-        partners = []
-        for (si, sj) in pw:
-            if si == target: partners.append(sj)
-            elif sj == target: partners.append(si)
-        ests = []
-        for p1, p2 in combinations(partners, 2):
-            keys = [tuple(sorted([target, p1])),
-                    tuple(sorted([target, p2])),
-                    tuple(sorted([p1, p2]))]
+        partners=[]
+        for (si,sj) in pw:
+            if si==target: partners.append(sj)
+            elif sj==target: partners.append(si)
+        ests=[]
+        for p1,p2 in combinations(partners,2):
+            keys=[tuple(sorted([target,p1])),tuple(sorted([target,p2])),tuple(sorted([p1,p2]))]
             if not all(k in pw for k in keys): continue
-            s2 = (pw[keys[0]]['var'] + pw[keys[1]]['var'] - pw[keys[2]]['var']) / 2
-            nm = min(pw[k]['n'] for k in keys)
-            ests.append((s2, nm))
-
+            s2=(pw[keys[0]]['var']+pw[keys[1]]['var']-pw[keys[2]]['var'])/2
+            nm=min(pw[k]['n'] for k in keys); ests.append((s2,nm))
         if not ests: continue
-        valid = [(s, n) for s, n in ests if s > 0]
-        sig   = (np.sqrt(sum(s*n for s,n in valid) / sum(n for _,n in valid))
-                 if valid else 0.0)
-        errs  = [d[1] for d in sb[target].values()
-                 if np.isfinite(d[1]) and d[1] > 0]
-        me    = float(np.median(errs)) if errs else np.nan
-        nf    = sig / me if (np.isfinite(me) and me > 0 and sig > 0) else np.nan
-
-        tch['survey_sigma'][target]  = sig
-        tch['norm_factors'][target]  = nf
+        valid=[(s,n) for s,n in ests if s>0]
+        sig=(np.sqrt(sum(s*n for s,n in valid)/sum(n for _,n in valid)) if valid else 0.0)
+        errs=[d[1] for d in sb[target].values() if np.isfinite(d[1]) and d[1]>0]
+        me=float(np.median(errs)) if errs else np.nan
+        nf=sig/me if (np.isfinite(me) and me>0 and sig>0) else np.nan
+        tch['survey_sigma'][target]=sig; tch['norm_factors'][target]=nf
         log(f"  TCH {target:<12s}: σ={sig:.3f} km/s  medErr={me:.3f}  f={nf:.3f}")
 
-    # Combined factors
-    # ── Strategy ────────────────────────────────────────────────────────────
-    # 1. If DUP N_pairs >= MIN_DUP_PAIRS_SIGNIFICANT  → DUP is reliable
-    # 2. If TCH also available → use average of both (most robust)
-    # 3. Only DUP available and reliable → use DUP
-    # 4. Only TCH available → use TCH
-    # 5. DUP unreliable (too few pairs) and no TCH → use TCH if available, else 1.0
-    # This keeps all surveys in the analysis while distinguishing reliability.
+    # ── Combined factor — per paper Table 4 logic ──────────────────────────
+    # FIX-4: Sanity checks on factor plausibility
     log("\n  === COMBINED NORMALIZATION FACTORS ===")
-    combined = {}
-    reliability = {}
+    log(f"  {'Survey':<14s}  {'DUP_f':>7s}  {'TCH_f':>7s}  {'A95_f':>7s}  {'Combined':>9s}  Method")
+    log("  "+"-"*74)
+    combined={}; reliability={}
     for surv in surveys:
-        df_val  = dup_results.get(surv, {}).get('norm_factor')
-        df_n    = dup_results.get(surv, {}).get('n_pairs', 0)
-        tf_val  = tch['norm_factors'].get(surv)
-        dup_ok  = (df_val is not None and np.isfinite(df_val)
-                   and df_n >= MIN_DUP_PAIRS_SIGNIFICANT)
-        tch_ok  = (tf_val is not None and np.isfinite(tf_val) and tf_val > 0)
+        df_val=dup_results.get(surv,{}).get('norm_factor')
+        df_n  =dup_results.get(surv,{}).get('n_pairs',0)
+        tf_val=tch['norm_factors'].get(surv)
+        a95_val=a95_fallback.get(surv)
 
-        if dup_ok and tch_ok:
-            f      = (df_val + tf_val) / 2.0
-            method = f'avg(DUP={df_val:.3f}, TCH={tf_val:.3f})'
-        elif dup_ok:
-            f      = df_val
-            method = f'DUP={df_val:.3f} (N_pairs={df_n:,})'
-        elif tch_ok:
-            f      = tf_val
-            method = f'TCH={tf_val:.3f}'
-        else:
-            f      = 1.0
-            method = 'default=1.0 (insufficient data)'
+        # FIX-4: Plausibility checks
+        dup_ok=(df_val is not None and np.isfinite(df_val)
+                and MIN_PLAUSIBLE_FACTOR < df_val < MAX_PLAUSIBLE_FACTOR
+                and df_n>=MIN_DUP_PAIRS_SIGNIFICANT)
+        tch_ok=(tf_val is not None and np.isfinite(tf_val)
+                and MIN_PLAUSIBLE_FACTOR < tf_val < MAX_PLAUSIBLE_FACTOR)
+        a95_ok=(a95_val is not None and np.isfinite(a95_val)
+                and MIN_PLAUSIBLE_FACTOR < a95_val < MAX_PLAUSIBLE_FACTOR)
 
-        combined[surv]     = f
-        reliability[surv]  = method
-        log(f"    {surv:<14s}: factor = {f:.3f}  [{method}]")
+        if surv in DUP_ONLY_SURVEYS:
+            if dup_ok: f,method=df_val,'DUP only'
+            elif a95_ok: f,method=a95_val,'A95 fallback'
+            elif tch_ok: f,method=tf_val,'TCH fallback (DUP implausible)'
+            else: f,method=1.0,'default=1.0'
+        elif surv in TCH_ONLY_SURVEYS:
+            if tch_ok: f,method=tf_val,'TCH only'
+            elif a95_ok: f,method=a95_val,'A95 fallback'
+            else: f,method=1.0,'default=1.0'
+        elif surv in AVG_BOTH_SURVEYS:
+            if dup_ok and tch_ok: f,method=(df_val+tf_val)/2,'avg(DUP,TCH)'
+            elif dup_ok: f,method=df_val,'DUP only'
+            elif tch_ok: f,method=tf_val,'TCH only'
+            elif a95_ok: f,method=a95_val,'A95 fallback'
+            else: f,method=1.0,'default=1.0'
+        else:  # DESI, SDSS, etc.
+            if tch_ok: f,method=tf_val,'TCH preferred'
+            elif dup_ok: f,method=df_val,'DUP fallback'
+            elif a95_ok: f,method=a95_val,'A95 fallback'
+            else: f,method=1.0,'default=1.0'
 
-    tch['combined_factors'] = combined
-    tch['pairwise_zp']      = pzp
+        combined[surv]=f; reliability[surv]=method
+        ds=f"{df_val:.3f}" if df_val is not None and np.isfinite(df_val) else "  n/a "
+        ts_=f"{tf_val:.3f}" if tf_val is not None and np.isfinite(tf_val) else "  n/a "
+        as_=f"{a95_val:.3f}" if a95_val is not None and np.isfinite(a95_val) else "  n/a "
+        log(f"  {surv:<14s}  {ds:>7s}  {ts_:>7s}  {as_:>7s}  {f:>9.3f}  {method}")
 
-    save_ckpt(ckpt, tch)
+    tch['combined_factors']=combined; tch['pairwise_zp']=pzp
+    tch['reliability']=reliability
+    save_ckpt(ckpt,tch)
     return tch
 
 
 # =============================================================================
-# PHASE 6: GAIA INTERNAL CALIBRATION (Sec 5.1, Eq. 5-7)
+# PHASE 6: GAIA INTERNAL CALIBRATION
+# =============================================================================
+# FIX-5: Restore paper §5.1 exclusion rules (Eq5/6/7)
 # =============================================================================
 def phase6_gaia_cal(cfg, survey_stars, tch_results):
-    ckpt = Path(cfg.checkpoint_dir) / "phase6_v5.pkl"
+    ckpt=Path(cfg.checkpoint_dir)/"phase6_v8b.pkl"
     if ckpt.exists():
-        log("Phase 6: Loading checkpoint")
-        return load_ckpt(ckpt)
+        log("Phase 6: Loading checkpoint"); return load_ckpt(ckpt)
 
-    log("\nPhase 6: Gaia internal calibration (Sec 5.1)...")
-    sb = _best_rv(survey_stars)
-
+    log("\nPhase 6: Gaia internal calibration (paper §5.1 rules)...")
+    sb=_best_rv(survey_stars)
     if 'GAIA' not in sb:
         log("  GAIA not found, skipping Phase 6")
-        return {'coefficients': {}, 'corrections': {}, 'diag_data': {}}
+        return {'coefficients':{},'per_survey':{},'zp_shifts':{}}
 
-    gaia_data = sb['GAIA']
+    gaia_data=sb['GAIA']
+    results={'coefficients':{},'per_survey':{},'zp_shifts':{}}
 
-    def wls_fit(x, y, w, degree=2):
-        valid = np.isfinite(x) & np.isfinite(y) & np.isfinite(w) & (w > 0)
-        x, y, w = x[valid], y[valid], w[valid]
-        if len(x) < 10: return None, None
-        coeffs    = np.polyfit(x, y, degree, w=np.sqrt(w))
-        residuals = y - np.polyval(coeffs, x)
-        return coeffs, {'x': x, 'y': y, 'resid': residuals, 'n': len(x)}
+    # FIX-5: Paper exclusion rules
+    all_non_gaia = [s for s in sb if s != 'GAIA']
+    eq5_surveys = [s for s in all_non_gaia if s not in EQ5_GMAG_EXCLUDE]
+    eq6_surveys = [s for s in all_non_gaia if s not in EQ6_FEH_EXCLUDE]
+    eq7_surveys = [s for s in all_non_gaia if s in EQ7_TEFF_SURVEYS]
 
-    results = {'coefficients': {}, 'per_survey': {}, 'diag_data': {}}
+    cal_specs=[
+        ('Gmag', eq5_surveys, 2, 'Eq5'),
+        ('FeH',  eq6_surveys, 1, 'Eq6'),
+        ('Teff', eq7_surveys, 2, 'Eq7'),
+    ]
 
-    for cal_param, cal_surveys, degree, eq_name in [
-        ('Gmag', ['APOGEE', 'GALAH', 'GES', 'RAVE'], 2, 'Eq5'),
-        ('FeH',  ['APOGEE', 'GALAH', 'GES'],         1, 'Eq6'),
-        ('Teff', ['APOGEE'],                          2, 'Eq7'),
-    ]:
+    for cal_param, cal_surveys, degree, eq_name in cal_specs:
         log(f"\n  --- {eq_name}: ΔRV vs {cal_param} ---")
-        # We bin per survey then pool the bins for a single global fit.
-        # This prevents surveys with millions of stars from dominating the
-        # polynomial shape vs surveys with only thousands.
-        all_bin_x, all_bin_y, all_bin_w = [], [], []
+        log(f"      Surveys used: {cal_surveys}")
+        per_surv_coeffs=[]
+        zp_row={}
 
         for surv in cal_surveys:
             if surv not in sb: continue
-            sd     = sb[surv]
-            common = set(gaia_data) & set(sd)
-            if len(common) < cfg.min_stars_zp: continue
+            sd=sb[surv]
+            common=set(gaia_data)&set(sd)
+            if len(common)<cfg.min_stars_zp: continue
 
-            drvs   = [gaia_data[g][0] - sd[g][0] for g in common
-                      if np.isfinite(gaia_data[g][0]) and np.isfinite(sd[g][0])]
-            zp_shift = np.median(drvs) if drvs else 0.0
+            # Collect ΔRV with parameter values
+            all_drv, all_pval = [], []
+            for g in common:
+                rv_g, _, pr_g = gaia_data[g]
+                rv_s, _, pr_s = sd[g]
+                if not (np.isfinite(rv_g) and np.isfinite(rv_s)): continue
+                pval = pr_s.get(cal_param, pr_g.get(cal_param, np.nan))
+                if not np.isfinite(pval): continue
+                all_drv.append(rv_g - rv_s)
+                all_pval.append(pval)
 
+            if len(all_drv) < cfg.min_stars_zp:
+                log(f"    {surv}: {len(all_drv)} stars with {cal_param}, too few")
+                continue
+
+            all_drv = np.array(all_drv)
+            all_pval = np.array(all_pval)
+
+            # ZP shift = median(ΔRV) — paper §5.1
+            zp_shift = float(np.median(all_drv))
+            zp_row[surv] = zp_shift
+
+            # ZP-subtracted ΔRV with weights
             xs, ys, ws = [], [], []
             for g in common:
                 rv_g, err_g, pr_g = gaia_data[g]
@@ -1159,7 +1194,7 @@ def phase6_gaia_cal(cfg, survey_stars, tch_results):
                 if not (np.isfinite(rv_g) and np.isfinite(rv_s)): continue
                 pval = pr_s.get(cal_param, pr_g.get(cal_param, np.nan))
                 if not np.isfinite(pval): continue
-                drv      = (rv_g - rv_s) - zp_shift
+                drv = (rv_g - rv_s) - zp_shift
                 comb_err = (np.sqrt(err_g**2 + err_s**2)
                             if (np.isfinite(err_g) and np.isfinite(err_s)) else 1.0)
                 comb_err = max(comb_err, 0.01)
@@ -1168,599 +1203,466 @@ def phase6_gaia_cal(cfg, survey_stars, tch_results):
             if len(xs) < 50: continue
             xs, ys, ws = np.array(xs), np.array(ys), np.array(ws)
 
-            # ── KEY FIX: bin the data, fit to medians only ─────────────────
-            n_bins = min(40, max(15, len(xs) // 300))
-            lo, hi = np.percentile(xs, 1), np.percentile(xs, 99)
-            be     = np.linspace(lo, hi, n_bins + 1)
-            bc     = 0.5 * (be[:-1] + be[1:])
-            for j in range(n_bins):
-                m = (xs >= be[j]) & (xs < be[j+1])
-                if m.sum() < cfg.min_bin_count: continue
-                all_bin_x.append(bc[j])
-                all_bin_y.append(float(np.median(ys[m])))
-                all_bin_w.append(float(m.sum()))   # weight = N per bin
-
-            # Per-survey raw storage for diagnostics (kept for plot overlay)
             results['per_survey'][f'{eq_name}_{surv}'] = {
-                'xs': xs, 'ys': ys, 'zp': zp_shift,
-                'n': len(xs), 'surv': surv
-            }
-            log(f"    {surv}: N_raw={len(xs):,}  N_bins={n_bins}  "
-                f"ZP_shift={zp_shift:+.3f} km/s")
+                'xs':xs,'ys':ys,'ws':ws,'zp':zp_shift,'n':len(xs),'surv':surv,
+                'param':cal_param,'eq_name':eq_name}
 
-        if len(all_bin_x) >= degree + 2:
-            bx = np.array(all_bin_x)
-            by = np.array(all_bin_y)
-            bw = np.array(all_bin_w)
-            valid = np.isfinite(bx) & np.isfinite(by)
-            bx, by, bw = bx[valid], by[valid], bw[valid]
-            # WLS fit to binned medians — polynomial anchored to where data exists
-            coeffs_g = np.polyfit(bx, by, degree, w=np.sqrt(bw))
-            results['coefficients'][eq_name] = coeffs_g.tolist()
-            log(f"    GLOBAL (bins): N_bins={len(bx)}  "
-                f"coeffs={np.array2string(coeffs_g, precision=6)}")
-            results['diag_data'][cal_param] = {
-                'bin_x':   bx,   'bin_y':   by,   'bin_w':   bw,
-                'coeffs':  coeffs_g,
-                'eq_name': eq_name,
-            }
+            # Bin data → fit polynomial to binned medians
+            n_bins = min(40, max(15, len(xs)//300))
+            lo, hi = np.percentile(xs, 1), np.percentile(xs, 99)
+            be = np.linspace(lo, hi, n_bins+1)
+            bc = 0.5*(be[:-1]+be[1:])
+            bin_x, bin_y, bin_w = [], [], []
+            for j in range(n_bins):
+                m = (xs>=be[j]) & (xs<be[j+1])
+                if m.sum() < cfg.min_bin_count: continue
+                bin_x.append(bc[j])
+                bin_y.append(float(np.median(ys[m])))
+                bin_w.append(float(m.sum()))
+
+            if len(bin_x) < degree+2: continue
+            bx, by, bw = np.array(bin_x), np.array(bin_y), np.array(bin_w)
+            ok = np.isfinite(bx) & np.isfinite(by)
+            bx, by, bw = bx[ok], by[ok], bw[ok]
+            coeffs = np.polyfit(bx, by, degree, w=np.sqrt(bw))
+            per_surv_coeffs.append((coeffs, len(xs)))
+
+            log(f"    {surv}: N={len(xs):,}  N_bins={len(bx)}"
+                f"  ZP={zp_shift:+.3f}  coeffs={np.array2string(coeffs,precision=5)}")
+
+        results['zp_shifts'][eq_name] = zp_row
+
+        if not per_surv_coeffs:
+            log(f"    {eq_name}: no surveys produced valid fits"); continue
+
+        # Global = weighted mean of per-survey coefficients
+        coeffs_arr = np.array([c for c,_ in per_surv_coeffs])
+        weights_arr = np.array([n for _,n in per_surv_coeffs], dtype=float)
+        global_coeffs = (coeffs_arr * weights_arr[:,None]).sum(axis=0) / weights_arr.sum()
+        results['coefficients'][eq_name] = global_coeffs.tolist()
+        log(f"    {eq_name} GLOBAL (weighted mean of {len(per_surv_coeffs)} surveys): "
+            f"coeffs={np.array2string(global_coeffs,precision=6)}")
 
     save_ckpt(ckpt, results)
     return results
 
 
 # =============================================================================
-# PHASE 7: SURVEY CALIBRATION (Sec 5.2, Eq. 8)
+# PHASE 7: SURVEY CALIBRATION (Eq.8)  (unchanged logic from v7)
 # =============================================================================
 def phase7_survey_cal(cfg, survey_stars, gaia_cal):
-    """
-    Fit ΔRV = f(Teff², Teff, logg, [Fe/H], S/N, RV) per survey.
-    Splits: dwarfs / giants for most surveys; cool / hot only for LAMOST.
-    NOTE: Dwarf/giant/hot/cold splits are ONLY here in Phase 7 (not in DUP/TCH).
-    """
-    ckpt = Path(cfg.checkpoint_dir) / "phase7_v5.pkl"
+    ckpt=Path(cfg.checkpoint_dir)/"phase7_v8.pkl"
     if ckpt.exists():
-        log("Phase 7: Loading checkpoint")
-        return load_ckpt(ckpt)
-
-    log("\nPhase 7: Survey calibration (Sec 5.2, Eq. 8)...")
-    sb = _best_rv(survey_stars)
-
+        log("Phase 7: Loading checkpoint"); return load_ckpt(ckpt)
+    log("\nPhase 7: Survey calibration (Eq.8)...")
+    sb=_best_rv(survey_stars)
     if 'GAIA' not in sb:
-        log("  GAIA not found, skipping Phase 7")
-        return {}
+        log("  GAIA not found, skipping"); return {}
 
-    gaia       = sb['GAIA']
-    gaia_coeffs = gaia_cal.get('coefficients', {})
+    gaia=sb['GAIA']; gaia_coeffs=gaia_cal.get('coefficients',{})
 
     def corrected_gaia_rv(gid):
-        rv_g, err_g, pr = gaia[gid]
-        corr = 0.0
+        rv_g,err_g,pr=gaia[gid]; corr=0.0
         if 'Eq5' in gaia_coeffs:
-            gmag = pr.get('Gmag', np.nan)
-            if np.isfinite(gmag): corr += np.polyval(gaia_coeffs['Eq5'], gmag)
+            gmag=pr.get('Gmag',np.nan)
+            if np.isfinite(gmag): corr+=np.polyval(gaia_coeffs['Eq5'],gmag)
         if 'Eq6' in gaia_coeffs:
-            feh = pr.get('FeH', np.nan)
-            if np.isfinite(feh): corr += np.polyval(gaia_coeffs['Eq6'], feh)
+            feh=pr.get('FeH',np.nan)
+            if np.isfinite(feh): corr+=np.polyval(gaia_coeffs['Eq6'],feh)
         if 'Eq7' in gaia_coeffs:
-            teff = pr.get('Teff', np.nan)
-            if np.isfinite(teff): corr += np.polyval(gaia_coeffs['Eq7'], teff)
-        return rv_g - corr, err_g
+            teff=pr.get('Teff',np.nan)
+            if np.isfinite(teff): corr+=np.polyval(gaia_coeffs['Eq7'],teff)
+        return rv_g-corr, err_g
 
-    results = {}
-
+    results={}
     for surv in sorted(sb.keys()):
-        if surv == 'GAIA': continue
-        sd     = sb[surv]
-        common = set(gaia) & set(sd)
-        if len(common) < 50:
-            log(f"  {surv}: {len(common)} common stars, skip"); continue
-
-        rows = []
+        if surv=='GAIA': continue
+        sd=sb[surv]; common=set(gaia)&set(sd)
+        if len(common)<50: continue
+        rows=[]
         for g in common:
-            rv_g_corr, err_g = corrected_gaia_rv(g)
-            rv_s, err_s, pr_s = sd[g]
-            if not (np.isfinite(rv_g_corr) and np.isfinite(rv_s)): continue
-            drv      = rv_g_corr - rv_s
-            comb_err = (np.sqrt(err_g**2 + err_s**2)
-                        if (np.isfinite(err_g) and np.isfinite(err_s)) else 1.0)
-            comb_err = max(comb_err, 0.01)
-            rows.append({
-                'drv':   drv,
-                'weight': 1.0/comb_err**2,
-                'Teff':  pr_s.get('Teff',  np.nan),
-                'logg':  pr_s.get('logg',  np.nan),
-                'FeH':   pr_s.get('FeH',   np.nan),
-                'SNR':   pr_s.get('SNR',   np.nan),
-                'RV':    rv_s,
-                'Gmag':  pr_s.get('Gmag',  np.nan),
-            })
+            rv_g_c,err_g=corrected_gaia_rv(g); rv_s,err_s,pr_s=sd[g]
+            if not (np.isfinite(rv_g_c) and np.isfinite(rv_s)): continue
+            drv=rv_g_c-rv_s
+            ce=(np.sqrt(err_g**2+err_s**2) if (np.isfinite(err_g) and np.isfinite(err_s)) else 1.0)
+            ce=max(ce,0.01)
+            rows.append({'drv':drv,'weight':1.0/ce**2,
+                         'Teff':pr_s.get('Teff',np.nan),'logg':pr_s.get('logg',np.nan),
+                         'FeH':pr_s.get('FeH',np.nan),'SNR':pr_s.get('SNR',np.nan),
+                         'RV':rv_s,'Gmag':pr_s.get('Gmag',np.nan)})
+        if len(rows)<50: continue
+        df=pd.DataFrame(rows); log(f"  {surv}: {len(df):,} stars for Eq.8")
 
-        if len(rows) < 50:
-            log(f"  {surv}: {len(rows)} valid rows, skip"); continue
-
-        df = pd.DataFrame(rows)
-        log(f"  {surv}: {len(df):,} stars for Eq.8")
-
-        # Splits — dwarfs/giants for most; cool/hot ONLY for LAMOST
-        splits = []
-        if surv == 'LAMOST':
-            lam_cool = df[df['Teff'] < 6200].copy()
-            lam_hot  = df[df['Teff'] >= 6200].copy()
-            if len(lam_cool) > 50: splits.append(('cool_Teff<6200K', lam_cool))
-            if len(lam_hot)  > 50: splits.append(('hot_Teff>=6200K', lam_hot))
+        splits=[]
+        if surv=='LAMOST':
+            lc=df[df['Teff']<6200].copy(); lh=df[df['Teff']>=6200].copy()
+            if len(lc)>50: splits.append(('cool_Teff<6200K',lc))
+            if len(lh)>50: splits.append(('hot_Teff>=6200K',lh))
         else:
-            dwarfs = df[df['logg'] > 3.5].copy()
-            giants = df[df['logg'] <= 3.5].copy()
-            if len(dwarfs) > 50: splits.append(('dwarfs_logg>3.5',  dwarfs))
-            if len(giants) > 50: splits.append(('giants_logg<=3.5', giants))
+            dw=df[df['logg']>3.5].copy(); gi=df[df['logg']<=3.5].copy()
+            if len(dw)>50: splits.append(('dwarfs_logg>3.5',dw))
+            if len(gi)>50: splits.append(('giants_logg<=3.5',gi))
+        if not splits: splits=[('all',df)]
 
-        if not splits: splits = [('all', df)]
-
-        surv_results = {'diag': df, 'fits': {}}
-
-        for split_name, sdf in splits:
-            features, feat_names = [], []
-            for fname, col, use_sq in [
-                ('Teff2','Teff',True), ('Teff','Teff',False),
-                ('logg','logg',False), ('FeH','FeH',False),
-                ('SNR','SNR',False), ('RV','RV',False)
-            ]:
-                vals = sdf[col].values if col in sdf.columns else np.full(len(sdf), np.nan)
-                if use_sq: vals = vals**2
-                if np.sum(np.isfinite(vals)) > len(sdf)*0.3:
-                    features.append(np.where(np.isfinite(vals), vals, 0))
+        surv_results={'diag':df,'fits':{}}
+        for split_name,sdf in splits:
+            features,feat_names=[],[]
+            for fname,col,use_sq in [
+                ('Teff2','Teff',True),('Teff','Teff',False),
+                ('logg','logg',False),('FeH','FeH',False),
+                ('SNR','SNR',False),('RV','RV',False)]:
+                vals=sdf[col].values if col in sdf.columns else np.full(len(sdf),np.nan)
+                if use_sq: vals=vals**2
+                if np.sum(np.isfinite(vals))>len(sdf)*0.3:
+                    features.append(np.where(np.isfinite(vals),vals,0))
                     feat_names.append(fname)
-
             if not features: continue
-            X = np.column_stack(features + [np.ones(len(sdf))])
-            feat_names.append('intercept')
-            y  = sdf['drv'].values
-            w  = sdf['weight'].values
-            ok = np.isfinite(y) & np.isfinite(w) & (w > 0)
-            X, y, w = X[ok], y[ok], w[ok]
-            if len(y) < 20: continue
-
+            X=np.column_stack(features+[np.ones(len(sdf))]); feat_names.append('intercept')
+            y=sdf['drv'].values; w=sdf['weight'].values
+            ok=np.isfinite(y)&np.isfinite(w)&(w>0)
+            X,y,w=X[ok],y[ok],w[ok]
+            if len(y)<20: continue
             try:
-                W      = np.diag(w)
-                coeffs = np.linalg.solve(X.T @ W @ X, X.T @ W @ y)
-                resid  = y - X @ coeffs
-                chi2   = np.sum(w * resid**2) / (len(y) - len(coeffs))
-                surv_results['fits'][split_name] = {
-                    'coeffs':     coeffs.tolist(),
-                    'feat_names': feat_names,
-                    'n':          len(y),
-                    'chi2':       chi2,
-                    'zp_before':  float(np.median(y)),
-                    'zp_after':   float(np.median(resid)),
-                }
-                log(f"    {surv}/{split_name}: N={len(y):,}  chi2={chi2:.3f}  "
-                    f"ZP: {np.median(y):+.3f} → {np.median(resid):+.3f} km/s")
+                XtWX=(X.T*(w[None,:]))@X; XtWy=X.T@(w*y); coeffs=np.linalg.solve(XtWX,XtWy)
+                resid=y-X@coeffs; chi2=np.sum(w*resid**2)/(len(y)-len(coeffs))
+                surv_results['fits'][split_name]={
+                    'coeffs':coeffs.tolist(),'feat_names':feat_names,'n':len(y),
+                    'chi2':chi2,'zp_before':float(np.median(y)),'zp_after':float(np.median(resid))}
+                log(f"    {surv}/{split_name}: N={len(y):,}  chi2={chi2:.3f}"
+                    f"  ZP: {np.median(y):+.3f} → {np.median(resid):+.3f} km/s")
             except Exception as e:
                 log(f"    {surv}/{split_name}: fit failed: {e}")
+        results[surv]=surv_results
 
-        results[surv] = surv_results
-
-    save_ckpt(ckpt, results)
+    save_ckpt(ckpt,results)
     return results
 
 
 # =============================================================================
-# PHASE 8: NORMALIZED ERRORS PER UNIQUE STAR (Fig 13)
+# PHASE 8: NORMALIZED ERRORS
 # =============================================================================
 def phase8_norm_errors(cfg, survey_stars, tch_results):
-    """
-    For each survey, for each UNIQUE STAR (group_id):
-      1. Compute weighted-average error across all that star's measurements.
-      2. Multiply by the survey's combined normalization factor.
-    This gives the normalized error per unique star — not per raw FITS row.
-
-    WHY this is correct:
-      - The normalization factor (from DUP/TCH) corrects for systematic over/under-
-        estimation of the reported errors by the survey pipeline.
-      - We plot per unique star so Gaia shows ~32M, not 38.9M.
-      - ZP correction affects the RV, not the error. The normalization factor
-        indirectly encodes systematic ZP-related scatter if ZP correlates with error.
-    """
-    ckpt = Path(cfg.checkpoint_dir) / "phase8_v5.pkl"
+    ckpt=Path(cfg.checkpoint_dir)/"phase8_v8.pkl"
     if ckpt.exists():
-        log("Phase 8: Loading checkpoint")
-        return load_ckpt(ckpt)
-
+        log("Phase 8: Loading checkpoint"); return load_ckpt(ckpt)
     log("\nPhase 8: Normalized RV errors (per unique star)...")
-    cf     = tch_results.get('combined_factors', {})
-    result = {}
-
+    cf=tch_results.get('combined_factors',{}); result={}
     for surv in sorted(survey_stars.keys()):
-        f    = cf.get(surv, 1.0)
-        errs = []
-        for gid, sdata in survey_stars[surv].items():
-            obs = sdata['rvs']
-            # Weighted-average error for THIS unique star
-            es  = np.array([e for _, e in obs])
-            ok  = np.isfinite(es) & (es > 0)
+        f=cf.get(surv,1.0); errs=[]
+        for gid,sdata in survey_stars[surv].items():
+            obs=sdata['rvs']; es=np.array([e for _,e in obs])
+            ok=np.isfinite(es)&(es>0)
             if not np.any(ok): continue
-            if np.sum(ok) == 1:
-                w_err = float(es[ok][0])
-            else:
-                w = 1.0 / es[ok]**2
-                w_err = float(1.0 / np.sqrt(np.sum(w)))   # combined error
-            errs.append(w_err * f)   # normalized error = combined_err × norm_factor
-
+            w_err=(float(es[ok][0]) if np.sum(ok)==1
+                   else float(1.0/np.sqrt(np.sum(1.0/es[ok]**2))))
+            errs.append(w_err*f)
         if errs:
-            ea = np.array(errs)
-            result[surv] = {
-                'errors': ea,
-                'factor': f,
-                'median': float(np.median(ea)),
-                'n':      len(ea),           # ← unique stars, not rows
-            }
-            log(f"  {surv:<14s}: factor={f:.3f}  "
-                f"median_norm_err={np.median(ea):.3f} km/s  "
-                f"N_unique={len(ea):,}")
-
-    save_ckpt(ckpt, result)
+            ea=np.array(errs)
+            result[surv]={'errors':ea,'factor':f,
+                          'median':float(np.median(ea)),'n':len(ea)}
+            log(f"  {surv:<14s}: factor={f:.3f}  median_norm_err={np.median(ea):.3f}  N={len(ea):,}")
+    save_ckpt(ckpt,result)
     return result
 
 
 # =============================================================================
-# COLORS
+# PLOTTING HELPERS
 # =============================================================================
-COLORS = {
-    'GAIA':   '#1f77b4',
-    'APOGEE': '#2ca02c',
-    'LAMOST': '#d62728',
-    'RAVE':   '#ff7f0e',
-    'GALAH':  '#9467bd',
-    'GES':    '#8c564b',
-    'DESI':   '#e377c2',
-    'SDSS':   '#17becf',   # SDSS-BOSS + SEGUE merged
-}
-def _c(s): return COLORS.get(s, '#333333')
+SIX_PARAMS=[('Gmag','G mag'),('RV','RV (km/s)'),('Teff','T$_{eff}$ (K)'),
+            ('logg','log g (dex)'),('FeH','[Fe/H] (dex)'),('SNR','S/N')]
+PARAM_TO_EQ={'Gmag':'Eq5','FeH':'Eq6','Teff':'Eq7'}
 
 
 # =============================================================================
-# PHASE 9: PLOTS + CSV
+# PHASE 9: ALL PLOTS + CSV  (FIX-6: paper-quality figures)
 # =============================================================================
-def phase9_plots(cfg, dup_results, tch_results, gaia_cal, survey_cal, nerr):
+def phase9_plots(cfg, dup_results, tch_results, gaia_cal, survey_cal,
+                 nerr, survey_stars):
     log("\nPhase 9: Generating plots and tables...")
-    out = Path(cfg.output_dir)
+    out=Path(cfg.output_dir)
 
-    # -----------------------------------------------------------------------
-    # Fig 6: DUP Normalized ΔRV/σ distributions
-    # -----------------------------------------------------------------------
+    # ── Fig 6: DUP normalized ΔRV/σ distributions (paper Fig 6) ───────────
     log("  Fig 6: DUP normalized differences...")
-    fig, ax = plt.subplots(figsize=(12, 7))
-    bins = np.linspace(-8, 8, 120)
-    bc   = 0.5 * (bins[:-1] + bins[1:])
-    xg   = np.linspace(-8, 8, 500)
-    ax.plot(xg, norm.pdf(xg, 0, 1), 'k--', lw=2, alpha=0.5, label='N(0,1)')
-    csv1 = {'bin_center': bc}
-
+    fig,ax=plt.subplots(figsize=(10,6))
+    bins=np.linspace(-15,15,160); bc=0.5*(bins[:-1]+bins[1:])
+    xg=np.linspace(-15,15,500)
+    ax.plot(xg,norm.pdf(xg,0,1),'k--',lw=2,alpha=0.5,label='N(0,1)')
+    csv1={'bin_center':bc}
     for s in sorted(dup_results.keys()):
-        dr  = dup_results[s]
-        nd  = dr['norm_diffs']
-        ndp = nd[(nd >= -8) & (nd <= 8)]
-        if len(ndp) < 50: continue
-        c, _ = np.histogram(ndp, bins=bins, density=True)
-        csv1[s] = c
-        ax.hist(bins[:-1], bins, weights=c, histtype='step', lw=2,
-                color=_c(s), alpha=0.85,
-                label=f"{s}  (N={len(ndp):,}, normMAD={dr['norm_mad']:.2f})")
-
-    ax.set_xlim(-8, 8)
-    ax.set_xlabel(r'$\Delta$RV / $\sqrt{\sigma_1^2+\sigma_2^2}$', fontsize=14)
-    ax.set_ylabel('Normalized density', fontsize=14)
-    ax.set_title('DUP Method: Normalized RV Differences [Sec 4.1, Fig 6]', fontsize=13)
-    ax.legend(fontsize=9, loc='upper right')
-    ax.grid(True, alpha=0.3, ls='--')
+        dr=dup_results[s]; nd=dr['norm_diffs']
+        ndp=nd[(nd>=-15)&(nd<=15)]
+        if len(ndp)<50: continue
+        c,_=np.histogram(ndp,bins=bins,density=True)
+        csv1[s]=c
+        ax.hist(bins[:-1],bins,weights=c,histtype='step',lw=2,color=_c(s),alpha=0.85,
+                label=f"{s}  (normMAD={dr['norm_mad']:.2f}, N={len(ndp):,})")
+    ax.set_xlim(-15,15)
+    ax.set_xlabel(r'$\Delta$RV / $\sqrt{\sigma_1^2+\sigma_2^2}$',fontsize=13)
+    ax.set_ylabel('Normalized density',fontsize=13)
+    ax.set_title('DUP Method: Normalized RV Differences (Paper Fig. 6)',fontsize=12)
+    ax.legend(fontsize=9,loc='upper right'); ax.grid(True,alpha=0.25,ls='--')
     fig.tight_layout()
-    for e in ['png', 'pdf']: fig.savefig(out/f'fig6.{e}', dpi=300)
+    for e in ['png','pdf']: fig.savefig(out/f'fig6.{e}',dpi=300)
     plt.close(fig)
-    pd.DataFrame(csv1).to_csv(out/'fig6_data.csv', index=False)
+    pd.DataFrame(csv1).to_csv(out/'fig6_data.csv',index=False)
 
-    # -----------------------------------------------------------------------
-    # Fig 13: Normalized RV error per unique star — ADAPTIVE BINS
-    # -----------------------------------------------------------------------
-    log("  Fig 13: Normalized RV errors (per unique star, adaptive bins)...")
-    fig, ax = plt.subplots(figsize=(12, 7))
-    csv4 = {}
-
-    for s in sorted(nerr.keys()):
-        ea = nerr[s]['errors']
-        ep = ea[(ea >= 0) & (ea <= 4)]
-        if len(ep) < 20: continue
-
-        # Adaptive bins: sqrt(N) capped [30, 120] → NO spikes for small N
-        be  = adaptive_bins(len(ep), lo=0.0, hi=4.0)
-        bce = 0.5 * (be[:-1] + be[1:])
-        c, _ = np.histogram(ep, bins=be, density=True)
-
-        if 'bin_center' not in csv4:
-            csv4['bin_center'] = bce   # use first survey's bin centres (approx)
-        csv4[s] = c if len(c) == len(csv4.get('bin_center',c)) else c
-
-        ax.hist(be[:-1], be, weights=c, histtype='step', lw=2,
-                color=_c(s), alpha=0.85,
-                label=(f"{s}  (med={nerr[s]['median']:.2f} km/s, "
-                       f"N={nerr[s]['n']:,} unique stars, "
-                       f"f={nerr[s]['factor']:.3f})"))
-
-    ax.set_xlim(0, 4)
-    ax.set_xlabel('Normalized RV error  [original err × norm_factor]  (km/s)', fontsize=13)
-    ax.set_ylabel('Density', fontsize=13)
-    ax.set_title(
-        'Normalized RV Error Distributions [Fig 13]\n'
-        '(per unique star, weighted-avg error × DUP/TCH normalization factor)',
-        fontsize=12)
-    ax.legend(fontsize=9, loc='upper right')
-    ax.grid(True, alpha=0.3, ls='--')
-    fig.tight_layout()
-    for e in ['png', 'pdf']: fig.savefig(out/f'fig13.{e}', dpi=300)
-    plt.close(fig)
-    if csv4: pd.DataFrame(csv4).to_csv(out/'fig13_data.csv', index=False)
-
-    # -----------------------------------------------------------------------
-    # Gaia calibration diagnostic plots (ΔRV vs Gmag, [Fe/H], Teff)
-    # ΔRV = RV_Gaia − RV_survey  (calibrating Gaia to ground-based frame)
-    # Fit is to binned medians only — polynomial is NOT extrapolated beyond data.
-    # -----------------------------------------------------------------------
-    diag = gaia_cal.get('diag_data', {})
-    per_surv = gaia_cal.get('per_survey', {})
-
-    for pname, pdata in diag.items():
-        log(f"  Gaia cal plot: ΔRV vs {pname}...")
-        coeffs  = pdata['coeffs']
-        bx      = pdata['bin_x']
-        by      = pdata['bin_y']
-        bw      = pdata['bin_w']
-        corrected_bins = by - np.polyval(coeffs, bx)
-
-        # ── Individual survey medians for overlay ──────────────────────────
-        eq_name = pdata.get('eq_name', '')
-        surv_curves = {}   # surv → (bin_x, bin_med_before, bin_med_after)
-        for key, sv in per_surv.items():
-            if not key.startswith(eq_name): continue
-            surv_name = sv.get('surv', key.replace(eq_name+'_',''))
-            xs_ = sv.get('xs'); ys_ = sv.get('ys')
-            if xs_ is None or len(xs_) < 20: continue
-            zp_ = sv.get('zp', 0.0)
-            n_b = min(30, max(10, len(xs_) // 200))
-            lo_, hi_ = np.percentile(xs_, 2), np.percentile(xs_, 98)
-            be_ = np.linspace(lo_, hi_, n_b + 1)
-            bc_ = 0.5*(be_[:-1]+be_[1:])
-            med_b, med_a = [], []
-            for j in range(n_b):
-                m_ = (xs_ >= be_[j]) & (xs_ < be_[j+1])
-                if m_.sum() < cfg.min_bin_count:
-                    med_b.append(np.nan); med_a.append(np.nan); continue
-                y_b = float(np.median(ys_[m_]))
-                y_a = float(np.median((ys_ - np.polyval(coeffs, xs_))[m_]))
-                med_b.append(y_b); med_a.append(y_a)
-            surv_curves[surv_name] = (bc_, np.array(med_b), np.array(med_a))
-
-        # ── Figure: per-survey overlay (before only) + global fit ─────────
-        fig, axes = plt.subplots(1, 2, figsize=(16, 6))
-
-        for ax_i, (ax, show_after) in enumerate(zip(axes, [False, True])):
-            for surv_name, (bc_, mb_, ma_) in surv_curves.items():
-                vals = ma_ if show_after else mb_
-                ok_  = np.isfinite(vals)
-                ax.plot(bc_[ok_], vals[ok_], 'o-', ms=4, lw=1.5,
-                        color=_c(surv_name), alpha=0.85, label=surv_name)
-
-            # Global binned medians
-            ok_b = np.isfinite(by)
-            ok_a = np.isfinite(corrected_bins)
-            if show_after:
-                ax.plot(bx[ok_a], corrected_bins[ok_a], 'k^-', ms=6, lw=2,
-                        label='Global (after)', zorder=5)
-            else:
-                ax.plot(bx[ok_b], by[ok_b], 'ks-', ms=6, lw=2,
-                        label='Global (before)', zorder=5)
-                # Fit line — ONLY over data range
-                x_fit = np.linspace(bx.min(), bx.max(), 300)
-                ax.plot(x_fit, np.polyval(coeffs, x_fit), 'k--', lw=2,
-                        alpha=0.6, label='Polynomial fit')
-
-            ax.axhline(0, color='gray', ls=':', alpha=0.5)
-            ax.set_xlabel(pname, fontsize=13)
-            title_state = 'After calibration' if show_after else 'Before calibration'
-            ax.set_ylabel(r'$\Delta$RV = RV$_{\rm Gaia}$ − RV$_{\rm survey}$  (km/s)',
-                          fontsize=12)
-            ax.set_title(f'Gaia cal: ΔRV vs {pname} — {title_state}', fontsize=12)
-            # Clip x to data range only
-            ax.set_xlim(bx.min() - 0.05*(bx.max()-bx.min()),
-                        bx.max() + 0.05*(bx.max()-bx.min()))
-            ax.legend(fontsize=9); ax.grid(True, alpha=0.3, ls='--')
-
-        fig.suptitle(
-            f'Gaia Internal Calibration: ΔRV vs {pname}\n'
-            r'ΔRV = RV$_{\rm Gaia}$ − RV$_{\rm survey}$  '
-            '(fit to binned medians only, clipped to data range)',
-            fontsize=12)
+    # ── Fig 7: ΔRV histograms before/after ZP correction ─────────────────
+    log("  Fig 7: ΔRV histograms before/after ZP...")
+    sb=_best_rv(survey_stars)
+    if 'GAIA' in sb:
+        gaia_d=sb['GAIA']
+        fig,axes=plt.subplots(1,2,figsize=(16,7),sharey=False)
+        bins7=np.linspace(-20,20,160)
+        stats_rows=[]
+        for ax,after in zip(axes,[False,True]):
+            ax.axvline(0,color='k',ls=':',lw=1,alpha=0.4)
+            for surv in sorted(sb.keys()):
+                if surv=='GAIA': continue
+                common=set(gaia_d)&set(sb[surv])
+                drvs=np.array([gaia_d[g][0]-sb[surv][g][0] for g in common
+                               if np.isfinite(gaia_d[g][0]) and np.isfinite(sb[surv][g][0])])
+                if len(drvs)<30: continue
+                zp=float(np.median(drvs))
+                d_plot=drvs-zp if after else drvs
+                d_plot=d_plot[(d_plot>=-20)&(d_plot<=20)]
+                if len(d_plot)<10: continue
+                c,_=np.histogram(d_plot,bins=bins7,density=True)
+                ax.step(bins7[:-1],c,where='post',color=_c(surv),lw=1.8,alpha=0.85,
+                        label=f"{surv}  med={np.median(d_plot):+.2f}  MAD={np.median(np.abs(d_plot-np.median(d_plot))):.2f}")
+                if not after:
+                    stats_rows.append({'Survey':surv,'N':len(drvs),'Median_ZP':zp,
+                        'MAD':float(np.median(np.abs(drvs-zp)))})
+            title='Before ZP correction' if not after else 'After ZP correction'
+            ax.set_xlabel(r'$\Delta$RV = RV$_{\rm Gaia}$ − RV$_{\rm survey}$ (km/s)',fontsize=11)
+            ax.set_ylabel('Normalized density',fontsize=11)
+            ax.set_title(title,fontsize=11); ax.set_xlim(-20,20)
+            ax.legend(fontsize=7,loc='upper right'); ax.grid(True,alpha=0.25,ls='--')
+        fig.suptitle(r'$\Delta$RV Histograms (Paper Fig. 7)',fontsize=12)
         fig.tight_layout()
-        for e in ['png', 'pdf']: fig.savefig(out/f'gaia_cal_{pname}.{e}', dpi=300)
+        for e in ['png','pdf']: fig.savefig(out/f'fig7.{e}',dpi=300)
+        plt.close(fig)
+        if stats_rows: pd.DataFrame(stats_rows).to_csv(out/'fig7_zp_stats.csv',index=False)
+        log("    fig7 saved.")
+
+    # ── Fig 8: ΔRV vs 6 parameters — all surveys (paper Fig 8) ───────────
+    log("  Fig 8: ΔRV vs 6 params (all surveys)...")
+    if 'GAIA' in sb:
+        gaia_d=sb['GAIA']
+        coeffs_all=gaia_cal.get('coefficients',{})
+        per_surv=gaia_cal.get('per_survey',{})
+        fig,axes=plt.subplots(2,3,figsize=(21,12)); axes=axes.flatten()
+        for pi,(pname,xlabel) in enumerate(SIX_PARAMS):
+            ax=axes[pi]
+            eq_name=PARAM_TO_EQ.get(pname)
+            global_coeffs=coeffs_all.get(eq_name) if eq_name else None
+            for surv in sorted(sb.keys()):
+                if surv=='GAIA': continue
+                common=set(gaia_d)&set(sb[surv])
+                if len(common)<30: continue
+                xs,ys=[],[]
+                for g in common:
+                    rv_g,_,pr_g=gaia_d[g]; rv_s,_,pr_s=sb[surv][g]
+                    if not (np.isfinite(rv_g) and np.isfinite(rv_s)): continue
+                    pval=pr_s.get(pname,pr_g.get(pname,np.nan))
+                    if pname=='RV': pval=rv_s
+                    if not np.isfinite(pval): continue
+                    xs.append(pval); ys.append(rv_g-rv_s)
+                if len(xs)<20: continue
+                xs,ys=np.array(xs),np.array(ys)
+                bc,meds,mads=bin_stat(xs,ys,n_bins=35,min_count=cfg.min_bin_count)
+                if len(bc)==0: continue
+                ax.plot(bc,meds,'-',color=_c(surv),lw=1.8,alpha=0.9,label=surv)
+                ax.fill_between(bc,meds-mads,meds+mads,color=_c(surv),alpha=0.1)
+            if global_coeffs is not None:
+                all_xs_flat=[]
+                for surv in sorted(sb.keys()):
+                    if surv=='GAIA': continue
+                    key=f"{eq_name}_{surv}" if eq_name else None
+                    if key and key in per_surv: all_xs_flat.append(per_surv[key]['xs'])
+                if all_xs_flat:
+                    all_xs_flat=np.concatenate(all_xs_flat)
+                    x_fit=np.linspace(np.percentile(all_xs_flat,1),np.percentile(all_xs_flat,99),300)
+                    ax.plot(x_fit,np.polyval(global_coeffs,x_fit),'k--',lw=2.2,alpha=0.8,
+                            label='Global fit',zorder=10)
+            ax.axhline(0,color='gray',ls=':',alpha=0.5)
+            ax.set_xlabel(xlabel,fontsize=11)
+            ax.set_ylabel(r'$\Delta$RV (km/s)',fontsize=10)
+            ax.set_title(f'ΔRV vs {pname}',fontsize=11); ax.set_ylim(-15,15)
+            ax.legend(fontsize=7,loc='upper right',ncol=2); ax.grid(True,alpha=0.25,ls='--')
+        fig.suptitle(r'$\Delta$RV = RV$_{\rm Gaia}$ − RV$_{\rm survey}$ vs parameters (Paper Fig. 8)',fontsize=12)
+        fig.tight_layout()
+        for e in ['png','pdf']: fig.savefig(out/f'fig8_all.{e}',dpi=300)
+        plt.close(fig)
+        log("    fig8_all saved.")
+
+    # ── Figs 9-11: Gaia calibration before/after per equation ─────────────
+    coeffs_all=gaia_cal.get('coefficients',{})
+    per_surv=gaia_cal.get('per_survey',{})
+    for eq_name,coeffs in coeffs_all.items():
+        keys=[k for k in per_surv if k.startswith(eq_name)]
+        if not keys: continue
+        param=per_surv[keys[0]]['param']
+        log(f"  Gaia cal before/after: {eq_name} ({param})...")
+        fig,axes=plt.subplots(1,2,figsize=(16,6))
+        for ax,show_after in zip(axes,[False,True]):
+            for k in keys:
+                sv=per_surv[k]; sn=sv['surv']
+                xs_=sv['xs']; ys_=sv['ys']
+                bc,meds,mads=bin_stat(xs_,ys_,n_bins=30,min_count=cfg.min_bin_count)
+                if len(bc)==0: continue
+                if show_after:
+                    ys_c=ys_-np.polyval(coeffs,xs_)
+                    bc2,meds2,mads2=bin_stat(xs_,ys_c,n_bins=30,min_count=cfg.min_bin_count)
+                    if len(bc2)==0: continue
+                    ax.plot(bc2,meds2,'o-',ms=4,lw=1.5,color=_c(sn),alpha=0.85,label=sn)
+                    ax.fill_between(bc2,meds2-mads2,meds2+mads2,color=_c(sn),alpha=0.1)
+                else:
+                    ax.plot(bc,meds,'o-',ms=4,lw=1.5,color=_c(sn),alpha=0.85,label=sn)
+                    ax.fill_between(bc,meds-mads,meds+mads,color=_c(sn),alpha=0.1)
+            if not show_after:
+                all_xs=[per_surv[k]['xs'] for k in keys if len(per_surv[k]['xs'])>0]
+                if all_xs:
+                    axx=np.concatenate(all_xs)
+                    xf=np.linspace(np.percentile(axx,1),np.percentile(axx,99),300)
+                    ax.plot(xf,np.polyval(coeffs,xf),'k--',lw=2.2,alpha=0.8,
+                            label='Global fit',zorder=10)
+            ax.axhline(0,color='gray',ls=':',alpha=0.5)
+            ax.set_xlabel(param,fontsize=12)
+            ax.set_ylabel(r'$\Delta$RV (km/s)',fontsize=11)
+            t='After calibration' if show_after else 'Before calibration'
+            ax.set_title(f'{eq_name} ({param}): {t}',fontsize=12)
+            ax.legend(fontsize=9); ax.grid(True,alpha=0.3,ls='--')
+        fig.suptitle(f'Gaia Calibration {eq_name}: ΔRV vs {param} (Paper Figs. 9-11)',fontsize=13)
+        fig.tight_layout()
+        for e in ['png','pdf']: fig.savefig(out/f'gaia_cal_{param}.{e}',dpi=300)
         plt.close(fig)
 
-    # ── Multi-survey overlay: all Gaia calibration params in one figure ────
-    if diag:
-        pnames = list(diag.keys())
-        ncols  = min(3, len(pnames))
-        nrows  = (len(pnames) + ncols - 1) // ncols
-        fig, axes = plt.subplots(nrows, ncols, figsize=(7*ncols, 5*nrows))
-        axes = np.array(axes).flatten() if len(pnames) > 1 else [axes]
-        for pi, pname_ in enumerate(pnames):
-            ax = axes[pi]
-            pdata_ = diag[pname_]
-            eq_name_ = pdata_.get('eq_name', '')
-            coeffs_  = pdata_['coeffs']
-            bx_      = pdata_['bin_x']
-            by_      = pdata_['bin_y']
-            ok_      = np.isfinite(by_)
-            ax.plot(bx_[ok_], by_[ok_], 'ks-', ms=7, lw=2, label='Global before')
-            x_fit_ = np.linspace(bx_.min(), bx_.max(), 300)
-            ax.plot(x_fit_, np.polyval(coeffs_, x_fit_), 'k--', lw=2, alpha=0.6,
-                    label='Polynomial fit')
-            for key_, sv_ in per_surv.items():
-                if not key_.startswith(eq_name_): continue
-                sn_ = sv_.get('surv', '')
-                xs__ = sv_.get('xs'); ys__ = sv_.get('ys')
-                if xs__ is None or len(xs__) < 20: continue
-                n_b_ = min(25, max(8, len(xs__) // 200))
-                be__ = np.linspace(np.percentile(xs__,2), np.percentile(xs__,98), n_b_+1)
-                bc__ = 0.5*(be__[:-1]+be__[1:])
-                mb__ = [np.median(ys__[(xs__>=be__[j])&(xs__<be__[j+1])])
-                        if np.sum((xs__>=be__[j])&(xs__<be__[j+1]))>=cfg.min_bin_count
-                        else np.nan for j in range(n_b_)]
-                mb__ = np.array(mb__); ok__ = np.isfinite(mb__)
-                ax.plot(bc__[ok__], mb__[ok__], 'o-', ms=4, lw=1.5,
-                        color=_c(sn_), alpha=0.8, label=sn_)
-            ax.axhline(0, color='gray', ls=':', alpha=0.5)
-            ax.set_xlabel(pname_, fontsize=12)
-            ax.set_ylabel(r'$\Delta$RV = RV$_{\rm Gaia}$ − RV$_{\rm survey}$  (km/s)',
-                          fontsize=11)
-            ax.set_xlim(bx_.min()-0.05*(bx_.max()-bx_.min()),
-                        bx_.max()+0.05*(bx_.max()-bx_.min()))
-            ax.set_title(f'ΔRV vs {pname_}', fontsize=12)
-            ax.legend(fontsize=8); ax.grid(True, alpha=0.3, ls='--')
-        for ax in axes[len(pnames):]: ax.set_visible(False)
-        fig.suptitle(
-            'Gaia Calibration: All parameters — survey-by-survey binned medians\n'
-            r'ΔRV = RV$_{\rm Gaia}$ − RV$_{\rm survey}$',
-            fontsize=13)
-        fig.tight_layout()
-        for e in ['png', 'pdf']: fig.savefig(out/f'gaia_cal_all_surveys.{e}', dpi=300)
-        plt.close(fig)
-
-    # -----------------------------------------------------------------------
-    # Survey calibration 6-panel plots (one per survey)
-    # ΔRV = RV_Gaia_corrected − RV_survey  (calibrating survey to Gaia frame)
-    # -----------------------------------------------------------------------
-    param_list = ['Teff', 'logg', 'FeH', 'SNR', 'RV', 'Gmag']
-    # Collect per-param binned medians for the all-surveys overlay
-    all_survey_bins = {p: {} for p in param_list}
-
-    for surv, sres in survey_cal.items():
+    # ── Fig 12: Calibrated ΔRV vs 6 params (paper Fig 12) ────────────────
+    log("  Fig 12: Calibrated ΔRV vs 6 params...")
+    param_list=['Teff','logg','FeH','SNR','RV','Gmag']
+    all_survey_bins={p:{} for p in param_list}
+    for surv,sres in survey_cal.items():
         if 'diag' not in sres: continue
-        df   = sres['diag']
-        log(f"  Survey cal 6-panel: {surv}...")
-        fig, axes = plt.subplots(2, 3, figsize=(18, 10))
-        axes = axes.flatten()
+        df=sres['diag']
+        for pname in param_list:
+            if pname not in df.columns or df[pname].isna().all(): continue
+            x=df[pname].values; y=df['drv'].values
+            ok=np.isfinite(x)&np.isfinite(y)
+            if np.sum(ok)<20: continue
+            bc,meds,_=bin_stat(x[ok],y[ok],n_bins=30,min_count=cfg.min_bin_count)
+            if len(bc)>0: all_survey_bins[pname][surv]=(bc,meds)
 
-        for pi, pname in enumerate(param_list):
-            ax = axes[pi]
-            if pname not in df.columns or df[pname].isna().all():
-                ax.text(0.5, 0.5, 'No data', ha='center', va='center',
-                        transform=ax.transAxes); ax.set_title(pname); continue
-            x = df[pname].values; y = df['drv'].values
-            ok = np.isfinite(x) & np.isfinite(y)
-            if np.sum(ok) < 20:
-                ax.text(0.5, 0.5, 'Too few', ha='center', va='center',
-                        transform=ax.transAxes); ax.set_title(pname); continue
-            x, y = x[ok], y[ok]
-            ax.scatter(x, y, s=1, alpha=0.1, color=_c(surv), rasterized=True)
-            nbins = min(30, max(10, len(x)//200))
-            be    = np.linspace(np.percentile(x,2), np.percentile(x,98), nbins+1)
-            bc    = 0.5*(be[:-1]+be[1:])
-            meds  = [np.median(y[(x>=be[j])&(x<be[j+1])])
-                     if np.sum((x>=be[j])&(x<be[j+1])) >= cfg.min_bin_count
-                     else np.nan for j in range(nbins)]
-            meds  = np.array(meds); okm = np.isfinite(meds)
-            ax.plot(bc[okm], meds[okm], 'ko-', ms=5, lw=1.5, label='Median ΔRV')
-            ax.axhline(0, color='gray', ls=':', alpha=0.5)
-            ax.set_xlabel(pname, fontsize=11)
-            ax.set_ylabel(r'$\Delta$RV = RV$_{\rm Gaia,\,corr}$ − RV$_{\rm survey}$  (km/s)',
-                          fontsize=10)
-            ax.set_ylim(-15, 15); ax.grid(True, alpha=0.3, ls='--'); ax.legend(fontsize=8)
-            # Store for overlay
-            all_survey_bins[pname][surv] = (bc[okm], meds[okm])
+    fig,axes=plt.subplots(2,3,figsize=(21,12)); axes=axes.flatten()
+    for pi,pname in enumerate(param_list):
+        ax=axes[pi]
+        sdata={s:v for s,v in all_survey_bins[pname].items() if len(v[0])>0}
+        for surv,(bc,med) in sdata.items():
+            ax.plot(bc,med,'o-',ms=4,lw=1.8,color=_c(surv),alpha=0.85,label=surv)
+        ax.axhline(0,color='gray',ls='--',lw=1,alpha=0.6)
+        ax.set_xlabel(pname,fontsize=11)
+        ax.set_ylabel(r'$\Delta$RV (km/s)',fontsize=10)
+        ax.set_title(f'Calibrated ΔRV vs {pname}',fontsize=11)
+        ax.legend(fontsize=8); ax.grid(True,alpha=0.3,ls='--'); ax.set_ylim(-5,5)
+    fig.suptitle('Survey Calibration: Calibrated ΔRV vs parameters (Paper Fig. 12)',fontsize=13)
+    fig.tight_layout()
+    for e in ['png','pdf']: fig.savefig(out/f'fig12_calibrated.{e}',dpi=300)
+    plt.close(fig)
 
-        fig.suptitle(
-            f'Survey Calibration: {surv}\n'
-            r'$\Delta$RV = RV$_{\rm Gaia,\,corrected}$ − RV$_{\rm ' + surv + r'}$'
-            '\n(positive = survey underestimates RV relative to Gaia)',
-            fontsize=13)
-        fig.tight_layout(rect=[0, 0, 1, 0.93])
-        for e in ['png', 'pdf']: fig.savefig(out/f'survey_cal_{surv}.{e}', dpi=300)
-        plt.close(fig)
+    # ── Fig 13: Normalized RV error distributions ─────────────────────────
+    log("  Fig 13: Normalized RV errors...")
+    fig,ax=plt.subplots(figsize=(10,6))
+    FIXED_BINS=np.linspace(0.0,4.0,101)
+    fixed_bc=0.5*(FIXED_BINS[:-1]+FIXED_BINS[1:])
+    csv4={'bin_center':fixed_bc}
+    for s in sorted(nerr.keys()):
+        ea=nerr[s]['errors']; ep=ea[(ea>=0)&(ea<=4)]
+        if len(ep)<20: continue
+        c,_=np.histogram(ep,bins=FIXED_BINS,density=True)
+        csv4[s]=c
+        ax.hist(FIXED_BINS[:-1],FIXED_BINS,weights=c,histtype='step',lw=2,
+                color=_c(s),alpha=0.85,
+                label=(f"{s}  (med={nerr[s]['median']:.2f} km/s, "
+                       f"N={nerr[s]['n']:,}, f={nerr[s]['factor']:.3f})"))
+    ax.set_xlim(0,4)
+    ax.set_xlabel('Normalized RV error (km/s)',fontsize=13)
+    ax.set_ylabel('Density',fontsize=13)
+    ax.set_title('Normalized RV Error Distributions (Paper Fig. 13)',fontsize=12)
+    ax.legend(fontsize=9,loc='upper right'); ax.grid(True,alpha=0.3,ls='--')
+    fig.tight_layout()
+    for e in ['png','pdf']: fig.savefig(out/f'fig13.{e}',dpi=300)
+    plt.close(fig)
+    if len(csv4)>1: pd.DataFrame(csv4).to_csv(out/'fig13_data.csv',index=False)
 
-    # ── All-surveys overlay: one figure per calibration parameter ─────────
-    log("  All-surveys calibration overlay plots...")
-    for pname in param_list:
-        sdata = {s: v for s, v in all_survey_bins[pname].items() if len(v[0]) > 0}
-        if not sdata: continue
-        fig, ax = plt.subplots(figsize=(12, 6))
-        for surv, (bc_, med_) in sdata.items():
-            ax.plot(bc_, med_, 'o-', ms=5, lw=1.8,
-                    color=_c(surv), alpha=0.85, label=surv)
-        ax.axhline(0, color='gray', ls='--', lw=1, alpha=0.6)
-        ax.set_xlabel(pname, fontsize=13)
-        ax.set_ylabel(r'$\Delta$RV = RV$_{\rm Gaia,\,corr}$ − RV$_{\rm survey}$  (km/s)',
-                      fontsize=12)
-        ax.set_title(
-            f'All-Survey Calibration Overlay: ΔRV vs {pname}\n'
-            r'Each curve = median $\Delta$RV per bin for that survey',
-            fontsize=12)
-        ax.legend(fontsize=10, loc='best'); ax.grid(True, alpha=0.3, ls='--')
-        ax.set_ylim(-10, 10)
-        fig.tight_layout()
-        for e in ['png', 'pdf']:
-            fig.savefig(out/f'survey_cal_overlay_{pname}.{e}', dpi=300)
-        plt.close(fig)
-
-    # -----------------------------------------------------------------------
-    # Tables
-    # -----------------------------------------------------------------------
+    # ── CSV tables ─────────────────────────────────────────────────────────
     log("  Writing CSV tables...")
 
-    # Table 3: DUP results
-    rows = []
-    for s, dr in sorted(dup_results.items()):
-        rows.append({'Survey': s, 'N_stars': dr['n_stars'], 'N_pairs': dr['n_pairs'],
-                     'Mean_raw': dr['mean_raw'], 'Std_raw': dr['std_raw'],
-                     'Median_raw': dr['median_raw'], 'MAD_raw': dr['mad_raw'],
-                     'NormMAD': dr['norm_mad'], 'NormStd': dr['norm_std']})
-    if rows: pd.DataFrame(rows).to_csv(out/'table3_dup.csv', index=False)
+    # Table 3: DUP statistics
+    rows=[{'Survey':s,'N_stars':d['n_stars'],'N_pairs':d['n_pairs'],
+           'Mean_raw':d['mean_raw'],'Std_raw':d['std_raw'],
+           'Median_raw':d['median_raw'],'MAD_raw':d['mad_raw'],
+           'NormMAD':d['norm_mad'],'NormStd':d['norm_std']}
+          for s,d in sorted(dup_results.items())]
+    if rows: pd.DataFrame(rows).to_csv(out/'table3_dup.csv',index=False)
 
     # Table 4: Combined normalization factors
-    cf = tch_results.get('combined_factors', {})
-    rows = [{'Survey': s, 'Combined_Factor': cf[s],
-             'DUP_factor': dup_results.get(s, {}).get('norm_factor', np.nan),
-             'TCH_factor': tch_results.get('norm_factors', {}).get(s, np.nan)}
-            for s in sorted(cf.keys())]
-    if rows: pd.DataFrame(rows).to_csv(out/'table4_norm_factors.csv', index=False)
+    cf=tch_results.get('combined_factors',{})
+    rel=tch_results.get('reliability',{})
+    rows=[{'Survey':s,'Combined_Factor':cf[s],
+           'DUP_factor':dup_results.get(s,{}).get('norm_factor',np.nan),
+           'TCH_factor':tch_results.get('norm_factors',{}).get(s,np.nan),
+           'Method':rel.get(s,'')}
+          for s in sorted(cf.keys())]
+    if rows: pd.DataFrame(rows).to_csv(out/'table4_norm_factors.csv',index=False)
+
+    # Table 5: ΔRV statistics (before and after)
+    if 'GAIA' in sb:
+        gaia_d=sb['GAIA']
+        t5_rows=[]
+        for surv in sorted(sb.keys()):
+            if surv=='GAIA': continue
+            common=set(gaia_d)&set(sb[surv])
+            drvs=np.array([gaia_d[g][0]-sb[surv][g][0] for g in common
+                           if np.isfinite(gaia_d[g][0]) and np.isfinite(sb[surv][g][0])])
+            if len(drvs)<10: continue
+            t5_rows.append({'Survey':surv,'N':len(drvs),
+                           'Mean_DRV':float(np.mean(drvs)),
+                           'Median_DRV':float(np.median(drvs)),
+                           'Sigma':float(np.std(drvs)),
+                           'MAD':float(np.median(np.abs(drvs-np.median(drvs))))})
+        if t5_rows: pd.DataFrame(t5_rows).to_csv(out/'table5_drv_stats.csv',index=False)
 
     # Gaia calibration coefficients
-    gc_ = gaia_cal.get('coefficients', {})
+    gc_=gaia_cal.get('coefficients',{})
     if gc_:
-        rows = [{'Equation': k, 'Coefficients': str(v)} for k, v in gc_.items()]
-        pd.DataFrame(rows).to_csv(out/'gaia_cal_coefficients.csv', index=False)
+        pd.DataFrame([{'Equation':k,'Coefficients':str(v)} for k,v in gc_.items()]
+                     ).to_csv(out/'gaia_cal_coefficients.csv',index=False)
+
+    # ZP shifts per equation per survey
+    zp_all=gaia_cal.get('zp_shifts',{})
+    if zp_all:
+        zp_rows=[]
+        for eq,zdict in zp_all.items():
+            for surv,zp in zdict.items():
+                zp_rows.append({'Equation':eq,'Survey':surv,'ZP_shift_km_s':zp})
+        pd.DataFrame(zp_rows).to_csv(out/'gaia_cal_zp_shifts.csv',index=False)
 
     # Survey calibration coefficients
-    rows = []
-    for surv, sres in survey_cal.items():
-        for split, fdata in sres.get('fits', {}).items():
-            rows.append({'Survey': surv, 'Split': split,
-                         'Features': str(fdata['feat_names']),
-                         'Coefficients': str(fdata['coeffs']),
-                         'N': fdata['n'], 'Chi2': fdata['chi2'],
-                         'ZP_before_km_s': fdata['zp_before'],
-                         'ZP_after_km_s':  fdata['zp_after']})
-    if rows: pd.DataFrame(rows).to_csv(out/'survey_cal_coefficients.csv', index=False)
+    rows=[]
+    for surv,sres in survey_cal.items():
+        for split,fdata in sres.get('fits',{}).items():
+            rows.append({'Survey':surv,'Split':split,
+                         'Features':str(fdata['feat_names']),
+                         'Coefficients':str(fdata['coeffs']),'N':fdata['n'],
+                         'Chi2':fdata['chi2'],'ZP_before_km_s':fdata['zp_before'],
+                         'ZP_after_km_s':fdata['zp_after']})
+    if rows: pd.DataFrame(rows).to_csv(out/'survey_cal_coefficients.csv',index=False)
 
-    # Summary: N unique stars per survey + normalized error stats
-    rows = []
-    for s in sorted(VALID_SURVEYS):
-        nr = nerr.get(s, {})
-        rows.append({
-            'Survey':        s,
-            'N_unique_stars': nr.get('n', 0),
-            'Norm_factor':    nr.get('factor', np.nan),
-            'Median_norm_err_km_s': nr.get('median', np.nan),
-        })
-    pd.DataFrame(rows).to_csv(out/'summary_unique_stars.csv', index=False)
-
+    # Summary per survey
+    rows=[{'Survey':s,'N_unique_stars':nerr.get(s,{}).get('n',0),
+           'Norm_factor':nerr.get(s,{}).get('factor',np.nan),
+           'Median_norm_err_km_s':nerr.get(s,{}).get('median',np.nan)}
+          for s in sorted(VALID_SURVEYS)]
+    pd.DataFrame(rows).to_csv(out/'summary_unique_stars.csv',index=False)
     log("  All outputs saved.")
 
 
@@ -1768,20 +1670,20 @@ def phase9_plots(cfg, dup_results, tch_results, gaia_cal, survey_cal, nerr):
 # MAIN
 # =============================================================================
 def main():
-    p = argparse.ArgumentParser(description='RV Normalization v5')
+    p=argparse.ArgumentParser(description='RV Normalization v8 (fixed)')
     p.add_argument('input_fits')
-    p.add_argument('--output-dir', '-o', default='./rv_norm_output_v5')
-    p.add_argument('--checkpoint-dir', default='./rv_norm_ckpt_v5')
-    p.add_argument('--chunk-size', '-c', type=int, default=3_000_000)
-    p.add_argument('--tolerance', type=float, default=1.0)
-    p.add_argument('--nside', type=int, default=32)
-    p.add_argument('--apogee-csv', default='./astro_data/APOGEE_DR17/APOGEE_DR17_merged_rv_parallax.csv')
-    p.add_argument('--galah-csv',  default='./astro_data/GALAH_DR3/GALAH_DR3_merged_rv_parallax.csv')
-    p.add_argument('--ges-csv',    default='./astro_data/GES_DR5/GES_DR5_merged_rv_parallax.csv')
-    p.add_argument('--rave-csv',   default='./astro_data/RAVE_DR6/RAVE_DR6_merged_rv_parallax.csv')
-    p.add_argument('--clean', action='store_true',
-                   help='Delete checkpoints and restart from scratch')
-    args = p.parse_args()
+    p.add_argument('--output-dir','-o',default='./rv_norm_output_v8')
+    p.add_argument('--checkpoint-dir',default='./rv_norm_ckpt_v8')
+    p.add_argument('--chunk-size','-c',type=int,default=3_000_000)
+    p.add_argument('--tolerance',type=float,default=1.0)
+    p.add_argument('--nside',type=int,default=32)
+    p.add_argument('--apogee-csv',default='./astro_data/APOGEE_DR17/APOGEE_DR17_merged_rv_parallax.csv')
+    p.add_argument('--galah-csv', default='./astro_data/GALAH_DR3/GALAH_DR3_merged_rv_parallax.csv')
+    p.add_argument('--ges-csv',   default='./astro_data/GES_DR5/GES_DR5_merged_rv_parallax.csv')
+    p.add_argument('--rave-csv',  default='./astro_data/RAVE_DR6/RAVE_DR6_merged_rv_parallax.csv')
+    p.add_argument('--a95-dir',   default='./astro_data/A95_cds')
+    p.add_argument('--clean',action='store_true',help='Delete checkpoints and restart')
+    args=p.parse_args()
 
     if args.clean:
         import shutil
@@ -1789,66 +1691,42 @@ def main():
             shutil.rmtree(args.checkpoint_dir)
             print(f"Cleaned {args.checkpoint_dir}")
 
-    cfg = Config(
-        input_fits     = args.input_fits,
-        output_dir     = args.output_dir,
-        checkpoint_dir = args.checkpoint_dir,
-        chunk_size     = args.chunk_size,
-        tolerance_arcsec = args.tolerance,
-        healpix_nside  = args.nside,
-        apogee_csv     = args.apogee_csv,
-        galah_csv      = args.galah_csv,
-        ges_csv        = args.ges_csv,
-        rave_csv       = args.rave_csv,
+    cfg=Config(
+        input_fits=args.input_fits,output_dir=args.output_dir,
+        checkpoint_dir=args.checkpoint_dir,chunk_size=args.chunk_size,
+        tolerance_arcsec=args.tolerance,healpix_nside=args.nside,
+        apogee_csv=args.apogee_csv,galah_csv=args.galah_csv,
+        ges_csv=args.ges_csv,rave_csv=args.rave_csv,a95_dir=args.a95_dir,
     )
 
-    t0 = time.time()
-    log("=" * 72)
-    log("RV NORMALIZATION v5 — Survey of Surveys I")
-    log("=" * 72)
+    t0=time.time()
+    log("="*72)
+    log("RV NORMALIZATION v8 — Survey of Surveys I (FIXED)")
+    log("="*72)
     log(f"Input FITS : {cfg.input_fits}")
     log(f"Output     : {cfg.output_dir}")
     log(f"Surveys    : {', '.join(sorted(VALID_SURVEYS))}")
-    log(f"DUP surveys: {', '.join(sorted(DUP_SURVEYS))}  [GAIA excluded from DUP]")
+    log("FIXES: param propagation, DUP quality ctrl, paper exclusion rules")
 
-    # Phase 0: Load external survey CSVs
-    csv_data = phase0_load_csvs(cfg)
-
-    # Phase 1: Extract one RV/star from FITS
-    data = phase1_extract(cfg)
-
-    # Phase 2: Spatial grouping
-    groups = phase2_spatial(cfg, data)
-
-    # Phase 2b: source_id → group_id map
-    sid_map = phase2b_sid_map(cfg, data, groups)
-
-    # Phase 3: Build per-survey star data (FITS + CSVs)
+    csv_data     = phase0_load_csvs(cfg)
+    data         = phase1_extract(cfg)
+    groups       = phase2_spatial(cfg, data)
+    sid_map      = phase2b_sid_map(cfg, data, groups)
     survey_stars = phase3_build(cfg, data, groups, csv_data, sid_map)
-    del data, groups, sid_map, csv_data
-    gc.collect()
+    del data, groups, sid_map, csv_data; gc.collect()
 
-    # Phase 4: DUP normalization (GAIA excluded)
-    dup_results = phase4_dup(cfg, survey_stars)
+    dup_results  = phase4_dup(cfg, survey_stars)
+    tch_results  = phase5_tch(cfg, survey_stars, dup_results)
+    gaia_cal     = phase6_gaia_cal(cfg, survey_stars, tch_results)
+    survey_cal   = phase7_survey_cal(cfg, survey_stars, gaia_cal)
+    norm_errors  = phase8_norm_errors(cfg, survey_stars, tch_results)
 
-    # Phase 5: TCH normalization
-    tch_results = phase5_tch(cfg, survey_stars, dup_results)
-
-    # Phase 6: Gaia internal calibration (Eq. 5-7)
-    gaia_cal = phase6_gaia_cal(cfg, survey_stars, tch_results)
-
-    # Phase 7: Survey calibration (Eq. 8, dwarfs/giants/cool/hot)
-    survey_cal = phase7_survey_cal(cfg, survey_stars, gaia_cal)
-
-    # Phase 8: Normalized errors per unique star
-    norm_errors = phase8_norm_errors(cfg, survey_stars, tch_results)
-
-    # Phase 9: All plots + CSV tables
-    phase9_plots(cfg, dup_results, tch_results, gaia_cal, survey_cal, norm_errors)
+    phase9_plots(cfg, dup_results, tch_results, gaia_cal, survey_cal,
+                 norm_errors, survey_stars)
 
     log(f"\nDONE in {(time.time()-t0)/60:.1f} min")
     log(f"Outputs in: {cfg.output_dir}")
 
 
-if __name__ == '__main__':
+if __name__=='__main__':
     main()

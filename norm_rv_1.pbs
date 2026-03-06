@@ -23,13 +23,14 @@ cd /user/sutirtha/BallTree_Xmatch
 INPUT="/user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits"
 OUTDIR="./rv_norm_output_v5"
 CKPTDIR="./rv_norm_ckpt_v5"
-LIVELOG="/user/sutirtha/BallTree_Xmatch/rv_v5_live1.log"
+LIVELOG="/user/sutirtha/BallTree_Xmatch/rv_v5_live2.log"
 
 # External survey CSV paths
 APOGEE_CSV="./astro_data/APOGEE_DR17/APOGEE_DR17_merged_rv_parallax.csv"
 GALAH_CSV="./astro_data/GALAH_DR3/GALAH_DR3_merged_rv_parallax.csv"
 GES_CSV="./astro_data/GES_DR5/GES_DR5_merged_rv_parallax.csv"
 RAVE_CSV="./astro_data/RAVE_DR6/RAVE_DR6_merged_rv_parallax.csv"
+A95_DIR="./astro_data/A95_cds"
 
 echo "=============================================="
 echo "RV NORMALIZATION v5 — Survey of Surveys I"
@@ -45,7 +46,7 @@ echo "=============================================="
 
 pip install tqdm psutil --break-system-packages -q 2>/dev/null || true
 
-python3 -u norm_rv_1.py \
+python3 -u /user/sutirtha/BallTree_Xmatch/norm_rv_1.py \
     "$INPUT" \
     --output-dir "$OUTDIR" \
     --checkpoint-dir "$CKPTDIR" \
@@ -56,6 +57,7 @@ python3 -u norm_rv_1.py \
     --galah-csv  "$GALAH_CSV" \
     --ges-csv    "$GES_CSV" \
     --rave-csv   "$RAVE_CSV" \
+    --a95-dir    "$A95_DIR" \
     --clean \
     2>&1 | tee "$LIVELOG"
 
