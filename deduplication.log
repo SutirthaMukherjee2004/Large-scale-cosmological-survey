@@ -423,3 +423,11 @@
 All chunks written to /user/sutirtha/BallTree_Xmatch/Entire_catalogue_chunk*.fits
 2026-01-28 17:10:14 | INFO     | 
 COMPLETE! Time: 46.90 hours
+2026-03-03 12:46:06 | INFO     | ================================================================================
+2026-03-03 12:46:06 | INFO     | STELLAR DEDUPLICATION - MEMORY OPTIMIZED
+2026-03-03 12:46:06 | INFO     | ================================================================================
+2026-03-03 12:46:06 | INFO     | Input: /user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits
+2026-03-03 12:46:06 | INFO     | Output: /user/sutirtha/BallTree_Xmatch/Entire_catalogue.fits
+2026-03-03 12:46:06 | INFO     |   [MEMORY] Initial: 0.1 GB
+2026-03-03 12:46:06 | INFO     | 
+[PHASE 1] Loading metadata...
