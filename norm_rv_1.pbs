@@ -1,0 +1,78 @@
+#!/bin/bash
+#PBS -S /bin/bash
+#PBS -N rv_norm_v7
+#PBS -l nodes=1:ppn=8
+#PBS -l mem=120gb
+#PBS -l walltime=48:00:00
+#PBS -o rv_norm_v7.log
+#PBS -e rv_norm_v7.err
+#PBS -m abe
+#PBS -M sutirtharkm@gmail.com
+
+export MALLOC_TRIM_THRESHOLD_=65536
+export MALLOC_MMAP_THRESHOLD_=65536
+export OMP_NUM_THREADS=1
+export MKL_NUM_THREADS=1
+export NUMEXPR_NUM_THREADS=1
+export OPENBLAS_NUM_THREADS=1
+
+source /user/sutirtha/anaconda3/etc/profile.d/conda.sh
+conda activate base
+cd /user/sutirtha/BallTree_Xmatch
+
+INPUT="/user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits"
+OUTDIR="./rv_norm_output_v5"
+CKPTDIR="./rv_norm_ckpt_v5"
+LIVELOG="/user/sutirtha/BallTree_Xmatch/rv_v5_live1.log"
+
+# External survey CSV paths
+APOGEE_CSV="./astro_data/APOGEE_DR17/APOGEE_DR17_merged_rv_parallax.csv"
+GALAH_CSV="./astro_data/GALAH_DR3/GALAH_DR3_merged_rv_parallax.csv"
+GES_CSV="./astro_data/GES_DR5/GES_DR5_merged_rv_parallax.csv"
+RAVE_CSV="./astro_data/RAVE_DR6/RAVE_DR6_merged_rv_parallax.csv"
+
+echo "=============================================="
+echo "RV NORMALIZATION v5 — Survey of Surveys I"
+echo "=============================================="
+echo "Job: $PBS_JOBID | Node: $(hostname) | $(date)"
+echo "Live log: tail -f $LIVELOG"
+echo "Surveys: GAIA DESI APOGEE GALAH GES RAVE LAMOST SDSS-BOSS SEGUE"
+echo "DSOS/SOSI/UNKNOWN: EXCLUDED"
+echo "GAIA DUP: SKIPPED (spatial dups already averaged)"
+echo "Fig 13: per unique star, adaptive bins"
+free -h
+echo "=============================================="
+
+pip install tqdm psutil --break-system-packages -q 2>/dev/null || true
+
+python3 -u norm_rv_1.py \
+    "$INPUT" \
+    --output-dir "$OUTDIR" \
+    --checkpoint-dir "$CKPTDIR" \
+    --chunk-size 3000000 \
+    --tolerance 1.0 \
+    --nside 32 \
+    --apogee-csv "$APOGEE_CSV" \
+    --galah-csv  "$GALAH_CSV" \
+    --ges-csv    "$GES_CSV" \
+    --rave-csv   "$RAVE_CSV" \
+    --clean \
+    2>&1 | tee "$LIVELOG"
+
+EXIT_CODE=${PIPESTATUS[0]}
+echo "Exit: $EXIT_CODE | $(date)"
+echo ""
+echo "=== Output files ==="
+ls -lh "$OUTDIR"/ 2>/dev/null
+echo ""
+echo "=== Key results ==="
+if [ -f "$OUTDIR/summary_unique_stars.csv" ]; then
+    echo "Unique stars + normalized errors per survey:"
+    cat "$OUTDIR/summary_unique_stars.csv"
+fi
+if [ -f "$OUTDIR/table4_norm_factors.csv" ]; then
+    echo ""
+    echo "Normalization factors:"
+    cat "$OUTDIR/table4_norm_factors.csv"
+fi
+exit $EXIT_CODE
