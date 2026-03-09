@@ -1,13 +1,17 @@
 #!/bin/bash
 #PBS -S /bin/bash
-#PBS -N rv_norm_v7
+#PBS -N rv_norm_v94
 #PBS -l nodes=1:ppn=8
 #PBS -l mem=120gb
 #PBS -l walltime=48:00:00
-#PBS -o rv_norm_v7.log
-#PBS -e rv_norm_v7.err
+#PBS -o rv_norm_v94.log
+#PBS -e rv_norm_v94.err
 #PBS -m abe
 #PBS -M sutirtharkm@gmail.com
+
+# =============================================================================
+# RV NORMALIZATION v9.4 — Corrected (TypeError fix + redesigned cal plots)
+# =============================================================================
 
 export MALLOC_TRIM_THRESHOLD_=65536
 export MALLOC_MMAP_THRESHOLD_=65536
@@ -21,9 +25,9 @@ conda activate base
 cd /user/sutirtha/BallTree_Xmatch
 
 INPUT="/user/sutirtha/BallTree_Xmatch/Final_weight_cal_gaia_params_duplicate.fits"
-OUTDIR="./rv_norm_output_v5"
+OUTDIR="./rv_norm_output_v94"
 CKPTDIR="./rv_norm_ckpt_v5"
-LIVELOG="/user/sutirtha/BallTree_Xmatch/rv_v5_live2.log"
+LIVELOG="/user/sutirtha/BallTree_Xmatch/rv_v94_live.log"
 
 # External survey CSV paths
 APOGEE_CSV="./astro_data/APOGEE_DR17/APOGEE_DR17_merged_rv_parallax.csv"
@@ -32,21 +36,26 @@ GES_CSV="./astro_data/GES_DR5/GES_DR5_merged_rv_parallax.csv"
 RAVE_CSV="./astro_data/RAVE_DR6/RAVE_DR6_merged_rv_parallax.csv"
 A95_DIR="./astro_data/A95_cds"
 
+# ── Choose which script to run ──
+# Option A: Run the patched version directly
+SCRIPT="norm_rv_1_corrected.py"
+# Option B: Apply patch first, then run
+# python3 rv_norm_patch.py norm_rv_1.py && SCRIPT="norm_rv_1_corrected.py"
+
 echo "=============================================="
-echo "RV NORMALIZATION v5 — Survey of Surveys I"
+echo "RV NORMALIZATION v9.4 — Corrected"
 echo "=============================================="
 echo "Job: $PBS_JOBID | Node: $(hostname) | $(date)"
+echo "Script: $SCRIPT"
 echo "Live log: tail -f $LIVELOG"
-echo "Surveys: GAIA DESI APOGEE GALAH GES RAVE LAMOST SDSS-BOSS SEGUE"
-echo "DSOS/SOSI/UNKNOWN: EXCLUDED"
-echo "GAIA DUP: SKIPPED (spatial dups already averaged)"
-echo "Fig 13: per unique star, adaptive bins"
-free -h
+echo "NOTE: Reuses existing checkpoints in $CKPTDIR"
+echo "      Delete phase7_v9.pkl if you want to rebuild Phase 7"
 echo "=============================================="
+free -h
 
 pip install tqdm psutil --break-system-packages -q 2>/dev/null || true
 
-python3 -u /user/sutirtha/BallTree_Xmatch/norm_rv_1.py \
+python3 -u "/user/sutirtha/BallTree_Xmatch/$SCRIPT" \
     "$INPUT" \
     --output-dir "$OUTDIR" \
     --checkpoint-dir "$CKPTDIR" \
@@ -58,7 +67,6 @@ python3 -u /user/sutirtha/BallTree_Xmatch/norm_rv_1.py \
     --ges-csv    "$GES_CSV" \
     --rave-csv   "$RAVE_CSV" \
     --a95-dir    "$A95_DIR" \
-    --clean \
     2>&1 | tee "$LIVELOG"
 
 EXIT_CODE=${PIPESTATUS[0]}

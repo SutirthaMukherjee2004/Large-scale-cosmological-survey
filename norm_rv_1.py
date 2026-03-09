@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 ================================================================================
-RV ERROR NORMALIZATION & CALIBRATION — v9.2
+RV ERROR NORMALIZATION & CALIBRATION — v9.3
 Following Tsantaki et al. (2021) "Survey of Surveys I"  (A&A 659, A95)
 ================================================================================
 CHANGES vs v8  (all cumulative):
@@ -25,6 +25,15 @@ CHANGES vs v9 (v9.1):
   [v9.1-B] corrected_gaia_rv_with_err(): skips nan _poly_err contributions.
   [v9.1-C] Fig. 13 redesigned — 2 panels (histogram + cumulative), stats CSV.
   [v9.1-D] Fig. 17 redesigned — 3 panels, data-driven peaks, per-survey panel.
+
+CHANGES vs v9.2 (v9.3):
+
+  [v9.3-A] No merged catalogue file is written.
+           phase10_merge() renamed to _compute_rv_stats_for_plots().
+           δRV and σRV are computed in-memory purely for Fig 16/17 plotting.
+           No phase10_v9.pkl checkpoint, no merged_catalogue_summary.csv.
+           The computation (Bevington Gaia errors, Eq.8 corrections, Eq.9
+           σRV) is identical to v9.2 — only the output destination changes.
 
 CHANGES vs v9.1 (v9.2):
 
@@ -1483,23 +1492,31 @@ def phase8_norm_errors(cfg, survey_stars, tch_results):
 
 
 # =============================================================================
-# PHASE 10: MERGED CATALOGUE  [NEW-3]
-# Produces δRV (weighted error) and σRV (inter-survey scatter, Eq.9)
+# PHASE 10: COMPUTE δRV / σRV ARRAYS FOR PLOTTING  [NEW-3]
+# NO catalogue file is written — values are computed in-memory for Fig 16/17.
+# The computation uses the same Bevington-corrected Gaia errors as Phase 7.
 # =============================================================================
-def phase10_merge(cfg, survey_stars, gaia_cal, survey_cal, tch_results):
-    ckpt=Path(cfg.checkpoint_dir)/"phase10_v9.pkl"
-    if ckpt.exists():
-        log("Phase 10: Loading checkpoint")
-        d=load_ckpt(ckpt)
-        log(f"  {len(d):,} merged stars")
-        n_multi=sum(1 for v in d.values() if v['n_surveys']>=2)
-        all_drv=np.array([v['delta_rv'] for v in d.values() if np.isfinite(v['delta_rv'])])
-        all_srv=np.array([v['sigma_rv'] for v in d.values() if np.isfinite(v['sigma_rv'])])
-        log(f"  Multi-survey: {n_multi:,}")
-        log(f"  δRV: median={np.median(all_drv):.3f}  σRV: median={np.median(all_srv):.3f} km/s")
-        return d
+def _compute_rv_stats_for_plots(cfg, survey_stars, gaia_cal, survey_cal, tch_results):
+    """
+    Compute per-group weighted-mean δRV and inter-survey σRV (Eq.9) for
+    every spatial group that has at least one valid calibrated RV entry.
 
-    log("\nPhase 10: Building merged catalogue (δRV and σRV)...")
+    Returns a plain dict  {group_id: {'delta_rv', 'sigma_rv', 'n_surveys',
+                                       'surveys'}}  held in memory only.
+    NO checkpoint is written.  Call this function once and pass the result
+    directly to phase9_plots().
+
+    δRV  = 1/sqrt(Σ w_i)          (weighted-mean precision)
+    σRV  = sqrt(Σ w_i (RV_i − <RV>)² / ((N−1) Σ w_i))   [Eq. 9, N≥2 only]
+
+    For Gaia entries:
+        δRV_calib = sqrt( δΔRV² + (err_Gaia × f_TCH)² )
+        where δΔRV comes from Bevington covariance propagation (Phase 6).
+    For non-Gaia entries:
+        δRV = err_pipeline × f_DUP/TCH
+    """
+
+    log("\nComputing δRV / σRV arrays for plots (no catalogue written)...")
     sb  = _best_rv(survey_stars)
     cf  = tch_results.get('combined_factors', {})
     gaia_coeffs = gaia_cal.get('coefficients', {})
@@ -1627,7 +1644,7 @@ def phase10_merge(cfg, survey_stars, gaia_cal, survey_cal, tch_results):
             'surveys':   [e[2] for e in entries],
         }
 
-    log(f"  Merged catalogue: {len(merged):,} unique stars")
+    log(f"  δRV/σRV computed: {len(merged):,} groups  (no file written)")
     n_multi = sum(1 for v in merged.values() if v['n_surveys'] >= 2)
     all_drv = np.array([v['delta_rv'] for v in merged.values() if np.isfinite(v['delta_rv'])])
     all_srv = np.array([v['sigma_rv'] for v in merged.values() if np.isfinite(v['sigma_rv'])])
@@ -1637,8 +1654,6 @@ def phase10_merge(cfg, survey_stars, gaia_cal, survey_cal, tch_results):
     if len(all_srv) > 0:
         log(f"  σRV: median={np.median(all_srv):.3f} km/s  p5={np.percentile(all_srv,5):.3f}"
             f"  p95={np.percentile(all_srv,95):.3f}")
-
-    save_ckpt(ckpt, merged)
     return merged
 
 
@@ -2256,24 +2271,10 @@ def phase9_plots(cfg, dup_results, tch_results, gaia_cal, survey_cal,
           for s in sorted(VALID_SURVEYS)]
     pd.DataFrame(rows).to_csv(out/'summary_unique_stars.csv',index=False)
 
-    # Merged catalogue summary
-    if merged_catalogue:
-        all_drv_m = np.array([v['delta_rv'] for v in merged_catalogue.values() if np.isfinite(v['delta_rv'])])
-        all_srv_m = np.array([v['sigma_rv'] for v in merged_catalogue.values() if np.isfinite(v['sigma_rv'])])
-        summary_row = {
-            'N_total': len(merged_catalogue),
-            'N_multi_survey': sum(1 for v in merged_catalogue.values() if v['n_surveys']>=2),
-            'delta_rv_median': float(np.median(all_drv_m)) if len(all_drv_m)>0 else np.nan,
-            'delta_rv_p5':     float(np.percentile(all_drv_m,5)) if len(all_drv_m)>0 else np.nan,
-            'delta_rv_p95':    float(np.percentile(all_drv_m,95)) if len(all_drv_m)>0 else np.nan,
-            'sigma_rv_median': float(np.median(all_srv_m)) if len(all_srv_m)>0 else np.nan,
-            'sigma_rv_p5':     float(np.percentile(all_srv_m,5)) if len(all_srv_m)>0 else np.nan,
-            'sigma_rv_p95':    float(np.percentile(all_srv_m,95)) if len(all_srv_m)>0 else np.nan,
-        }
-        pd.DataFrame([summary_row]).to_csv(out/'merged_catalogue_summary.csv',index=False)
-        log(f"  Merged catalogue summary saved.")
-
     log("  All outputs saved.")
+
+
+
 
 
 # =============================================================================
@@ -2333,10 +2334,9 @@ def main():
     norm_errors  = phase8_norm_errors(cfg, survey_stars, tch_results)
 
     log("\n" + "="*72)
-    log("Phase 10: Merged catalogue (δRV + σRV, Bevington-corrected Gaia errors)")
-    log("          Phase 6 polynomial fitted with ALL non-Gaia surveys (v9.2)")
+    log("δRV / σRV computation for Fig 16 + 17 (in-memory, no catalogue written)")
     log("="*72)
-    merged_cat   = phase10_merge(cfg, survey_stars, gaia_cal, survey_cal, tch_results)
+    merged_cat   = _compute_rv_stats_for_plots(cfg, survey_stars, gaia_cal, survey_cal, tch_results)
 
     phase9_plots(cfg, dup_results, tch_results, gaia_cal, survey_cal,
                  norm_errors, survey_stars, merged_cat)
